@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.energysolution.mapper.EnergySolutionMapperInterface">
+	<select id="getUser" parameterType="map" resultType="UserVO">
+		SELECT 'user01' AS 'UserId', '닉네임' AS 'Name'
+	</select>
+	
+	<select id="getBill" parameterType="map" resultType="BillVO">
+		SELECT '101022' AS 'BillId', 2000 AS 'WaterFee', '2020-04-01' AS 'Billdate'
+	</select>
+</mapper>

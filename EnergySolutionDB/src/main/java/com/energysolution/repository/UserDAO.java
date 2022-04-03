@@ -2,35 +2,35 @@ package com.energysolution.repository;
 
 import org.mybatis.spring.SqlSessionTemplate;
 
-import com.energysolution.domain.UserEntity;
+import com.energysolution.domain.UserVO;
 
 public class UserDAO implements UserDAOInterface {
-	UserEntity user;
+	UserVO user;
 	private final SqlSessionTemplate sqlSession = null;
 	
-	public UserEntity test() {
+	public UserVO test() {
 		return sqlSession.selectOne(null);
 	}
 	
 	@Override
-	public UserEntity insert(UserEntity user)  {
+	public UserVO insert(UserVO user)  {
 		this.user = user;
 		
 		return this.user;
 	}
 
 	@Override
-	public UserEntity update(String originPW, String newPW) {
+	public UserVO update(String originPW, String newPW) {
 		return user;
 	}
 
 	@Override
-	public UserEntity select() {
+	public UserVO select() {
 		return user;
 	}
 
 	@Override
-	public UserEntity delete() {
+	public UserVO delete() {
 		return user;
 	}
 

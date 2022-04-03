@@ -2,22 +2,22 @@ package com.energysolution.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.energysolution.domain.UserVO;
+import com.energysolution.domain.BillVO;
 import com.energysolution.mapper.EnergySolutionMapperInterface;
 
 @Service
-public class UserService implements UserServiceInterface{
+public class BillService implements BillServiceInterface{
 
 	private final EnergySolutionMapperInterface ESMapper;
 	
 	@Autowired
-	public UserService(EnergySolutionMapperInterface ESMapper) {
+	public BillService(EnergySolutionMapperInterface ESMapper) {
 		this.ESMapper = ESMapper;
 	}
 	
 	@Override
-	public UserVO getUser() throws Exception{
-		return ESMapper.getUser();
+	public BillVO getBill() throws Exception {
+		return ESMapper.getBill();
 	}
-	
+
 }

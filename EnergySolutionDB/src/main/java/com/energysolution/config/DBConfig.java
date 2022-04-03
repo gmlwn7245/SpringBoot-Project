@@ -35,8 +35,7 @@ public class DBConfig {
         DataSource dataSource = new HikariDataSource(hikariConfig());
         return dataSource;
     }
-    
-    
+        
     @Bean
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();

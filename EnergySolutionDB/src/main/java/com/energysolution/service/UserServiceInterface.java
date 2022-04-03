@@ -1,8 +1,7 @@
 package com.energysolution.service;
 
-import com.energysolution.domain.UserEntity;
+import com.energysolution.domain.UserVO;
 
 public interface UserServiceInterface {
-
-	public UserEntity test() throws Exception;
+	public UserVO getUser() throws Exception;
 }
