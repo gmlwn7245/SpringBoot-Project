@@ -1,37 +1,43 @@
 package com.energysolution.repository;
 
+import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.energysolution.domain.UserVO;
 
+@Repository
 public class UserDAO implements UserDAOInterface {
+
 	UserVO user;
-	private final SqlSessionTemplate sqlSession = null;
 	
-	public UserVO test() {
-		return sqlSession.selectOne(null);
-	}
+	@Autowired
+	private SqlSession sqlSession;
 	
+	private static final String namespace = "com.energysolution.mappers.UserMapper";
+	
+
 	@Override
-	public UserVO insert(UserVO user)  {
-		this.user = user;
+	public void insertUser(UserVO user) {
+		sqlSession.insert(namespace+".insertUser", user);
+	}
+
+	@Override
+	public void updateUser(String originPW, String newPW) {
 		
-		return this.user;
 	}
 
 	@Override
-	public UserVO update(String originPW, String newPW) {
-		return user;
+	public UserVO selectUser() {
+		return null;
 	}
 
 	@Override
-	public UserVO select() {
-		return user;
+	public void deleteUser() {
+		
 	}
+	
 
-	@Override
-	public UserVO delete() {
-		return user;
-	}
 
 }

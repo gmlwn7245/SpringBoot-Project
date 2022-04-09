@@ -6,29 +6,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.energysolution.domain.BillVO;
 import com.energysolution.domain.UserVO;
-import com.energysolution.service.BillService;
-import com.energysolution.service.UserService;
+import com.energysolution.repository.UserDAO;
 
 @RestController
 public class EnergySolutionController {
-	private final UserService userService;
-	private final BillService billService;
 	
 	@Autowired
-	public EnergySolutionController(UserService userService, BillService billService) {
-		this.userService = userService;
-		this.billService = billService;
-	}
+	private UserDAO userdao;
 	
-	@RequestMapping("/getUser")
-	public UserVO getUser() throws Exception{
-		return userService.getUser();
+	@RequestMapping("/insertUser")
+	public String getUser() throws Exception{
+		UserVO uservo = new UserVO();
+		uservo.setUserId("user044");
+		uservo.setName("잉유저");
+		uservo.setPassword("4324sdf");
+		uservo.setEmail("user03@user.com");
+		
+		userdao.insertUser(uservo);
+		return "success!";
 	}
-	
-	@RequestMapping("/getBill")
-	public BillVO getBill() throws Exception{
-		return billService.getBill();
-	}
+
 		
 	@RequestMapping("/")
 	public String root_home() throws Exception{

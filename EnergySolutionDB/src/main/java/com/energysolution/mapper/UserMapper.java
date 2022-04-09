@@ -8,7 +8,10 @@ import com.energysolution.domain.UserVO;
 
 @Component
 @MapperScan
-public interface EnergySolutionMapperInterface {
-	UserVO getUser() throws Exception;
-	BillVO getBill() throws Exception;
+public interface UserMapper {
+
+	public void insertUser(UserVO user);
+	public void updateUser(String originPW, String newPW);
+	public UserVO selectUser();
+	public void deleteUser();
 }
