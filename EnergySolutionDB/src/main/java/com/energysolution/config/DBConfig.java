@@ -19,7 +19,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @PropertySource("classpath:/application.properties")
-@MapperScan(basePackages="com.energysolution.repository",sqlSessionFactoryRef = "SqlSessionFactory")
+@MapperScan(basePackages="com.energysolution.mapper",sqlSessionFactoryRef = "SqlSessionFactory")
 public class DBConfig {
 
     @Autowired
@@ -50,5 +50,5 @@ public class DBConfig {
     public SqlSessionTemplate sqlSessionTemplate(@Qualifier("SqlSessionFactory")SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
-
+    
 }

@@ -7,15 +7,13 @@ import org.springframework.stereotype.Repository;
 
 import com.energysolution.domain.UserVO;
 
-@Repository
+@Repository("userDAO")
 public class UserDAO implements UserDAOInterface {
-
-	UserVO user;
 	
 	@Autowired
 	private SqlSession sqlSession;
 	
-	private static final String namespace = "com.energysolution.mappers.UserMapper";
+	private static final String namespace = "com.energysolution.mapper.UserMapper";
 	
 
 	@Override
@@ -29,8 +27,8 @@ public class UserDAO implements UserDAOInterface {
 	}
 
 	@Override
-	public UserVO selectUser() {
-		return null;
+	public UserVO selectUser(String UserId) {
+		return sqlSession.selectOne(namespace+".selectUser", UserId);
 	}
 
 	@Override

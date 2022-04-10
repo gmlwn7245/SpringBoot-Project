@@ -10,7 +10,7 @@ public interface UserDAOInterface {
 	public void updateUser(String originPW, String newPW);
 	
 	//회원 검색
-	public UserVO selectUser();
+	public UserVO selectUser(String UserId);
 	
 	//회원 삭제
 	public void deleteUser();

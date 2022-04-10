@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.energysolution.mappers.UserMapper">
+<mapper namespace="com.energysolution.mapper.UserMapper">
 	
 	<insert id="insertUser">
 		INSERT INTO User(UserId, Name, Password, Email) VALUES (#{UserId},#{Name},#{Password},#{Email})
 	</insert>
 	
+	<select id="selectUser" parameterType="String" resultType="com.energysolution.domain.UserVO">
+		SELECT * FROM User WHERE UserId=#{UserId}
+	</select>
 	
 </mapper>
