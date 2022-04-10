@@ -14,4 +14,8 @@
 		UPDATE User SET Password=#{newPW} WHERE UserId=#{UserId} AND Password=#{originPW}
 	</update>
 	
+	<delete id="deleteUser">
+		DELETE FROM User WHERE UserId=#{UserId}
+	</delete>
+	
 </mapper>

@@ -19,6 +19,32 @@ public class EnergySolutionController {
 	@Autowired
 	UserService userService;
 	
+	@RequestMapping("")
+	public @ResponseBody String mainView() {
+		return "This is home";
+	}
+	
+	@RequestMapping("sub")
+	public @ResponseBody String sub() throws Exception{
+		return "This is sub for test";
+	}
+	
+	@RequestMapping("getUser")
+	public @ResponseBody String getUser(Model mv) {
+		String UserId = "user4885";
+		UserVO uservo = userService.selectUser(UserId);	//id로 user정보 가져옴
+		String Name = uservo.getName();
+		String Email = uservo.getEmail();
+		String Password = uservo.getPassword();
+		
+		// testView.html에 데이터 넣고 출력
+		mv.addAttribute("UserId",UserId);
+		mv.addAttribute("Name",Name);
+		mv.addAttribute("Email",Email);
+		mv.addAttribute("Password",Password);
+		return "success : select user!";
+	}
+	
 	@RequestMapping("insertUser")
 	public @ResponseBody String setUser() throws Exception{
 		UserVO uservo = new UserVO();
@@ -28,7 +54,7 @@ public class EnergySolutionController {
 		uservo.setEmail("user4885@user.com");
 		
 		userService.insertUser(uservo);
-		return "insert : success!";
+		return "success : insert user!";
 	}
 	
 	@RequestMapping("updateUser")
@@ -47,33 +73,14 @@ public class EnergySolutionController {
 		
 		return "update : success!";
 	}
-		
-	@RequestMapping("")
-	public @ResponseBody String mainView() {
-		return "This is home";
-	}
 	
-	@RequestMapping("getUser")
-	public @ResponseBody String getUser(Model mv) {
+	//임시로 URL로 설정. 나중에 바꿀예정!
+	@RequestMapping("deleteUser")
+	public @ResponseBody String deleteUser() {
 		String UserId = "user4885";
-		UserVO uservo = userService.selectUser(UserId);	//id로 user정보 가져옴
-		String Name = uservo.getName();
-		String Email = uservo.getEmail();
-		String Password = uservo.getPassword();
 		
-		// testView.html에 데이터 넣고 출력
-		mv.addAttribute("UserId",UserId);
-		mv.addAttribute("Name",Name);
-		mv.addAttribute("Email",Email);
-		mv.addAttribute("Password",Password);
-		System.out.println("select user!");
-		return null;
+		userService.deleteUser(UserId);
+		
+		return "success : delete user!";
 	}
-	
-	@RequestMapping("sub")
-	public @ResponseBody String sub() throws Exception{
-		return "This is sub";
-	}
-	
-
 }

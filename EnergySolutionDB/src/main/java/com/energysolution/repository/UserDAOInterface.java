@@ -15,6 +15,6 @@ public interface UserDAOInterface {
 	public UserVO selectUser(String UserId);
 	
 	//회원 삭제
-	public void deleteUser();
+	public void deleteUser(String UserId);
 		
 }

@@ -12,5 +12,5 @@ public interface UserMapper {
 	public void insertUser(UserVO uservo);
 	public void updateUser(HashMap<String, String> updateMap);
 	public UserVO selectUser(String UserId);
-	public void deleteUser();
+	public void deleteUser(String UserId);
 }

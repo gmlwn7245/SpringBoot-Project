@@ -31,9 +31,8 @@ public class UserService implements UserServiceInterface {
 	}
 
 	@Override
-	public void deleteUser() {
-		// TODO Auto-generated method stub
-		
+	public void deleteUser(String UserId) {
+		userMapper.deleteUser(UserId);
 	}
 
 }

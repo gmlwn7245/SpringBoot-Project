@@ -34,7 +34,7 @@ public class UserDAO implements UserDAOInterface {
 	}
 
 	@Override
-	public void deleteUser() {
-		
+	public void deleteUser(String UserId) {
+		sqlSession.delete(namespace+".deleteUser",UserId);
 	}
 }
