@@ -1,5 +1,8 @@
 package com.energysolution.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,26 +17,35 @@ import com.energysolution.service.UserService;
 public class EnergySolutionController {
 	
 	@Autowired
-	private UserDAO userdao;
-	
-	@Autowired
 	UserService userService;
 	
 	@RequestMapping("insertUser")
-	public String setUser() throws Exception{
+	public @ResponseBody String setUser() throws Exception{
 		UserVO uservo = new UserVO();
-		uservo.setUserId("user044");
-		uservo.setName("잉유저");
-		uservo.setPassword("4324sdf");
-		uservo.setEmail("user03@user.com");
+		uservo.setUserId("user4885");
+		uservo.setName("사팔팔오");
+		uservo.setPassword("pw4885");
+		uservo.setEmail("user4885@user.com");
 		
-		userdao.insertUser(uservo);
-		return "success!";
+		userService.insertUser(uservo);
+		return "insert : success!";
 	}
 	
-	@RequestMapping("getUser")
-	public UserVO getUser() throws Exception{
-		return null;
+	@RequestMapping("updateUser")
+	public @ResponseBody String updateUser() throws Exception{
+		String UserId = "user4885";
+		UserVO uservo = userService.selectUser(UserId);	//id로 user정보 가져옴
+		String newPW = "4885pw";
+		
+		HashMap<String, String> updateMap = new HashMap<String, String>();
+		updateMap.put("UserId", UserId);
+		updateMap.put("originPW", uservo.getPassword());
+		updateMap.put("newPW", newPW);
+		
+		
+		userService.updateUser(updateMap);
+		
+		return "update : success!";
 	}
 		
 	@RequestMapping("")
@@ -41,14 +53,15 @@ public class EnergySolutionController {
 		return "This is home";
 	}
 	
-	@RequestMapping("test")
-	public @ResponseBody String getView(Model mv) {
-		String UserId = "user01";
-		UserVO uservo = userService.selectUser(UserId);
+	@RequestMapping("getUser")
+	public @ResponseBody String getUser(Model mv) {
+		String UserId = "user4885";
+		UserVO uservo = userService.selectUser(UserId);	//id로 user정보 가져옴
 		String Name = uservo.getName();
 		String Email = uservo.getEmail();
 		String Password = uservo.getPassword();
 		
+		// testView.html에 데이터 넣고 출력
 		mv.addAttribute("UserId",UserId);
 		mv.addAttribute("Name",Name);
 		mv.addAttribute("Email",Email);

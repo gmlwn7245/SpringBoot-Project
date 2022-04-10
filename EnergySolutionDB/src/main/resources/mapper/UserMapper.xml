@@ -10,4 +10,8 @@
 		SELECT * FROM User WHERE UserId=#{UserId}
 	</select>
 	
+	<update id="updateUser" parameterType="hashmap">
+		UPDATE User SET Password=#{newPW} WHERE UserId=#{UserId} AND Password=#{originPW}
+	</update>
+	
 </mapper>

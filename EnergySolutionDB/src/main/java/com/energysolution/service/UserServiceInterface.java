@@ -1,5 +1,7 @@
 package com.energysolution.service;
 
+import java.util.HashMap;
+
 import com.energysolution.domain.UserVO;
 
 public interface UserServiceInterface {
@@ -7,7 +9,7 @@ public interface UserServiceInterface {
 	public void insertUser(UserVO user);
 	
 	//회원 수정 (비밀번호)
-	public void updateUser(String originPW, String newPW);
+	public void updateUser(HashMap<String, String> updateMap);
 	
 	//회원 검색
 	public UserVO selectUser(String UserId);

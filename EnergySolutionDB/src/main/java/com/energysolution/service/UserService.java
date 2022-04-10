@@ -1,10 +1,13 @@
 package com.energysolution.service;
 
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.energysolution.domain.UserVO;
 import com.energysolution.mapper.UserMapper;
+import com.energysolution.repository.UserDAO;
 
 @Service
 public class UserService implements UserServiceInterface {
@@ -13,14 +16,13 @@ public class UserService implements UserServiceInterface {
 	private UserMapper userMapper;
 	
 	@Override
-	public void insertUser(UserVO user) {
-		
+	public void insertUser(UserVO uservo) {
+		userMapper.insertUser(uservo);
 	}
 
 	@Override
-	public void updateUser(String originPW, String newPW) {
-		// TODO Auto-generated method stub
-		
+	public void updateUser(HashMap<String, String> updateMap) {
+		userMapper.updateUser(updateMap);	
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package com.energysolution.repository;
 
+import java.util.HashMap;
+
 import com.energysolution.domain.UserVO;
 
 public interface UserDAOInterface {
@@ -7,7 +9,7 @@ public interface UserDAOInterface {
 	public void insertUser(UserVO user);
 	
 	//회원 수정 (비밀번호)
-	public void updateUser(String originPW, String newPW);
+	public void updateUser(UserVO uservo);
 	
 	//회원 검색
 	public UserVO selectUser(String UserId);

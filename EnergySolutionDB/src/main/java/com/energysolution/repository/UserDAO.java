@@ -1,5 +1,7 @@
 package com.energysolution.repository;
 
+import java.util.HashMap;
+
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +19,13 @@ public class UserDAO implements UserDAOInterface {
 	
 
 	@Override
-	public void insertUser(UserVO user) {
-		sqlSession.insert(namespace+".insertUser", user);
+	public void insertUser(UserVO uservo) {
+		sqlSession.insert(namespace+".insertUser", uservo);
 	}
 
 	@Override
-	public void updateUser(String originPW, String newPW) {
-		
+	public void updateUser(UserVO uservo) {
+		sqlSession.update(namespace+".updateUser",uservo);
 	}
 
 	@Override
@@ -35,7 +37,4 @@ public class UserDAO implements UserDAOInterface {
 	public void deleteUser() {
 		
 	}
-	
-
-
 }
