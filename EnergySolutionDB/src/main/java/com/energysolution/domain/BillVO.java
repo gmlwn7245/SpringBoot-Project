@@ -9,10 +9,34 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class BillVO {
-	private String BillId;
-	private Date Billdate;
-	private Long ElectricityFee;
-	private Long HeatingFee;
-	private Long WaterFee;	
-	//private Long totalFee;
+	
+	//필요한 필드값
+	private int BillId;
+	private String date;
+	private int Totalfee;
+	
+	
+	//출력
+	public int getBillId() {
+		return BillId;
+	}
+	public String getBilldate() {
+		return date;
+	}
+	
+	public int getTotalFee() {
+		return Totalfee;
+	}
+	
+	//입력
+	public void setBillId(int BillId) {
+		this.BillId = BillId;
+	}
+	public void setBilldate(String date) {
+		this.date = date;
+	}
+	public void setTotalFee(int Totalfee) {
+		this.Totalfee = Totalfee;
+	}
+
 }

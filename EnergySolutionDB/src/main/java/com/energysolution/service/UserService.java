@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.energysolution.domain.UserVO;
 import com.energysolution.mapper.UserMapper;
-import com.energysolution.repository.UserDAO;
 
 @Service
 public class UserService implements UserServiceInterface {

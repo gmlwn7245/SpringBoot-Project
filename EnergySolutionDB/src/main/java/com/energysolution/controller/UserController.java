@@ -14,7 +14,7 @@ import com.energysolution.repository.UserDAO;
 import com.energysolution.service.UserService;
 
 @Controller
-public class EnergySolutionController {
+public class UserController {
 	
 	@Autowired
 	UserService userService;

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.energysolution.mapper.BillMapper">
+	
+	<insert id="insertBill">
+		INSERT INTO Bill(BillId, date, Totalfee) VALUES (#{BillId},#{date},#{Totalfee})
+	</insert>
+	
+	<delete id="deleteBill">
+		DELETE FROM Bill WHERE BillId=#{BillId}
+	</delete>
+	
+</mapper>
