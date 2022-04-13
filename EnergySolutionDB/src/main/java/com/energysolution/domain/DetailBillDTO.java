@@ -12,7 +12,7 @@ public class DetailBillDTO {
 	
 	//필요한 필드값
 	private int BillId;
-	private int Waterfee;	
+	private int Waterfee;
 	private int Heatingfee;
 	private int Electricityfee;
 	//해당 field의 요금값

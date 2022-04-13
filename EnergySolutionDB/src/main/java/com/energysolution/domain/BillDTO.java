@@ -10,7 +10,6 @@ import lombok.Setter;
 public class BillDTO {
 	
 	//필요한 필드값
-	private String UserId;
 	private int BillId;
 	private String date;
 	private int Totalfee;
@@ -27,7 +26,6 @@ public class BillDTO {
 		return Totalfee;
 	}
 
-	
 	//입력
 	public void setBillId(int BillId) {
 		this.BillId = BillId;

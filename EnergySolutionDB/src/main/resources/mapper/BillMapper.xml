@@ -26,4 +26,12 @@
 		DELETE FROM payment WHERE BillId=#{BillId}
 	</delete>
 	
+	<select id="getBill" parameterType="hashmap" resultType="com.energysolution.domain.BillDTO">
+		SELECT * FROM Bill WHERE BillId IN (SELECT BillId from payment WHERE UserId=#{UserId} AND BillId = (SELECT BillId FROM Bill WHERE date=#{date}))
+	</select>
+	
+	<select id="getDetailBill" parameterType="hashmap" resultType="com.energysolution.domain.DetailBillDTO">
+		SELECT * FROM detailBill WHERE BillId IN (SELECT BillId from payment WHERE UserId=#{UserId} AND BillId = (SELECT BillId FROM Bill WHERE date=#{date}))
+	</select>
+	
 </mapper>

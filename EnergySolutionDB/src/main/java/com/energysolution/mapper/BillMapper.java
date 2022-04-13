@@ -13,6 +13,7 @@ public interface BillMapper {
 	public void insertPayment(PaymentDTO paymentDTO);
 	
 	public BillDTO getBill(HashMap<String, String> updateBillMap);
+	public DetailBillDTO getDetailBill(HashMap<String, String> updateBillMap);
 	
 	public void deleteBill(int BillId);
 	public void deleteDetailBill(int BillId);

@@ -1,7 +1,7 @@
 package com.energysolution.controller;
 
-import java.time.LocalDate;
-import java.util.Date;
+
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,9 +33,11 @@ public class BillController {
 	
 	@RequestMapping("getBill")
 	public @ResponseBody String getBill(Model mv) {
-		String UserId = "user01";		
+		String UserId = "user001";		
 		int term = 12;
-		billService.getBill(UserId, term);
+		
+		ArrayList<BillDTO> arrDTO;
+		arrDTO = billService.getBill(UserId, term);
 		
 		return "success : select user!";
 	}
