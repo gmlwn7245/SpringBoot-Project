@@ -1,16 +1,25 @@
 package com.energysolution.controller;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+
 import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.energysolution.domain.UserVO;
-import com.energysolution.repository.UserDAO;
+import com.energysolution.domain.UserDTO;
 import com.energysolution.service.UserService;
 
 @Controller
@@ -19,8 +28,16 @@ public class UserController {
 	@Autowired
 	UserService userService;
 	
+	private Reader reader;
+	private JSONParser parser;
+	private JSONObject jsonObject;
+	
 	@RequestMapping("")
-	public @ResponseBody String mainView() {
+	public @ResponseBody String mainView() throws IOException, ParseException {
+		reader = new FileReader("C:\\Users\\82109\\git\\SpringBoot-Project\\EnergySolutionDB\\src\\main\\java\\com\\energysolution\\controller\\Data.json");
+		parser = new JSONParser();
+		jsonObject = (JSONObject) parser.parse(reader) ;
+		
 		return "This is home";
 	}
 	
@@ -31,44 +48,51 @@ public class UserController {
 	
 	@RequestMapping("getUser")
 	public @ResponseBody String getUser(Model mv) {
-		String UserId = "user4885";
-		UserVO uservo = userService.selectUser(UserId);	//id로 user정보 가져옴
-		String Name = uservo.getName();
-		String Email = uservo.getEmail();
-		String Password = uservo.getPassword();
+		JSONArray jsonArr = (JSONArray)jsonObject.get("SelectUser");
+		JSONObject obj = (JSONObject) jsonArr.get(0);
+		
+		String UserId = (String)obj.get("UserId");
+		
+		UserDTO userDTO = userService.selectUser(UserId);	//id로 user정보 가져옴
+		String Name = userDTO.getName();
+		String Email = userDTO.getEmail();
+		String Password = userDTO.getPassword();
+		
+		System.out.println("Name: "+Name);
+		System.out.println("Email: "+Email);
+		System.out.println("Password: "+Password);
+		
 		
 		// testView.html에 데이터 넣고 출력
-		mv.addAttribute("UserId",UserId);
+		/*mv.addAttribute("UserId",UserId);
 		mv.addAttribute("Name",Name);
 		mv.addAttribute("Email",Email);
-		mv.addAttribute("Password",Password);
+		mv.addAttribute("Password",Password);*/
+		
 		return "success : select user!";
 	}
 	
 	@RequestMapping("insertUser")
-	public @ResponseBody String setUser() throws Exception{
-		UserVO uservo = new UserVO();
-		uservo.setUserId("user4885");
-		uservo.setName("사팔팔오");
-		uservo.setPassword("pw4885");
-		uservo.setEmail("user4885@user.com");
+	public @ResponseBody String insertUser() {
+		JSONArray jsonArr = (JSONArray)jsonObject.get("InsertUser");
+		JSONObject obj = (JSONObject) jsonArr.get(0);
 		
-		userService.insertUser(uservo);
+		UserDTO userDTO = new UserDTO((String)obj.get("UserId"),(String)obj.get("Name"),(String)obj.get("Password"),(String)obj.get("Email"));
+		
+		userService.insertUser(userDTO);
 		return "success : insert user!";
 	}
 	
 	@RequestMapping("updateUser")
 	public @ResponseBody String updateUser() throws Exception{
-		String UserId = "user4885";
-		UserVO uservo = userService.selectUser(UserId);	//id로 user정보 가져옴
-		String newPW = "4885pw";
+		JSONArray jsonArr = (JSONArray)jsonObject.get("UpdateUser");
+		JSONObject obj = (JSONObject) jsonArr.get(0);
 		
 		HashMap<String, String> updateMap = new HashMap<String, String>();
-		updateMap.put("UserId", UserId);
-		updateMap.put("originPW", uservo.getPassword());
-		updateMap.put("newPW", newPW);
-		
-		
+		updateMap.put("UserId", (String)obj.get("UserId"));
+		updateMap.put("originPW", (String)obj.get("originPW"));
+		updateMap.put("newPW", (String)obj.get("newPW"));
+				
 		userService.updateUser(updateMap);
 		
 		return "update : success!";
@@ -77,9 +101,10 @@ public class UserController {
 	//임시로 URL로 설정. 나중에 바꿀예정!
 	@RequestMapping("deleteUser")
 	public @ResponseBody String deleteUser() {
-		String UserId = "user4885";
+		JSONArray jsonArr = (JSONArray)jsonObject.get("DeleteUser");
+		JSONObject obj = (JSONObject) jsonArr.get(0);
 		
-		userService.deleteUser(UserId);
+		userService.deleteUser((String)obj.get("UserId"));
 		
 		return "success : delete user!";
 	}

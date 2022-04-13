@@ -2,24 +2,24 @@ package com.energysolution.repository;
 
 import org.mybatis.spring.SqlSessionTemplate;
 
-import com.energysolution.domain.BillVO;
+import com.energysolution.domain.BillDTO;
 
 public class BillDAO implements BillDAOInterface {
-	BillVO bill;
+	BillDTO bill;
 	private final SqlSessionTemplate sqlSession = null;
 	
-	public BillVO test() {
+	public BillDTO test() {
 		return sqlSession.selectOne(null);
 	}
 	
 	@Override
-	public BillVO insert(BillVO bill)  {
+	public BillDTO insert(BillDTO bill)  {
 		this.bill = bill;
 		
 		return this.bill;
 	}
 	@Override
-	public BillVO select() {
+	public BillDTO select() {
 		return bill;
 	}
 

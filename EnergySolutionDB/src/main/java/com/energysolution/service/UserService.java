@@ -5,7 +5,7 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.energysolution.domain.UserVO;
+import com.energysolution.domain.UserDTO;
 import com.energysolution.mapper.UserMapper;
 
 @Service
@@ -15,7 +15,7 @@ public class UserService implements UserServiceInterface {
 	private UserMapper userMapper;
 	
 	@Override
-	public void insertUser(UserVO uservo) {
+	public void insertUser(UserDTO uservo) {
 		userMapper.insertUser(uservo);
 	}
 
@@ -25,7 +25,7 @@ public class UserService implements UserServiceInterface {
 	}
 
 	@Override
-	public UserVO selectUser(String UserId) {
+	public UserDTO selectUser(String UserId) {
 		return userMapper.selectUser(UserId);
 	}
 

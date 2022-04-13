@@ -6,7 +6,7 @@
 		INSERT INTO User(UserId, Name, Password, Email) VALUES (#{UserId},#{Name},#{Password},#{Email})
 	</insert>
 	
-	<select id="selectUser" parameterType="String" resultType="com.energysolution.domain.UserVO">
+	<select id="selectUser" parameterType="String" resultType="com.energysolution.domain.UserDTO">
 		SELECT * FROM User WHERE UserId=#{UserId}
 	</select>
 	

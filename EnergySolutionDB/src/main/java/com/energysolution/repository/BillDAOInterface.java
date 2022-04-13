@@ -1,11 +1,11 @@
 package com.energysolution.repository;
 
-import com.energysolution.domain.BillVO;
+import com.energysolution.domain.BillDTO;
 
 public interface BillDAOInterface {
 	//고지서 저장
-	public BillVO insert(BillVO bill);
+	public BillDTO insert(BillDTO bill);
 		
 	//고지서 검색
-	public BillVO select();
+	public BillDTO select();
 }

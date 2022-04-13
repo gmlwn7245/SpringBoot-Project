@@ -1,5 +1,7 @@
 package com.energysolution.controller;
 
+import java.time.LocalDate;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -7,7 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.energysolution.domain.BillVO;
+import com.energysolution.domain.BillDTO;
+import com.energysolution.domain.DetailBillDTO;
+import com.energysolution.domain.PaymentDTO;
 import com.energysolution.service.BillService;
 
 @Controller
@@ -28,29 +32,34 @@ public class BillController {
 	}
 	
 	@RequestMapping("getBill")
-	public @ResponseBody String getUser(Model mv) {
-		/*int BillId = 0001;
-		BillVO billvo = billService.selectBill(BillId); //id로 user정보 가져옴
-		String Name = uservo.getName();
-		String Email = uservo.getEmail();
-		String Password = uservo.getPassword();
+	public @ResponseBody String getBill(Model mv) {
+		String UserId = "user01";		
+		int term = 12;
+		billService.getBill(UserId, term);
 		
-		// testView.html에 데이터 넣고 출력
-		mv.addAttribute("UserId",UserId);
-		mv.addAttribute("Name",Name);
-		mv.addAttribute("Email",Email);
-		mv.addAttribute("Password",Password);*/
 		return "success : select user!";
 	}
 	
 	@RequestMapping("insertBill")
 	public @ResponseBody String setBill() throws Exception{
-		BillVO billvo = new BillVO();
-		billvo.setBillId(1000);
-		billvo.setBilldate("2022-01");
-		billvo.setTotalFee(14000);
 		
-		billService.insertBill(billvo);
+		BillDTO billDTO = new BillDTO();
+		billDTO.setBillId(10010);
+		billDTO.setBilldate("2022-1");
+		billDTO.setTotalfee(14000);
+		
+		DetailBillDTO detailbillDTO = new DetailBillDTO();
+		
+		detailbillDTO.setElectricityfee(10000);
+		detailbillDTO.setWaterfee(2000);
+		detailbillDTO.setHeatingfee(2000);
+		
+		PaymentDTO paymentDTO = new PaymentDTO("user01",10010);
+		
+		billService.insertBill(billDTO);
+		billService.insertDetailBill(detailbillDTO);
+		billService.insertPayment(paymentDTO);
+		
 		return "success : insert bill!";
 	}
 	

@@ -1,0 +1,36 @@
+{
+	"InsertUser" : [{
+		"UserId" : "유저테스트11",
+		"Name" : "최강유저11",
+		"Password" : "passwordTest11",
+		"Email" : "User11@naver.com"
+	}],
+	"SelectUser" : [{
+		"UserId":"유저테스트11"
+	}],
+	"UpdateUser": [{
+		"UserId" : "유저테스트11",
+		"originPW" : "passwordTest11",
+		"newPW" : "changedPW"
+	}],
+	"DeleteUser":[{
+		"UserId" : "유저테스트11"
+	}],
+	"InsertBill" : [{
+		"UserId" : "유저테스트11",
+		"BillId" : 1000,
+		"date" : "2022-02",
+		"TotalFee" : 14000,
+		"WaterFee" : 7000,
+		"HeatingFee" : 3000,
+		"ElectricityFee" : 4000
+	}],
+	"SelectBill" : [{
+		"UserId" : "유저테스트11",
+		"startDate" : "2022-01",
+		"endDate" : "2022-04",
+		"SearchField" : "ElectricityFee",
+		"TotalFee" : 30000,
+		"DetailFee" : 20000
+	}]
+}

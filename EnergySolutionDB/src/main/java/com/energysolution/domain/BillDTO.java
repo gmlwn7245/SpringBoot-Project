@@ -1,21 +1,20 @@
 package com.energysolution.domain;
 
 import lombok.Getter;
-import java.sql.Date;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class BillVO {
+public class BillDTO {
 	
 	//필요한 필드값
+	private String UserId;
 	private int BillId;
 	private String date;
 	private int Totalfee;
-	
-	
+		
 	//출력
 	public int getBillId() {
 		return BillId;
@@ -24,9 +23,10 @@ public class BillVO {
 		return date;
 	}
 	
-	public int getTotalFee() {
+	public int getTotalfee() {
 		return Totalfee;
 	}
+
 	
 	//입력
 	public void setBillId(int BillId) {
@@ -35,8 +35,8 @@ public class BillVO {
 	public void setBilldate(String date) {
 		this.date = date;
 	}
-	public void setTotalFee(int Totalfee) {
+	public void setTotalfee(int Totalfee) {
 		this.Totalfee = Totalfee;
-	}
+	}	
 
 }

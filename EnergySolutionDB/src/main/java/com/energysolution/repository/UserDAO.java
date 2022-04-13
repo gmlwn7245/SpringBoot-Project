@@ -7,7 +7,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.energysolution.domain.UserVO;
+import com.energysolution.domain.UserDTO;
 
 @Repository("userDAO")
 public class UserDAO implements UserDAOInterface {
@@ -19,17 +19,17 @@ public class UserDAO implements UserDAOInterface {
 	
 
 	@Override
-	public void insertUser(UserVO uservo) {
+	public void insertUser(UserDTO uservo) {
 		sqlSession.insert(namespace+".insertUser", uservo);
 	}
 
 	@Override
-	public void updateUser(UserVO uservo) {
+	public void updateUser(UserDTO uservo) {
 		sqlSession.update(namespace+".updateUser",uservo);
 	}
 
 	@Override
-	public UserVO selectUser(String UserId) {
+	public UserDTO selectUser(String UserId) {
 		return sqlSession.selectOne(namespace+".selectUser", UserId);
 	}
 

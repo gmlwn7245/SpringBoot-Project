@@ -6,8 +6,24 @@
 		INSERT INTO Bill(BillId, date, Totalfee) VALUES (#{BillId},#{date},#{Totalfee})
 	</insert>
 	
+	<insert id="insertDetailBill">
+		INSERT INTO detailBill(BillId, Waterfee, Heatingfee, Electricityfee) VALUES (#{BillId},#{Waterfee},#{Heatingfee},#{Electricityfee})
+	</insert>
+	
+	<insert id="insertPayment">
+		INSERT INTO payment(UserId, BillId) VALUES (#{UserId},#{BillId})
+	</insert>
+		
 	<delete id="deleteBill">
 		DELETE FROM Bill WHERE BillId=#{BillId}
+	</delete>
+	
+	<delete id="deleteDetailBill">
+		DELETE FROM detailBill WHERE BillId=#{BillId}
+	</delete>
+	
+	<delete id="deletePayment">
+		DELETE FROM payment WHERE BillId=#{BillId}
 	</delete>
 	
 </mapper>
