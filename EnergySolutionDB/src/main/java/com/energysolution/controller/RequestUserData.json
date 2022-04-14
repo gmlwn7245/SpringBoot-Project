@@ -1,0 +1,26 @@
+{
+	"InsertUser" : [{
+		"UserId" : "User0414",
+		"Name" : "김유저앵",
+		"Password" : "PW0414",
+		"Email" : "User11@naver.com"
+	}],
+	"LoginUser" : [{
+		"UserId":"User0414"
+	}],
+	"UpdateUser": [{
+		"UserId" : "User0414",
+		"originPW" : "PW0414",
+		"newPW" : "changedPW0414"
+	}],
+	"DeleteUser":[{
+		"UserId" : "User0414"
+	}],
+	"findID" : [{
+		"Email" : "User11@naver.com"
+	}],
+	"findPW" : [{
+		"UserId" : "User0414",
+		"Email" : "User11@naver.com"
+	}]
+}
