@@ -13,17 +13,21 @@
 	<insert id="insertPayment">
 		INSERT INTO payment(UserId, BillId) VALUES (#{UserId},#{BillId})
 	</insert>
+	
+	<update id="updateBill">
+		UPDATE ${table} SET ${Field}=#{fee} WHERE BillId IN (SELECT BillId from payment WHERE UserId=#{UserId} AND BillId = (SELECT BillId FROM Bill WHERE date=#{date}))
+	</update>
 		
 	<delete id="deleteBill">
-		DELETE FROM Bill WHERE BillId=#{BillId}
+		DELETE FROM Bill WHERE BillId IN (SELECT BillId from payment WHERE UserId=#{UserId} AND BillId = (SELECT BillId FROM Bill WHERE date=#{date}))
 	</delete>
 	
 	<delete id="deleteDetailBill">
-		DELETE FROM detailBill WHERE BillId=#{BillId}
+		DELETE FROM detailBill WHERE BillId IN (SELECT BillId from payment WHERE UserId=#{UserId} AND BillId = (SELECT BillId FROM Bill WHERE date=#{date}))
 	</delete>
 	
 	<delete id="deletePayment">
-		DELETE FROM payment WHERE BillId=#{BillId}
+		DELETE FROM payment WHERE BillId IN (SELECT BillId from payment WHERE UserId=#{UserId} AND BillId = (SELECT BillId FROM Bill WHERE date=#{date}))
 	</delete>
 	
 	<select id="getBill" parameterType="hashmap" resultType="com.energysolution.domain.BillDTO">

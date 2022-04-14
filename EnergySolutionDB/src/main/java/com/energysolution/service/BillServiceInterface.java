@@ -1,6 +1,6 @@
 package com.energysolution.service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.energysolution.domain.BillDTO;
 import com.energysolution.domain.DetailBillDTO;
@@ -13,9 +13,12 @@ public interface BillServiceInterface {
 	public void insertDetailBill(DetailBillDTO detailbillDTO);
 	
 	// 종합고지서 조회 (UserId와 Date)
-	public ArrayList<BillDTO> getBill(String UserId, int term);
+	public List<BillDTO> getBill(String UserId, int term);
+	
+	// 고지서 수정
+	public void updateBill(String UserId, String Date, String Field, int fee);
 	
 	// 고지서 삭제
-	public void deleteBill(int BillId);
+	public void deleteBill(String UserId, String Date);
 	
 }

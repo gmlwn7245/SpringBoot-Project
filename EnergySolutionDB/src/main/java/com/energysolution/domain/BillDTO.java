@@ -13,6 +13,12 @@ public class BillDTO {
 	private int BillId;
 	private String date;
 	private int Totalfee;
+	
+	public BillDTO(int BillId, String date, int Totalfee) {
+		this.BillId = BillId;
+		this.date = date;
+		this.Totalfee =Totalfee;
+	}
 		
 	//출력
 	public int getBillId() {
@@ -22,7 +28,7 @@ public class BillDTO {
 		return date;
 	}
 	
-	public int getTotalfee() {
+	public long getTotalfee() {
 		return Totalfee;
 	}
 

@@ -12,10 +12,12 @@ public interface BillMapper {
 	public void insertDetailBill(DetailBillDTO detailbillDTO);
 	public void insertPayment(PaymentDTO paymentDTO);
 	
-	public BillDTO getBill(HashMap<String, String> updateBillMap);
-	public DetailBillDTO getDetailBill(HashMap<String, String> updateBillMap);
+	public BillDTO getBill(HashMap<String, String> getBillMap);
+	public DetailBillDTO getDetailBill(HashMap<String, String> getDetailBillMap);
 	
-	public void deleteBill(int BillId);
-	public void deleteDetailBill(int BillId);
-	public void deletePayment(int BillId);
+	public void updateBill(HashMap<String, String> deleteBillMap);
+	
+	public void deleteBill(HashMap<String, String> deleteBillMap);
+	public void deleteDetailBill(HashMap<String, String> deleteDetailBillMap);
+	public void deletePayment(HashMap<String, String> deletePaymentMap);
 }
