@@ -1,6 +1,6 @@
 package com.energysolution.repository;
 
-import com.energysolution.domain.BillDTO;
+import com.energysolution.dto.BillDTO;
 
 public interface BillDAOInterface {
 	//고지서 저장

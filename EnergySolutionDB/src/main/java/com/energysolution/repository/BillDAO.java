@@ -2,7 +2,7 @@ package com.energysolution.repository;
 
 import org.mybatis.spring.SqlSessionTemplate;
 
-import com.energysolution.domain.BillDTO;
+import com.energysolution.dto.BillDTO;
 
 public class BillDAO implements BillDAOInterface {
 	BillDTO bill;

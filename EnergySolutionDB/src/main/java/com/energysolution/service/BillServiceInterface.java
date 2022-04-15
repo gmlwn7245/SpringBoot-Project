@@ -2,9 +2,9 @@ package com.energysolution.service;
 
 import java.util.List;
 
-import com.energysolution.domain.BillDTO;
-import com.energysolution.domain.DetailBillDTO;
-import com.energysolution.domain.PaymentDTO;
+import com.energysolution.dto.BillDTO;
+import com.energysolution.dto.DetailBillDTO;
+import com.energysolution.dto.PaymentDTO;
 
 public interface BillServiceInterface {
 	//고지서 저장

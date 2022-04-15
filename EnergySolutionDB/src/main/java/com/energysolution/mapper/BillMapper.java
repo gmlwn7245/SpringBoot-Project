@@ -2,9 +2,10 @@ package com.energysolution.mapper;
 
 import java.util.HashMap;
 import org.apache.ibatis.annotations.Mapper;
-import com.energysolution.domain.BillDTO;
-import com.energysolution.domain.DetailBillDTO;
-import com.energysolution.domain.PaymentDTO;
+
+import com.energysolution.dto.BillDTO;
+import com.energysolution.dto.DetailBillDTO;
+import com.energysolution.dto.PaymentDTO;
 
 @Mapper
 public interface BillMapper {	

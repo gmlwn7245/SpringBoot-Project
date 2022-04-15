@@ -2,7 +2,7 @@ package com.energysolution.repository;
 
 import java.util.HashMap;
 
-import com.energysolution.domain.UserDTO;
+import com.energysolution.dto.UserDTO;
 
 public interface UserDAOInterface {
 	//회원 저장

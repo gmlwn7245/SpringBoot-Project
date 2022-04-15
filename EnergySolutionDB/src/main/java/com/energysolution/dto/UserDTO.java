@@ -1,6 +1,4 @@
-package com.energysolution.domain;
-
-import java.util.Objects;
+package com.energysolution.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

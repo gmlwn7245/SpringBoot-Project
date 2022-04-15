@@ -1,7 +1,6 @@
-package com.energysolution.domain;
+package com.energysolution.dto;
 
 import lombok.Getter;
-import java.sql.Date;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 

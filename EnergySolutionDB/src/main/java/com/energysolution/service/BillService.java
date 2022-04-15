@@ -8,9 +8,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.energysolution.domain.BillDTO;
-import com.energysolution.domain.DetailBillDTO;
-import com.energysolution.domain.PaymentDTO;
+import com.energysolution.dto.BillDTO;
+import com.energysolution.dto.DetailBillDTO;
+import com.energysolution.dto.PaymentDTO;
 import com.energysolution.mapper.BillMapper;
 
 @Service

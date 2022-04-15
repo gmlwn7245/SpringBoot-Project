@@ -17,9 +17,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.energysolution.domain.BillDTO;
-import com.energysolution.domain.DetailBillDTO;
-import com.energysolution.domain.PaymentDTO;
+import com.energysolution.dto.BillDTO;
+import com.energysolution.dto.DetailBillDTO;
+import com.energysolution.dto.PaymentDTO;
 import com.energysolution.service.BillService;
 
 @Controller

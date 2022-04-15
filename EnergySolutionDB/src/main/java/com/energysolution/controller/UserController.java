@@ -20,7 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.energysolution.domain.UserDTO;
+import com.energysolution.dto.UserDTO;
 import com.energysolution.service.UserService;
 
 @Controller
@@ -49,31 +49,28 @@ public class UserController {
 	
 	// 로그인
 	@RequestMapping("LoginUser")
-	public String LoginUser(Model mv) {
+	public @ResponseBody String LoginUser() {
 		JSONArray jsonArr = (JSONArray)jsonObject.get("LoginUser");
 		JSONObject obj = (JSONObject) jsonArr.get(0);
 		
 		String UserId = (String)obj.get("UserId");
+		String Password = (String)obj.get("Password");
+		String result = userService.LoginUser(UserId, Password);
 		
-		UserDTO userDTO = userService.LoginUser(UserId);
-		String Name = userDTO.getName();
-		String Email = userDTO.getEmail();
-		String Password = userDTO.getPassword();
-		
-		// User.html에 데이터 넣고 출력
+		/*// User.html에 데이터 넣고 출력
 		mv.addAttribute("Successfield", "로그인성공");
 		mv.addAttribute("UserId",UserId);
 		mv.addAttribute("Name",Name);
 		mv.addAttribute("Email",Email);
-		mv.addAttribute("Password",Password);
+		mv.addAttribute("Password",Password);*/
 		
-		return "User";
+		return result;
 	}
 	
 	
 	// 회원가입
 	@RequestMapping("InsertUser")
-	public String InsertUser(Model mv) {
+	public @ResponseBody String InsertUser() {
 		JSONArray jsonArr = (JSONArray)jsonObject.get("InsertUser");
 		JSONObject obj = (JSONObject) jsonArr.get(0);
 			
@@ -84,16 +81,10 @@ public class UserController {
 		
 		UserDTO userDTO = new UserDTO(UserId,Name,Password,Email);
 
-		userService.insertUser(userDTO);
+		String result = userService.insertUser(userDTO);
 		
-		// User.html에 데이터 넣고 출력
-		mv.addAttribute("Successfield", "회원가입성공");
-		mv.addAttribute("UserId",UserId);
-		mv.addAttribute("Name",Name);
-		mv.addAttribute("Email",Email);
-		mv.addAttribute("Password",Password);
 		
-		return "User";
+		return result;
 	}
 	
 	//pw 바꾸기
@@ -106,10 +97,12 @@ public class UserController {
 		updateMap.put("UserId", (String)obj.get("UserId"));
 		updateMap.put("originPW", (String)obj.get("originPW"));
 		updateMap.put("newPW", (String)obj.get("newPW"));
-				
-		userService.updateUser(updateMap);
 		
-		return "update : success!";
+		System.out.println((String)obj.get("UserId"));
+		
+		String result = userService.updateUser(updateMap);
+		
+		return result;
 	}
 	
 	//임시로 URL로 설정. 나중에 바꿀예정!
@@ -118,9 +111,11 @@ public class UserController {
 		JSONArray jsonArr = (JSONArray)jsonObject.get("DeleteUser");
 		JSONObject obj = (JSONObject) jsonArr.get(0);
 		
-		userService.deleteUser((String)obj.get("UserId"));
+		String result = userService.deleteUser((String)obj.get("UserId"),(String)obj.get("Password"));
 		
-		return "success : delete user!";
+		//Payment - Bill 테이블과 얽혀있어서 더 구현해야함!
+		
+		return result;
 	}
 	
 	//id 찾기
@@ -129,13 +124,16 @@ public class UserController {
 		JSONArray jsonArr = (JSONArray)jsonObject.get("findID");
 		JSONObject obj = (JSONObject) jsonArr.get(0);
 		
-		List<UserDTO> list = userService.FindUserId((String)obj.get("Email"));
+		List<String> list = userService.FindUserId((String)obj.get("Email"));
 		
-		for(UserDTO dto : list) {
-			System.out.println("UserId:"+dto.getUserId());
+		if(list.size()==0)
+			return "fail";
+		
+		for(String str : list) {
+			System.out.println("UserId:"+str);
 		}
 		
-		return "success : find user!";
+		return "success";
 	}
 	
 	//PW 찾기
@@ -147,27 +145,12 @@ public class UserController {
 		HashMap<String, String> findUserPWMap = new HashMap<String, String>();
 		findUserPWMap.put("UserId", (String)obj.get("UserId"));
 		findUserPWMap.put("Email", (String)obj.get("Email"));
-		UserDTO userDTO = userService.FindUserPW(findUserPWMap);
+		String result = userService.FindUserPW(findUserPWMap);
+	
+		//이메일로 전송하기
 		
-		// 임시 비밀번호 발급
-		String temp = "tempPW0414";
-		HashMap<String, String> updateMap = new HashMap<String, String>();
-		updateMap.put("UserId", userDTO.getUserId());
-		updateMap.put("originPW", userDTO.getPassword());
-		updateMap.put("newPW", temp);
-		userService.updateUser(updateMap);
-		
-		//이메일로 전송하는 코드 추가!
-		
-		System.out.println("Success : PW is changed");
-		
-		// User.html에 데이터 넣고 출력
-		mv.addAttribute("Successfield", "로그인성공");
-		mv.addAttribute("UserId",userDTO.getUserId());
-		mv.addAttribute("Name",userDTO.getUserName());
-		mv.addAttribute("Email",userDTO.getUserEmail());
-		mv.addAttribute("Password",userDTO.getUserPassword());
-		
-		return "Success : PW is changed";
+		return result;
 	}
+	
+	
 }

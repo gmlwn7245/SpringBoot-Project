@@ -7,7 +7,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.energysolution.domain.UserDTO;
+import com.energysolution.dto.UserDTO;
 
 @Repository("userDAO")
 public class UserDAO implements UserDAOInterface {

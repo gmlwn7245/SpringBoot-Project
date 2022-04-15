@@ -1,4 +1,4 @@
-package com.energysolution.domain;
+package com.energysolution.dto;
 
 
 import lombok.Getter;

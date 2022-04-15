@@ -1,26 +1,28 @@
 {
 	"InsertUser" : [{
-		"UserId" : "User0414",
-		"Name" : "김유저앵",
-		"Password" : "PW0414",
-		"Email" : "User11@naver.com"
+		"UserId" : "User0415",
+		"Name" : "김유정",
+		"Password" : "PW0415",
+		"Email" : "User0415@naver.com"
 	}],
 	"LoginUser" : [{
-		"UserId":"User0414"
+		"UserId":"User0415",
+		"Password":"PW0415"
 	}],
 	"UpdateUser": [{
-		"UserId" : "User0414",
-		"originPW" : "PW0414",
-		"newPW" : "changedPW0414"
+		"UserId" : "User0415",
+		"originPW" : "PW0415",
+		"newPW" : "changedPW0415"
 	}],
 	"DeleteUser":[{
-		"UserId" : "User0414"
+		"UserId" : "User0415",
+		"Password": "tempPW0415"
 	}],
 	"findID" : [{
-		"Email" : "User11@naver.com"
+		"Email" : "User0415@naver.com"
 	}],
 	"findPW" : [{
-		"UserId" : "User0414",
-		"Email" : "User11@naver.com"
+		"UserId" : "User0415",
+		"Email" : "User0415@naver.com"
 	}]
 }

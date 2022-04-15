@@ -6,15 +6,15 @@
 		INSERT INTO User(UserId, Name, Password, Email) VALUES (#{UserId},#{Name},#{Password},#{Email})
 	</insert>
 	
-	<select id="LoginUser" parameterType="String" resultType="com.energysolution.domain.UserDTO">
-		SELECT * FROM User WHERE UserId=#{UserId}
+	<select id="getUserPassword" parameterType="String" resultType="String">
+		SELECT Password FROM User WHERE UserId=#{UserId}
 	</select>
 	
-	<select id="FindUserId" parameterType="String" resultType="com.energysolution.domain.UserDTO">
-		SELECT * FROM User WHERE Email=#{Email}
+	<select id="FindUserId" parameterType="String" resultType="String">
+		SELECT UserId FROM User WHERE Email=#{Email}
 	</select>
 	
-	<select id="FindUserPW" parameterType="hashmap" resultType="com.energysolution.domain.UserDTO">
+	<select id="FindUserPW" parameterType="hashmap" resultType="com.energysolution.dto.UserDTO">
 		SELECT * FROM User WHERE UserId=#{UserId} AND Email=#{Email}
 	</select>
 	
@@ -25,5 +25,9 @@
 	<delete id="deleteUser">
 		DELETE FROM User WHERE UserId=#{UserId}
 	</delete>
+	
+	<select id="checkUser" parameterType="hashmap" resultType="Integer">
+		SELECT COUNT(*) FROM User WHERE UserId=#{UserId}
+	</select>
 	
 </mapper>
