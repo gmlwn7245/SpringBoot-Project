@@ -4,7 +4,6 @@ package com.energysolution.controller;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.json.simple.JSONArray;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.energysolution.dto.BillDTO;
 import com.energysolution.dto.DetailBillDTO;
 import com.energysolution.dto.PaymentDTO;
+import com.energysolution.dto.TotalBillDTO;
 import com.energysolution.service.BillService;
 
 @Controller
@@ -53,25 +53,25 @@ public class BillController {
 		JSONArray jsonArr = (JSONArray)jsonObject.get("GetBill");
 		JSONObject obj = (JSONObject) jsonArr.get(0);
 		
-		List<BillDTO> listDTO = billService.getBill((String)obj.get("UserId"), Integer.parseInt(String.valueOf(obj.get("Term"))));
-				
-		return "success : select user!";
+		List<TotalBillDTO> listDTO = billService.getBill((String)obj.get("UserId"), Integer.parseInt(String.valueOf(obj.get("Term"))));
+		
+		if(listDTO.size()==0)
+			return "fail : get Bill";
+		return "success : get Bill!";
 	}
 	
-	@RequestMapping("insertBill")
+	@RequestMapping("InsertBill")
 	public @ResponseBody String setBill() throws Exception{
 		JSONArray jsonArr = (JSONArray)jsonObject.get("InsertBill");
 		JSONObject obj = (JSONObject) jsonArr.get(0);
 		
-		BillDTO billDTO = new BillDTO(Integer.parseInt(String.valueOf(obj.get("BillId"))),(String)obj.get("Date"),Integer.parseInt(String.valueOf(obj.get("Totalfee"))));
-		DetailBillDTO detailbillDTO = new DetailBillDTO(Integer.parseInt(String.valueOf(obj.get("BillId"))),Integer.parseInt(String.valueOf(obj.get("Waterfee"))),Integer.parseInt(String.valueOf(obj.get("Heatingfee"))),Integer.parseInt(String.valueOf(obj.get("Electricityfee"))));
-		PaymentDTO paymentDTO = new PaymentDTO((String)obj.get("UserId"),Integer.parseInt(String.valueOf(obj.get("BillId"))));
+		BillDTO billDTO = new BillDTO(0,(String)obj.get("Date"),Integer.parseInt(String.valueOf(obj.get("Totalfee"))));
+		DetailBillDTO detailbillDTO = new DetailBillDTO(0,Integer.parseInt(String.valueOf(obj.get("Waterfee"))),Integer.parseInt(String.valueOf(obj.get("Heatingfee"))),Integer.parseInt(String.valueOf(obj.get("Electricityfee"))));
+		PaymentDTO paymentDTO = new PaymentDTO((String)obj.get("UserId"),0);
 		
-		billService.insertBill(billDTO);
-		billService.insertDetailBill(detailbillDTO);
-		billService.insertPayment(paymentDTO);
+		String result = billService.insertBill(billDTO,detailbillDTO,paymentDTO);
 		
-		return "success : insert bill!";
+		return result+":insert";
 	}
 	
 	//고지서 수정
@@ -80,9 +80,9 @@ public class BillController {
 		JSONArray jsonArr = (JSONArray)jsonObject.get("UpdateBill");
 		JSONObject obj = (JSONObject) jsonArr.get(0);
 		
-		billService.updateBill((String)obj.get("UserId"), (String)obj.get("Date"), (String)obj.get("Field"), Integer.parseInt(String.valueOf(obj.get("Fee"))));
+		String result = billService.updateBill((String)obj.get("UserId"), (String)obj.get("Date"), (String)obj.get("Field"), Integer.parseInt(String.valueOf(obj.get("Fee"))));
 		
-		return "success : update bill!";
+		return result + ":update!";
 	}
 	
 	//임시로 URL로 설정. 나중에 바꿀예정!
@@ -91,7 +91,7 @@ public class BillController {
 		JSONArray jsonArr = (JSONArray)jsonObject.get("DeleteBill");
 		JSONObject obj = (JSONObject) jsonArr.get(0);
 		
-		billService.deleteBill((String)obj.get("UserId"),(String)obj.get("Date"));
-		return "success : delete bill!";
+		String result = billService.deleteBill((String)obj.get("UserId"),(String)obj.get("Date"));
+		return result +":delete";
 	}
 }

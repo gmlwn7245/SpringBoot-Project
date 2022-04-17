@@ -9,22 +9,35 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.energysolution.dto.UserDTO;
 import com.energysolution.service.UserService;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Controller
+@RequestMapping("/User")
 public class UserController {
+	
+	@JsonInclude(Include.NON_NULL)
+	private String result;
+	
+	@JsonInclude(Include.NON_EMPTY)
+	private List<String> userIdList;
 	
 	@Autowired
 	UserService userService;
@@ -45,6 +58,16 @@ public class UserController {
 	@RequestMapping("sub")
 	public @ResponseBody String sub() throws Exception{
 		return "This is sub for test";
+	}
+	
+	@RequestMapping(value="json", method=RequestMethod.POST)
+	public void jsonTest(HttpServletRequest request,HttpServletResponse response) throws Exception{
+		JSONObject jsonObj = new JSONObject();
+		
+		jsonObj.put("name", "me");
+		jsonObj.put("age", 144);
+		
+		String jsons = jsonObj.toString();
 	}
 	
 	// 로그인
@@ -81,7 +104,7 @@ public class UserController {
 		
 		UserDTO userDTO = new UserDTO(UserId,Name,Password,Email);
 
-		String result = userService.insertUser(userDTO);
+		result = userService.insertUser(userDTO);
 		
 		
 		return result;
@@ -100,7 +123,7 @@ public class UserController {
 		
 		System.out.println((String)obj.get("UserId"));
 		
-		String result = userService.updateUser(updateMap);
+		result = userService.updateUser(updateMap);
 		
 		return result;
 	}
@@ -111,7 +134,7 @@ public class UserController {
 		JSONArray jsonArr = (JSONArray)jsonObject.get("DeleteUser");
 		JSONObject obj = (JSONObject) jsonArr.get(0);
 		
-		String result = userService.deleteUser((String)obj.get("UserId"),(String)obj.get("Password"));
+		result = userService.deleteUser((String)obj.get("UserId"),(String)obj.get("Password"));
 		
 		//Payment - Bill 테이블과 얽혀있어서 더 구현해야함!
 		
@@ -124,12 +147,12 @@ public class UserController {
 		JSONArray jsonArr = (JSONArray)jsonObject.get("findID");
 		JSONObject obj = (JSONObject) jsonArr.get(0);
 		
-		List<String> list = userService.FindUserId((String)obj.get("Email"));
+		userIdList = userService.FindUserId((String)obj.get("Email"));
 		
-		if(list.size()==0)
+		if(userIdList.size()==0)
 			return "fail";
 		
-		for(String str : list) {
+		for(String str : userIdList) {
 			System.out.println("UserId:"+str);
 		}
 		
@@ -145,9 +168,9 @@ public class UserController {
 		HashMap<String, String> findUserPWMap = new HashMap<String, String>();
 		findUserPWMap.put("UserId", (String)obj.get("UserId"));
 		findUserPWMap.put("Email", (String)obj.get("Email"));
-		String result = userService.FindUserPW(findUserPWMap);
+		result = userService.FindUserPW(findUserPWMap);
 	
-		//이메일로 전송하기
+		/*이메일로 전송하기*/
 		
 		return result;
 	}

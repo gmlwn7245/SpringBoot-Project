@@ -1,8 +1,7 @@
 {
 	"InsertBill" : [{
 		"UserId" : "User0414",
-		"BillId" : 220414,
-		"Date" : "2020-4",
+		"Date" : "2020-5",
 		"Totalfee" : 4000,
 		"Waterfee" : 2000,
 		"Heatingfee" : 1500,
@@ -14,12 +13,12 @@
 	}],
 	"UpdateBill" : [{
 		"UserId" : "User0414",
-		"Date" : "2020-4",
-		"Field" : "Waterfee",
-		"Fee" : 10000
+		"Date" : "2020-5",
+		"Field" : "Electricityfee",
+		"Fee" : 2500
 	}],
 	"DeleteBill" : [{
 		"UserId" : "User0414",
-		"Date" : "2020-4"
+		"Date" : "2020-5"
 	}]
 }

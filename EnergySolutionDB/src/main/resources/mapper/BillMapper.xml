@@ -19,15 +19,15 @@
 	</update>
 		
 	<delete id="deleteBill">
-		DELETE FROM Bill WHERE BillId IN (SELECT BillId from payment WHERE UserId=#{UserId} AND BillId = (SELECT BillId FROM Bill WHERE date=#{date}))
+		DELETE FROM Bill WHERE BillId=#{billId}
 	</delete>
 	
 	<delete id="deleteDetailBill">
-		DELETE FROM detailBill WHERE BillId IN (SELECT BillId from payment WHERE UserId=#{UserId} AND BillId = (SELECT BillId FROM Bill WHERE date=#{date}))
+		DELETE FROM detailBill WHERE BillId=#{billId}
 	</delete>
 	
 	<delete id="deletePayment">
-		DELETE FROM payment WHERE BillId IN (SELECT BillId from payment WHERE UserId=#{UserId} AND BillId = (SELECT BillId FROM Bill WHERE date=#{date}))
+		DELETE FROM payment WHERE BillId=#{billId}
 	</delete>
 	
 	<select id="getBill" parameterType="hashmap" resultType="com.energysolution.dto.BillDTO">
@@ -38,4 +38,27 @@
 		SELECT * FROM detailBill WHERE BillId IN (SELECT BillId from payment WHERE UserId=#{UserId} AND BillId = (SELECT BillId FROM Bill WHERE date=#{date}))
 	</select>
 	
-</mapper>
+	<select id="checkBill" parameterType="Integer" resultType="Integer">
+		SELECT count(*) FROM Bill WHERE BillId=#{billId} AND BillId=(SELECT BillId FROM payment WHERE BillId=#{billId}) AND BillId=(SELECT BillId FROM detailBill WHERE BillId=#{billId});
+	</select>
+	
+	<select id="checkUpdateBill" parameterType="hashmap" resultType="Integer">
+		SELECT ${Field} FROM ${table} WHERE BillId IN (SELECT BillId FROM payment WHERE UserId=#{UserId} AND BillId = (SELECT BillId FROM Bill WHERE date=#{date}))
+	</select>
+	
+	<select id="checkDeleteBill" parameterType="hashmap" resultType="Integer">
+		SELECT count(*) FROM Bill WHERE BillId =#{billId}
+	</select>
+	
+	<select id="checkDeleteDetailBill" parameterType="hashmap" resultType="Integer">
+		SELECT count(*) FROM detailBill WHERE BillId =#{billId}
+	</select>
+	
+	<select id="checkDeletePayment" parameterType="hashmap" resultType="Integer">
+		SELECT count(*) FROM payment WHERE BillId =#{billId}
+	</select>
+	
+	<select id="getBillId" parameterType="hashmap" resultType="Integer">
+		SELECT BillId FROM payment WHERE UserId=#{UserId} AND BillId IN (SELECT BillId FROM Bill WHERE date=#{date});
+	</select>
+ </mapper>
