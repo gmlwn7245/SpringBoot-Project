@@ -15,19 +15,16 @@ public class UserService implements UserServiceInterface {
 	@Autowired
 	private UserMapper userMapper;
 	
+	//회원가입
 	@Override
 	public String insertUser(UserDTO userDTO) {
-		
-		//이미 있는 사용자인 경우
-		if(checkUser(userDTO.getUserId()).equals("success"))
-			return "false";
-		
-		//insert 작업
 		userMapper.insertUser(userDTO);
-		
-		return checkUser(userDTO.getUserId());
+		if(checkUser(userDTO.getUserId())==1)
+			return "success";
+		return "fail";
 	}
 
+	//비밀번호 변경
 	@Override
 	public String updateUser(HashMap<String, String> updateMap) {
 		//새 비밀번호로 변경
@@ -42,18 +39,26 @@ public class UserService implements UserServiceInterface {
 		return "fail";
 	}
 	
+	//아이디 찾기
 	@Override
 	public List<String> FindUserId(String Email) {
 		return userMapper.FindUserId(Email);
 	}
 	
+	//비밀번호 찾기
 	@Override
 	public String FindUserPW(HashMap<String, String> findUserPWMap) {
-		//아이디 있는지 확인 : (나중에 삭제)
-		UserDTO userDTO = userMapper.FindUserPW(findUserPWMap);
-		if(userDTO.getUserId().isEmpty())
-			return "false";
+		//아이디 있는지 확인
+		int count = userMapper.checkUserByIdEmail(findUserPWMap);
+		System.out.println(count);
 		
+		if(count==0)
+			return "fail";
+		
+		UserDTO userDTO = userMapper.FindUserPW(findUserPWMap);
+		
+
+
 		//임시 비밀번호 발급
 		String temp = "tempPW002";
 		HashMap<String, String> updateMap = new HashMap<String, String>();
@@ -63,15 +68,18 @@ public class UserService implements UserServiceInterface {
 		
 		return res;
 	}
-
+	
+	
+	//로그인 하기
 	@Override
-	public String LoginUser(String UserId, String Password) {		
+	public UserDTO LoginUser(String UserId, String Password) {		
 		//해당 아이디의 비밀번호가 사용자가 입력한 비밀번호와 일치하는지 확인
+
 		if(Password.equals(getUserPassword(UserId)))
-			return "success";
-		else
-			return "fail";
+			return userMapper.getUser(UserId);
+		return null;
 	}
+	
 
 	@Override
 	public String deleteUser(String UserId,String Password) {
@@ -81,19 +89,19 @@ public class UserService implements UserServiceInterface {
 		userMapper.deleteUser(UserId);
 		
 		//UserId에 해당하는 User 못찾았다면 success
-		if(checkUser(UserId).equals("fail"))
+		if(checkUser(UserId)==0)
 			return "success";
-		
 		return "fail";
 	}
 	
 	@Override
-	public String checkUser(String UserId) {
-		int res = userMapper.checkUser(UserId);
-		if(res == 0)
-			return "fail";
-		else
-			return "success";
+	public int checkUser(String UserId) {
+		return userMapper.checkUser(UserId);
+	}
+	
+	@Override
+	public int checkUserByIdEmail(HashMap<String, String> UserMap) {
+		return userMapper.checkUserByIdEmail(UserMap);
 	}
 	
 	@Override

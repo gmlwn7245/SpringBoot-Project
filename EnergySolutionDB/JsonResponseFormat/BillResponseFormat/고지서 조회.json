@@ -1,0 +1,25 @@
+// 고지서 조회
+// 방식 : GET
+// URL : /Bill/FindBillAll?user="user001"&&date="2022-2"
+// 기간 내 모든 분야 데이터 보내기
+
+{
+    "ResponseBody":{
+        "status":200,   
+        "message":"고지서 조회 성공", 
+        "data":{
+            "UserId":"user001",
+            "Date":"2022-2",
+            "TotalFee":4000,
+            "WaterFee":3000,
+            "WaterUsage":500,
+            "ElectricityFee":1000,
+            "ElectricityUsage":200
+        }
+    },
+
+    "UserNotFound":{
+        "errorMessage":"고지서를 등록해주세요.",
+        "errorCode":201
+    }
+}

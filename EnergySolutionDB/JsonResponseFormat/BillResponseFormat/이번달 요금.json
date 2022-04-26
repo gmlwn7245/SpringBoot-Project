@@ -1,0 +1,24 @@
+// 이번달 요금 : 아이디 -> 전체 요금
+// 방식 : GET
+// URL : /Bill/FindBill?user="user001"&&date="2022-02"
+
+{
+    "ResponseBody":{
+        "status":200,   
+        "message":"로그인 성공",    //또는 반갑습니다 + 이름 + 님
+        "data":{
+            "UserId":"user001",
+            "Date":"2022-2",
+            "TotalFee":4000,
+            "WaterFee":3000,
+            "WaterUsage":500,
+            "ElectricityFee":1000,
+            "ElectricityUsage":200
+        }
+    },
+
+    "UserNotFound":{
+        "errorMessage":"등록된 고지서가 없습니다.",
+        "errorCode":201
+    }
+}

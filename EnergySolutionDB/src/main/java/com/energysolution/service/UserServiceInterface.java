@@ -10,7 +10,7 @@ public interface UserServiceInterface {
 	public String insertUser(UserDTO userDTO);
 	
 	//회원 로그인
-	public String LoginUser(String UserId, String Password);
+	public UserDTO LoginUser(String UserId, String Password);
 	
 	//회원 ID 찾기
 	public List<String> FindUserId(String Email);
@@ -25,7 +25,10 @@ public interface UserServiceInterface {
 	public String deleteUser(String UserId, String Password);
 	
 	//회원 유무 체크
-	public String checkUser(String UserId);
+	public int checkUser(String UserId);
+	
+	//회원 유무 체크
+	public int checkUserByIdEmail(HashMap<String, String> UserMap);
 
 	//비밀번호 가져오기
 	public String getUserPassword(String UserId);

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
-
 import com.energysolution.dto.UserDTO;
 
 @Mapper
@@ -18,4 +17,6 @@ public interface UserMapper {
 	public void deleteUser(String UserId);
 	
 	public int checkUser(String UserId);
+	public int checkUserByIdEmail(HashMap<String, String> UserMap);
+	public UserDTO getUser(String UserId);
 }

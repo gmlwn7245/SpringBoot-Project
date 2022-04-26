@@ -1,0 +1,26 @@
+{
+	"로그인":"아이디, 비밀번호",
+	"방식":"POST",
+	"URI":"/User/SignIn",
+	
+	
+    "RequestBody":{
+        "userId":"user001",
+        "password":"PW001"
+    },
+    
+    "ResponseBody":{
+        "status":200,   
+        "message":"로그인 성공",    
+        "data":{
+            "UserId":"user001",
+            "Name":"김희주",
+            "Email":"Email"
+        }
+    },
+    
+    "UserNotFound":{
+        "errorMessage":"일치하는 회원정보가 없습니다.",
+        "errorCode":201
+    }
+}

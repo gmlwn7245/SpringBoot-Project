@@ -1,0 +1,20 @@
+// 아이디, 날짜, 총 요금, 수도사용량, 수도요금, 전기사용량, 전기요금
+// 방식 : POST
+// URL : /Bill/UpdateBill
+
+{
+    "RequestBody":{
+        "userId":"user100",
+        "date":"2022-2",
+        "totalFee":50000,
+        "waterFee":40000,
+        "waterUsage":3000,
+        "electricityFee":10000,
+        "electricityUsage":1000
+    },
+
+    "ResponseBody":{
+        "status":200, 
+        "message":"변경이 완료되었습니다."
+    }
+}

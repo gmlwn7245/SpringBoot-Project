@@ -1,0 +1,43 @@
+// 기간별 요금 변화
+// 방식 : GET
+// URL : /Bill/FindBillAll?user="user001"&&month=6
+// 기간 내 모든 분야 데이터 보내기
+
+{
+    "ResponseBody":{
+        "status":200,   
+        "message":"고지서 조회 성공", 
+        "data":{
+            "UserId":"user001",
+            "month":6,
+            "BillList":[{
+                "Date":"2021-10",
+                "TotalFee":4000,
+                "WaterFee":3000,
+                "WaterUsage":500,
+                "ElectricityFee":1000,
+                "ElectricityUsage":200
+            },{
+                "Date":"2021-11",
+                "TotalFee":4000,
+                "WaterFee":3000,
+                "WaterUsage":500,
+                "ElectricityFee":1000,
+                "ElectricityUsage":200
+            },{
+                "Date":"2021-12",
+                "TotalFee":4000,
+                "WaterFee":3000,
+                "WaterUsage":500,
+                "ElectricityFee":1000,
+                "ElectricityUsage":200              // +9 months
+            }]
+            
+        }
+    },
+
+    "UserNotFound":{
+        "errorMessage":"고지서를 등록해주세요.",
+        "errorCode":201
+    }
+}

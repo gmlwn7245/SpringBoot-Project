@@ -10,6 +10,10 @@
 		SELECT Password FROM User WHERE UserId=#{UserId}
 	</select>
 	
+	<select id="getUser" parameterType="String" resultType="com.energysolution.dto.UserDTO">
+		SELECT * FROM User WHERE UserId=#{UserId}
+	</select>
+	
 	<select id="FindUserId" parameterType="String" resultType="String">
 		SELECT UserId FROM User WHERE Email=#{Email}
 	</select>
@@ -26,8 +30,12 @@
 		DELETE FROM User WHERE UserId=#{UserId}
 	</delete>
 	
-	<select id="checkUser" parameterType="hashmap" resultType="Integer">
+	<select id="checkUser" parameterType="String" resultType="Integer">
 		SELECT COUNT(*) FROM User WHERE UserId=#{UserId}
+	</select>
+	
+	<select id="checkUserByIdEmail" parameterType="hashmap" resultType="Integer">
+		SELECT COUNT(*) FROM User WHERE UserId=#{UserId} AND Email=#{Email}
 	</select>
 	
 </mapper>
