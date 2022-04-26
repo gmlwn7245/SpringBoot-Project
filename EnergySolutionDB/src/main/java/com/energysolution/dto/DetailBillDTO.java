@@ -11,43 +11,50 @@ public class DetailBillDTO {
 	
 	//필요한 필드값
 	private int BillId;
-	private int Waterfee;
-	private int Heatingfee;
-	private int Electricityfee;
-	//해당 field의 요금값
+	private int WaterFee;
+	private int WaterUsage;
+	private int ElectricityFee;
+	private int ElectricityUsage;
 	
-	public DetailBillDTO(int BillId, int Waterfee,int Heatingfee,int Electricityfee) {
-		this.BillId=BillId;
-		this.Electricityfee=Electricityfee;
-		this.Heatingfee=Heatingfee;
-		this.Waterfee=Waterfee;
+	public DetailBillDTO( int WaterFee, int WaterUsage, int ElectricityFee, int ElectricityUsage) {
+		this.WaterFee=WaterFee;
+		this.WaterUsage=WaterUsage;
+		this.ElectricityFee=ElectricityFee;
+		this.ElectricityUsage=ElectricityUsage;
 	}
+	
 	//출력
 	public int getBillId() {
 		return BillId;
 	}
-	public long getWaterFee() {
-		return Waterfee;
+	public int getWaterFee() {
+		return WaterFee;
 	}
-	public long getHeatingFee() {
-		return Heatingfee;
+	public int getWaterUsage() {
+		return WaterUsage;
 	}
-	public long getElectricityFee() {
-		return Electricityfee;
+	public int getElectricityFee() {
+		return ElectricityFee;
+	}
+	public int getElectricityUsage() {
+		return ElectricityUsage;
 	}
 	
 	//입력
 	public void setBillId(int BillId) {
 		this.BillId=BillId;
 	}
-	public void setElectricityfee(int Electricityfee) {
-		this.Electricityfee=Electricityfee;
+	public void setWaterFee(int WaterFee) {
+		this.WaterFee=WaterFee;
 	}
-	public void setHeatingfee(int Heatingfee) {
-		this.Heatingfee=Heatingfee;
+	public void setWaterUsage(int WaterUsage) {
+		this.WaterUsage=WaterUsage;
 	}
-	public void setWaterfee(int Waterfee) {
-		this.Waterfee=Waterfee;
+	public void setElectricityFee(int ElectricityFee) {
+		this.ElectricityFee=ElectricityFee;
+	}
+	public void setElectricityUsage(int ElectricityUsage) {
+		this.ElectricityUsage=ElectricityUsage;
 	}
 
 }

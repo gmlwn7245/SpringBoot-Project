@@ -19,7 +19,7 @@
 	</select>
 	
 	<update id="updateUser" parameterType="hashmap">
-		UPDATE User SET Password=#{newPW} WHERE UserId=#{UserId} AND Password=#{originPW}
+		UPDATE User SET Password=#{newPW} WHERE UserId=#{UserId}
 	</update>
 	
 	<delete id="deleteUser">

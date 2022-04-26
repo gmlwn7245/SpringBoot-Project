@@ -12,12 +12,11 @@ public class BillDTO {
 	//필요한 필드값
 	private int BillId;
 	private String date;
-	private int Totalfee;
+	private int TotalFee;
 	
-	public BillDTO(int BillId, String date, int Totalfee) {
-		this.BillId = BillId;
+	public BillDTO(String date, int TotalFee) {
 		this.date = date;
-		this.Totalfee =Totalfee;
+		this.TotalFee =TotalFee;
 	}
 		
 	//출력
@@ -28,8 +27,8 @@ public class BillDTO {
 		return date;
 	}
 	
-	public long getTotalfee() {
-		return Totalfee;
+	public int getTotalFee() {
+		return TotalFee;
 	}
 
 	//입력
@@ -39,8 +38,8 @@ public class BillDTO {
 	public void setBilldate(String date) {
 		this.date = date;
 	}
-	public void setTotalfee(int Totalfee) {
-		this.Totalfee = Totalfee;
+	public void setTotalFee(int TotalFee) {
+		this.TotalFee = TotalFee;
 	}	
 
 }

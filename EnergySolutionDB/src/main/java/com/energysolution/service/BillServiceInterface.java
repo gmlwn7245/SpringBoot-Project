@@ -9,14 +9,20 @@ import com.energysolution.dto.PaymentDTO;
 import com.energysolution.dto.TotalBillDTO;
 
 public interface BillServiceInterface {
-	//고지서 저장 
+	//고지서 등록
 	public String insertBill(BillDTO billDTO, DetailBillDTO detailbillDTO,PaymentDTO paymentDTO);
 	
-	// 종합고지서 조회 (UserId와 Date)
-	public List<TotalBillDTO> getBill(String UserId, int term);
+	// 특정 기간 고지서 조회 (UserId와 Term)
+	public List<TotalBillDTO> getBillTerm(String UserId, int term);
 	
-	// 고지서 수정
-	public String updateBill(String UserId, String Date, String Field, int fee);
+	// 특정 날짜 고지서 조회 (UserId와 Term)
+	public TotalBillDTO getBill(String UserId, String date);
+	
+	// 고지서 부분 수정
+	public String updateBillField(String UserId, String Date, String Field, int fee);
+	
+	// 고지서 전체 수정
+	public String updateBill(String UserId,BillDTO billDTO, DetailBillDTO detailbillDTO);
 	
 	// 고지서 삭제
 	public String deleteBill(String UserId, String Date);
@@ -24,9 +30,12 @@ public interface BillServiceInterface {
 	// 고지서 유무 확인
 	public String checkBill(int billId);
 	
-	// 고지서 변경 확인
-	public String checkUpdateBill(HashMap<String, String> updateCheckBillMap);
-	
+	// 고지서 특정 필드 값 변경 확인
+	public String checkUpdateBillField(HashMap<String, String> updateCheckBillMap);
+
+	// 고지서 전체 필드 값 변경 확인
+	public String checkUpdateBill(String UserId, String date , HashMap<String, String> updateBillMap);
+		
 	// 고지서 삭제 확인
 	public String checkDeleteBill(int billId);
 	

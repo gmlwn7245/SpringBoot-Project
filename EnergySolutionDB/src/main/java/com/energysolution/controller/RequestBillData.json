@@ -1,20 +1,34 @@
 {
 	"InsertBill" : [{
-		"UserId" : "User0414",
-		"Date" : "2020-5",
-		"Totalfee" : 4000,
-		"Waterfee" : 2000,
-		"Heatingfee" : 1500,
-		"Electricityfee" :500 
+		"UserId" : "user003",
+		"Date" : "2021-10",
+		"TotalFee" : 2500,
+		"WaterFee" : 2000,
+		"WaterUsage" : 4000,
+		"ElectricityFee" :500,
+		"ElectricityUsage" : 3000
 	}],
-	"GetBill" : [{
-		"UserId" : "User001",
+	"GetBillTerm" : [{
+		"UserId" : "user001",
 		"Term" : 6
 	}],
+	"GetBill" : [{
+		"UserId" : "user001",
+		"Date" : "2022-2"
+	}],
 	"UpdateBill" : [{
-		"UserId" : "User0414",
+		"UserId" : "User003",
 		"Date" : "2020-5",
-		"Field" : "Electricityfee",
+		"TotalFee" : 3500,
+		"WaterFee" : 3000,
+		"WaterUsage" : 5000,
+		"ElectricityFee" :500,
+		"ElectricityUsage" : 5000
+	}],
+	"UpdateBillField" : [{
+		"UserId" : "User003",
+		"Date" : "2020-5",
+		"Field" : "ElectricityFee",
 		"Fee" : 2500
 	}],
 	"DeleteBill" : [{

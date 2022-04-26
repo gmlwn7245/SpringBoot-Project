@@ -3,19 +3,27 @@
 <mapper namespace="com.energysolution.mapper.BillMapper">
 	
 	<insert id="insertBill">
-		INSERT INTO Bill(BillId, date, Totalfee) VALUES (#{BillId},#{date},#{Totalfee})
+		INSERT INTO Bill(Date, TotalFee) VALUES (#{date},#{TotalFee})
 	</insert>
 	
 	<insert id="insertDetailBill">
-		INSERT INTO detailBill(BillId, Waterfee, Heatingfee, Electricityfee) VALUES (#{BillId},#{Waterfee},#{Heatingfee},#{Electricityfee})
+		INSERT INTO detailBill(BillId, WaterFee, WaterUsage, ElectricityFee, ElectricityUsage) VALUES (#{BillId},#{WaterFee},#{WaterUsage},#{ElectricityFee},#{ElectricityUsage})
 	</insert>
 	
 	<insert id="insertPayment">
 		INSERT INTO payment(UserId, BillId) VALUES (#{UserId},#{BillId})
 	</insert>
 	
+	<update id="updateBillField">
+		UPDATE ${table} SET ${Field}=#{fee} WHERE BillId = #{BillId}
+	</update>
+	
 	<update id="updateBill">
-		UPDATE ${table} SET ${Field}=#{fee} WHERE BillId IN (SELECT BillId from payment WHERE UserId=#{UserId} AND BillId = (SELECT BillId FROM Bill WHERE date=#{date}))
+		UPDATE Bill SET TotalFee=#{TotalFee} WHERE BillId = #{BillId}
+	</update>
+	
+	<update id="updateDetailBill">
+		UPDATE Bill SET WaterFee=#{WaterFee}, WaterUsage=#{WaterUsage}, ElectricityFee=#{ElectricityFee}, ElectricityUsage=#{ElectricityUsage} WHERE BillId = #{BillId}
 	</update>
 		
 	<delete id="deleteBill">
@@ -30,22 +38,26 @@
 		DELETE FROM payment WHERE BillId=#{billId}
 	</delete>
 	
+	<select id="getLastBillId" resultType="Integer">
+		SELECT BillId FROM Bill ORDER BY BillId DESC LIMIT 1
+	</select>
+	
 	<select id="getBill" parameterType="hashmap" resultType="com.energysolution.dto.BillDTO">
-		SELECT * FROM Bill WHERE BillId IN (SELECT BillId from payment WHERE UserId=#{UserId} AND BillId = (SELECT BillId FROM Bill WHERE date=#{date}))
+		SELECT * FROM Bill WHERE BillId = #{BillId}
 	</select>
 	
 	<select id="getDetailBill" parameterType="hashmap" resultType="com.energysolution.dto.DetailBillDTO">
-		SELECT * FROM detailBill WHERE BillId IN (SELECT BillId from payment WHERE UserId=#{UserId} AND BillId = (SELECT BillId FROM Bill WHERE date=#{date}))
+		SELECT * FROM detailBill WHERE BillId = #{BillId}
 	</select>
 	
 	<select id="checkBill" parameterType="Integer" resultType="Integer">
 		SELECT count(*) FROM Bill WHERE BillId=#{billId} AND BillId=(SELECT BillId FROM payment WHERE BillId=#{billId}) AND BillId=(SELECT BillId FROM detailBill WHERE BillId=#{billId});
 	</select>
 	
-	<select id="checkUpdateBill" parameterType="hashmap" resultType="Integer">
-		SELECT ${Field} FROM ${table} WHERE BillId IN (SELECT BillId FROM payment WHERE UserId=#{UserId} AND BillId = (SELECT BillId FROM Bill WHERE date=#{date}))
+	<select id="checkUpdateBillField" parameterType="hashmap" resultType="Integer">
+		SELECT ${Field} FROM ${table} WHERE BillId IN (SELECT BillId FROM payment WHERE UserId=#{UserId} AND BillId = (SELECT BillId FROM Bill WHERE Date=#{date}))
 	</select>
-	
+		
 	<select id="checkDeleteBill" parameterType="hashmap" resultType="Integer">
 		SELECT count(*) FROM Bill WHERE BillId =#{billId}
 	</select>

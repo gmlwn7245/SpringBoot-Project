@@ -9,7 +9,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -50,6 +49,7 @@ public class UserController {
 	public @ResponseBody String mainView() throws IOException, ParseException {
 		reader = new FileReader("C:\\Users\\82109\\git\\SpringBoot-Project\\EnergySolutionDB\\src\\main\\java\\com\\energysolution\\controller\\RequestUserData.json");
 		parser = new JSONParser();
+		
 		jsonObject = (JSONObject) parser.parse(reader) ;
 		
 		return "This is home";
@@ -57,10 +57,17 @@ public class UserController {
 	
 	@RequestMapping("sub")
 	public @ResponseBody String sub() throws Exception{
-		return "This is sub for test";
+		JSONArray jArray = new JSONArray();
+		JSONObject result = new JSONObject();
+		
+		result.put("id", "userId");
+		result.put("pw", "userpw");
+		result.put("email", "userEmail");
+		result.put("name", "userName");
+		return result.toJSONString();
 	}
 	
-	@RequestMapping(value="json", method=RequestMethod.POST)
+	@RequestMapping(value="testjson", produces="application/json; charset=utf-8")
 	public void jsonTest(HttpServletRequest request,HttpServletResponse response) throws Exception{
 		JSONObject jsonObj = new JSONObject();
 		
@@ -87,7 +94,18 @@ public class UserController {
 		mv.addAttribute("Email",Email);
 		mv.addAttribute("Password",Password);*/
 		
-		return result;
+		if(result=="fail") {
+			return "fail";
+		}
+		
+		JSONObject resultJSON = new JSONObject();		
+		JSONObject data = new JSONObject();
+		data.put("UserId", UserId);
+		data.put("message", "로그인 성공");
+		
+		resultJSON.put("data", data);
+		
+		return resultJSON.toJSONString();
 	}
 	
 	
@@ -106,8 +124,20 @@ public class UserController {
 
 		result = userService.insertUser(userDTO);
 		
+		if(result=="fail") {
+			return "fail";
+		}
 		
-		return result;
+		JSONObject resultJSON = new JSONObject();
+		resultJSON.put("count", 2);
+		
+		JSONObject data = new JSONObject();
+		data.put("UserId", UserId);
+		data.put("message", "회원가입 성공");
+		
+		resultJSON.put("data", data);
+		
+		return resultJSON.toJSONString();
 	}
 	
 	//pw 바꾸기
@@ -118,14 +148,26 @@ public class UserController {
 		
 		HashMap<String, String> updateMap = new HashMap<String, String>();
 		updateMap.put("UserId", (String)obj.get("UserId"));
-		updateMap.put("originPW", (String)obj.get("originPW"));
 		updateMap.put("newPW", (String)obj.get("newPW"));
 		
 		System.out.println((String)obj.get("UserId"));
 		
 		result = userService.updateUser(updateMap);
 		
-		return result;
+		if(result=="fail") {
+			return "fail";
+		}
+		
+		JSONObject resultJSON = new JSONObject();
+		resultJSON.put("count", 2);
+		
+		JSONObject data = new JSONObject();
+		data.put("UserId", (String)obj.get("UserId"));
+		data.put("message", "비밀번호 변경 완료");
+		
+		resultJSON.put("data", data);
+		
+		return resultJSON.toJSONString();
 	}
 	
 	//임시로 URL로 설정. 나중에 바꿀예정!
@@ -138,7 +180,20 @@ public class UserController {
 		
 		//Payment - Bill 테이블과 얽혀있어서 더 구현해야함!
 		
-		return result;
+		if(result=="fail") {
+			return "fail";
+		}
+		
+		JSONObject resultJSON = new JSONObject();
+		resultJSON.put("count", 2);
+		
+		JSONObject data = new JSONObject();
+		data.put("UserId", (String)obj.get("UserId"));
+		data.put("message", "회원 탈퇴 완료");
+		
+		resultJSON.put("data", data);
+		
+		return resultJSON.toJSONString();
 	}
 	
 	//id 찾기
@@ -152,11 +207,21 @@ public class UserController {
 		if(userIdList.size()==0)
 			return "fail";
 		
-		for(String str : userIdList) {
-			System.out.println("UserId:"+str);
+		JSONObject resultJSON = new JSONObject();
+		resultJSON.put("count", 2);
+		
+		
+		JSONArray arr = new JSONArray();
+		for(String userId : userIdList) {
+			System.out.println("UserId:"+userId);
+			JSONObject data = new JSONObject();	
+			data.put("UserId", userId);
+			arr.add(data);
 		}
 		
-		return "success";
+		resultJSON.put("data",arr);
+		
+		return resultJSON.toJSONString();
 	}
 	
 	//PW 찾기
@@ -172,7 +237,20 @@ public class UserController {
 	
 		/*이메일로 전송하기*/
 		
-		return result;
+		if(result=="fail") {
+			return "fail";
+		}
+		
+		JSONObject resultJSON = new JSONObject();
+		resultJSON.put("count", 2);
+		
+		JSONObject data = new JSONObject();
+		data.put("UserId", (String)obj.get("UserId"));
+		data.put("message", "임시 비밀번호 발송됨");
+		
+		resultJSON.put("data", data);
+		
+		return resultJSON.toJSONString();
 	}
 	
 	

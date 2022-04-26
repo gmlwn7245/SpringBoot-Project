@@ -12,9 +12,8 @@ public class PaymentDTO {
 	private String UserId;
 	private int BillId;
 
-	public PaymentDTO(String UserId, int BillId) {
+	public PaymentDTO(String UserId) {
 		this.UserId = UserId;
-		this.BillId = BillId;
 	}
 	
 	// 출력

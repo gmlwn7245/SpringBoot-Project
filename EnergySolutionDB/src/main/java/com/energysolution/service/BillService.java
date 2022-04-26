@@ -23,9 +23,9 @@ public class BillService implements BillServiceInterface{
 	
 	//고지서 등록
 	@Override
-	public String insertBill(BillDTO billDTO, DetailBillDTO detailbillDTO,PaymentDTO paymentDTO) {
-		billId=220417;
-		
+	public String insertBill(BillDTO billDTO, DetailBillDTO detailbillDTO, PaymentDTO paymentDTO) {
+		billId = getLastBillId()+1;
+		 
 		billDTO.setBillId(billId);
 		detailbillDTO.setBillId(billId);
 		paymentDTO.setBillId(billId);
@@ -36,89 +36,129 @@ public class BillService implements BillServiceInterface{
 		
 		return checkBill(billId);
 	}
-
-	//고지서 내용 출력
+	
+	//마지막 BillId 가져옴
+	public int getLastBillId() {
+		return billMapper.getLastBillId(); 
+	}
+	
+	//특정 날짜 고지서 출력
 	@Override
-	public List<TotalBillDTO> getBill(String UserId, int term) {
+	public TotalBillDTO getBill(String UserId, String date) {
+		//BillId 가져옴
+		int BillId = getBillId(UserId, date);
+		
+		//각각 Bill, DetailBill에서 데이터 조회
+		BillDTO billDTO = billMapper.getBill(BillId);
+		DetailBillDTO detailbillDTO = billMapper.getDetailBill(BillId);
+		TotalBillDTO totalBillDTO = makeDTO(billDTO, detailbillDTO);
+		return totalBillDTO;
+	}
+
+	//특정 기간 고지서 출력
+	@Override
+	public List<TotalBillDTO> getBillTerm(String UserId, int term) {
 		LocalDate now = LocalDate.now();
 		int nowYear = now.getYear();
 		int nowMonth = now.getMonthValue();
 		
 		int rest = nowMonth - term;
 		
-		//return값.. 수정 필요
+		//해당 기간의 모든 요금 상세량 넘겨줌
 		List<TotalBillDTO> arrDTO = new ArrayList<TotalBillDTO>();
 		
-		//UserId값과 date값 넘겨줌
-		HashMap<String, String> getBillMap= new HashMap<String,String>();
-		getBillMap.put("UserId", UserId);
-		
+	
 		if(rest <=0) {
 			for(int i=12+rest; i<=12; i++) {
 				int year = nowYear-1;
 				int month = i;
 				String date = year+"-"+month;
-				getBillMap.put("date", date);
+				int BillId = getBillId(UserId, date);
 				
-				BillDTO billDTO = billMapper.getBill(getBillMap);
-				DetailBillDTO detailbillDTO = billMapper.getDetailBill(getBillMap);
+				BillDTO billDTO = billMapper.getBill(BillId);
+				DetailBillDTO detailbillDTO = billMapper.getDetailBill(BillId);
 				arrDTO.add(makeDTO(billDTO, detailbillDTO));
 				
 				print_bill(billDTO, detailbillDTO);
-				getBillMap.remove("date");
 			}
 			for(int i=1; i<nowMonth; i++) {
 				int year = nowYear;
 				int month = i;
 				String date = year+"-"+month;
-				getBillMap.put("date", date);
+				int BillId = getBillId(UserId, date);
 				
-				BillDTO billDTO = billMapper.getBill(getBillMap);
-				DetailBillDTO detailbillDTO = billMapper.getDetailBill(getBillMap);
+				BillDTO billDTO = billMapper.getBill(BillId);
+				DetailBillDTO detailbillDTO = billMapper.getDetailBill(BillId);
 				arrDTO.add(makeDTO(billDTO, detailbillDTO));
 				
 				print_bill(billDTO, detailbillDTO);
-				getBillMap.remove("date");
 			}
 		}else {
 			for(int i=rest; i<nowMonth; i++) {
 				int year = nowYear;
 				int month = i;
 				String date = year+"-"+month;
-				getBillMap.put("date", date);
+				int BillId = getBillId(UserId, date);
 				
-				BillDTO billDTO = billMapper.getBill(getBillMap);
-				DetailBillDTO detailbillDTO = billMapper.getDetailBill(getBillMap);
-				arrDTO.add(makeDTO(billDTO, detailbillDTO));
+				BillDTO billDTO = billMapper.getBill(BillId);
+				DetailBillDTO detailbillDTO = billMapper.getDetailBill(BillId);arrDTO.add(makeDTO(billDTO, detailbillDTO));
 				
 				print_bill(billDTO, detailbillDTO);
-				getBillMap.remove("date");
 			}
 		}
 		
 		return arrDTO;
 	}
-
+	
+	// 전체 고지서 수정
 	@Override
-	// 고지서 수정
-	public String updateBill(String UserId, String Date, String Field, int fee) {
+	public String updateBill(String UserId, BillDTO billDTO, DetailBillDTO detailbillDTO) {
+		HashMap<String, String> updateBillMap = new HashMap<String, String>();
+		String date = billDTO.getDate();
+		int BillId = getBillId(UserId,date);
+		updateBillMap.put("BillId", Integer.toString(BillId));
+		updateBillMap.put("TotalFee", Integer.toString(billDTO.getTotalFee()));
+		updateBillMap.put("WaterFee", Integer.toString(detailbillDTO.getWaterFee()));
+		updateBillMap.put("WaterUsage", Integer.toString(detailbillDTO.getWaterUsage()));
+		updateBillMap.put("ElectricityFee", Integer.toString(detailbillDTO.getElectricityFee()));
+		updateBillMap.put("ElectricityUsage", Integer.toString(detailbillDTO.getElectricityUsage()));
+		
+		return checkUpdateBill(UserId, date, updateBillMap);
+	}
+
+	// 전체 고지서 수정 확인
+	@Override
+	public String checkUpdateBill(String UserId, String date, HashMap<String, String> updateBillMap) {
+		TotalBillDTO totDTO = getBill(UserId,date);
+		if(updateBillMap.get("TotalFee").equals(Integer.toString(totDTO.getTotalFee()))
+				&& updateBillMap.get("WaterFee").equals(Integer.toString(totDTO.getWaterFee()))
+				&& updateBillMap.get("WaterUsage").equals(Integer.toString(totDTO.getWaterUsage()))
+				&& updateBillMap.get("ElectricityFee").equals(Integer.toString(totDTO.getElectricityFee()))
+				&& updateBillMap.get("ElectricityUsage").equals(Integer.toString(totDTO.getElectricityUsage())))
+			return "true";
+		return "false";
+	}
+	
+	// 특정 필드 고지서 수정
+	@Override
+	public String updateBillField(String UserId, String Date, String Field, int fee) {
 		HashMap<String, String> updateBillMap = new HashMap<String, String>();
 		String table;
 		
-		if(Field.equals("Totalfee"))
+		if(Field.equals("TotalFee"))
 			table = "Bill";
 		else
 			table = "detailBill";
 		
-		updateBillMap.put("UserId", UserId);
-		updateBillMap.put("date", Date);
+		int BillId = getBillId(UserId, Date);
+		updateBillMap.put("BillId", Integer.toString(BillId));
 		updateBillMap.put("table",table);
 		updateBillMap.put("Field", Field);
 		updateBillMap.put("fee", Integer.toString(fee));
 		
-		billMapper.updateBill(updateBillMap);
+		billMapper.updateBillField(updateBillMap);
 		
-		return checkUpdateBill(updateBillMap);
+		return checkUpdateBillField(updateBillMap);
 	}
 	
 	// 고지서 삭제
@@ -136,19 +176,29 @@ public class BillService implements BillServiceInterface{
 		return checkDeleteBill(billId);
 	}
 	
+	// 콘솔 출력
 	public void print_bill(BillDTO billDTO, DetailBillDTO detailbillDTO) {
 		System.out.println("BillId:"+billDTO.getBillId());
 		System.out.println("날짜:"+billDTO.getDate());
-		System.out.println("총요금:"+billDTO.getTotalfee());
+		System.out.println("총요금:"+billDTO.getTotalFee());
 		
-		System.out.println("수도:"+detailbillDTO.getWaterFee());
-		System.out.println("난방:"+detailbillDTO.getHeatingFee());
-		System.out.println("전기:"+detailbillDTO.getElectricityFee());
+		System.out.println("수도요금:"+detailbillDTO.getWaterFee());
+		System.out.println("수도사용량:"+detailbillDTO.getWaterUsage());
+		System.out.println("전기요금:"+detailbillDTO.getElectricityFee());
+		System.out.println("전기사용량:"+detailbillDTO.getElectricityUsage());
 		System.out.println("--------------fin--------------");
 	}
 	
+	//DTO 통합
 	public TotalBillDTO makeDTO(BillDTO billDTO, DetailBillDTO detailbillDTO) {
-		return new TotalBillDTO(billDTO.getBillId(),billDTO.getDate(),billDTO.getTotalfee(),detailbillDTO.getWaterFee(),detailbillDTO.getHeatingFee(),detailbillDTO.getElectricityFee());
+		return new TotalBillDTO(
+				billDTO.getBillId(),
+				billDTO.getDate(),
+				billDTO.getTotalFee(),
+				detailbillDTO.getWaterFee(),
+				detailbillDTO.getWaterUsage(),
+				detailbillDTO.getElectricityFee(),
+				detailbillDTO.getElectricityUsage());
 	}
 	
 	// 고지서 ID 가져오기
@@ -172,13 +222,14 @@ public class BillService implements BillServiceInterface{
 		return "fail";
 	}
 	
-	// 고지서 값 변경 확인
+	
+	// 고지서 특정 필드 값 변경 확인
 	@Override
-	public String checkUpdateBill(HashMap<String, String> updateCheckBillMap) {	
+	public String checkUpdateBillField(HashMap<String, String> updateCheckBillMap) {	
 		String fee = updateCheckBillMap.get("fee");
 		updateCheckBillMap.remove("fee");
 		
-		String cnt = Integer.toString(billMapper.checkUpdateBill(updateCheckBillMap));
+		String cnt = Integer.toString(billMapper.checkUpdateBillField(updateCheckBillMap));
 		if(fee.equals(cnt))
 			return "success";
 		return "fail";
@@ -196,6 +247,4 @@ public class BillService implements BillServiceInterface{
 			return "success";
 		return "fail";
 	}
-	
-
 }

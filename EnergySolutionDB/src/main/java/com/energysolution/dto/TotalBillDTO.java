@@ -12,18 +12,20 @@ public class TotalBillDTO {
 	//필요한 필드값
 	private int BillId;
 	private String date;
-	private long Totalfee;
-	private long Waterfee;
-	private long Heatingfee;
-	private long Electricityfee;
+	private int TotalFee;
+	private int WaterFee;
+	private int WaterUsage;
+	private int ElectricityFee;
+	private int ElectricityUsage;
 	
-	public TotalBillDTO(int BillId, String date, long Totalfee,long Waterfee,long Heatingfee,long Electricityfee) {
+	public TotalBillDTO(int BillId, String date, int TotalFee,int WaterFee,int WaterUsage,int ElectricityFee, int ElectricityUsage) {
 		this.BillId = BillId;
 		this.date = date;
-		this.Totalfee =Totalfee;
-		this.Electricityfee=Electricityfee;
-		this.Heatingfee=Heatingfee;
-		this.Waterfee=Waterfee;
+		this.TotalFee =TotalFee;
+		this.WaterFee=WaterFee;
+		this.WaterUsage=WaterUsage;
+		this.ElectricityFee=ElectricityFee;
+		this.ElectricityUsage=ElectricityUsage;
 	}
 		
 	//출력
@@ -33,19 +35,20 @@ public class TotalBillDTO {
 	public String getBilldate() {
 		return date;
 	}
-	
-	public long getTotalfee() {
-		return Totalfee;
+	public int getTotalFee() {
+		return TotalFee;
 	}
-	
-	public long getWaterFee() {
-		return Waterfee;
+	public int getWaterFee() {
+		return WaterFee;
 	}
-	public long getHeatingFee() {
-		return Heatingfee;
+	public int getWaterUsage() {
+		return WaterUsage;
 	}
-	public long getElectricityFee() {
-		return Electricityfee;
+	public int getElectricityFee() {
+		return ElectricityFee;
+	}
+	public int getElectricityUsage() {
+		return ElectricityUsage;
 	}
 
 	//입력
@@ -55,17 +58,20 @@ public class TotalBillDTO {
 	public void setBilldate(String date) {
 		this.date = date;
 	}
-	public void setTotalfee(int Totalfee) {
-		this.Totalfee = Totalfee;
-	}	
-	public void setElectricityfee(int Electricityfee) {
-		this.Electricityfee=Electricityfee;
+	public void setTotalFee(int TotalFee) {
+		this.TotalFee = TotalFee;
 	}
-	public void setHeatingfee(int Heatingfee) {
-		this.Heatingfee=Heatingfee;
+	public void setWaterFee(int WaterFee) {
+		this.WaterFee=WaterFee;
 	}
-	public void setWaterfee(int Waterfee) {
-		this.Waterfee=Waterfee;
+	public void setWaterUsage(int WaterUsage) {
+		this.WaterUsage=WaterUsage;
+	}
+	public void setElectricityFee(int ElectricityFee) {
+		this.ElectricityFee=ElectricityFee;
+	}
+	public void setElectricityUsage(int ElectricityUsage) {
+		this.ElectricityUsage=ElectricityUsage;
 	}
 
 }
