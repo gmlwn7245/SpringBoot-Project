@@ -112,29 +112,33 @@ public class BillService implements BillServiceInterface{
 	
 	// 전체 고지서 수정
 	@Override
-	public String updateBill(String UserId, BillDTO billDTO, DetailBillDTO detailbillDTO) {
-		HashMap<String, String> updateBillMap = new HashMap<String, String>();
-		String date = billDTO.getDate();
+	public String updateBill(TotalBillDTO totalDTO) {
+		HashMap<String, Integer> updateBillMap = new HashMap<String, Integer>();
+		String UserId = totalDTO.getUserId();
+		String date = totalDTO.getDate();
 		int BillId = getBillId(UserId,date);
-		updateBillMap.put("BillId", Integer.toString(BillId));
-		updateBillMap.put("TotalFee", Integer.toString(billDTO.getTotalFee()));
-		updateBillMap.put("WaterFee", Integer.toString(detailbillDTO.getWaterFee()));
-		updateBillMap.put("WaterUsage", Integer.toString(detailbillDTO.getWaterUsage()));
-		updateBillMap.put("ElectricityFee", Integer.toString(detailbillDTO.getElectricityFee()));
-		updateBillMap.put("ElectricityUsage", Integer.toString(detailbillDTO.getElectricityUsage()));
+		updateBillMap.put("BillId", BillId);
+		updateBillMap.put("TotalFee",totalDTO.getTotalFee());
+		updateBillMap.put("WaterFee", totalDTO.getWaterFee());
+		updateBillMap.put("WaterUsage", totalDTO.getWaterUsage());
+		updateBillMap.put("ElectricityFee", totalDTO.getElectricityFee());
+		updateBillMap.put("ElectricityUsage", totalDTO.getElectricityUsage());
 		
-		return checkUpdateBill(UserId, date, updateBillMap);
+		billMapper.updateBill(updateBillMap);
+		billMapper.updateDetailBill(updateBillMap);
+		
+		return checkUpdateBill(BillId, updateBillMap);
 	}
 
 	// 전체 고지서 수정 확인
 	@Override
-	public String checkUpdateBill(String UserId, String date, HashMap<String, String> updateBillMap) {
-		TotalBillDTO totDTO = getBill(UserId,date);
-		if(updateBillMap.get("TotalFee").equals(Integer.toString(totDTO.getTotalFee()))
-				&& updateBillMap.get("WaterFee").equals(Integer.toString(totDTO.getWaterFee()))
-				&& updateBillMap.get("WaterUsage").equals(Integer.toString(totDTO.getWaterUsage()))
-				&& updateBillMap.get("ElectricityFee").equals(Integer.toString(totDTO.getElectricityFee()))
-				&& updateBillMap.get("ElectricityUsage").equals(Integer.toString(totDTO.getElectricityUsage())))
+	public String checkUpdateBill(int BillId, HashMap<String, Integer> updateBillMap) {
+		TotalBillDTO totDTO = makeDTO(billMapper.getBill(BillId), billMapper.getDetailBill(BillId));
+		if(updateBillMap.get("TotalFee") == totDTO.getTotalFee()
+				&& updateBillMap.get("WaterFee")==totDTO.getWaterFee()
+				&& updateBillMap.get("WaterUsage")==totDTO.getWaterUsage()
+				&& updateBillMap.get("ElectricityFee")==totDTO.getElectricityFee()
+				&& updateBillMap.get("ElectricityUsage")==totDTO.getElectricityUsage())
 			return "true";
 		return "false";
 	}
@@ -161,7 +165,7 @@ public class BillService implements BillServiceInterface{
 		return checkUpdateBillField(updateBillMap);
 	}
 	
-	// 고지서 삭제
+	// 고지서 삭제 나중에 필요하면 사용
 	@Override
 	public String deleteBill(String UserId, String Date) {
 		HashMap<String, String> deleteBillMap = new HashMap<String, String>();

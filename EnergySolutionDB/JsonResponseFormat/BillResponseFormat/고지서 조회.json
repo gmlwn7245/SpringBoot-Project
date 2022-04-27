@@ -1,12 +1,11 @@
-// 고지서 조회
-// 방식 : GET
-// URL : /Bill/FindBillAll?user="user001"&&date="2022-2"
-// 기간 내 모든 분야 데이터 보내기
-
 {
+	"고지서 조회":"아이디, 날짜",
+	"방식":"Get",
+	"URI":"/Bill/GetBill?user=user001&&date=2022-2",
+	
     "ResponseBody":{
         "status":200,   
-        "message":"고지서 조회 성공", 
+        "message":"user001님 고지서 조회 성공", 
         "data":{
             "UserId":"user001",
             "Date":"2022-2",

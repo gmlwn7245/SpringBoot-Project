@@ -10,6 +10,7 @@ import lombok.Setter;
 public class TotalBillDTO {
 	
 	//필요한 필드값
+	private String UserId;
 	private int BillId;
 	private String date;
 	private int TotalFee;

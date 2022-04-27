@@ -1,29 +1,20 @@
 package com.energysolution.controller;
 
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.util.HashMap;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,7 +44,7 @@ public class UserController {
 	
 	
 	// 로그인
-	@RequestMapping("/User/SignIn")
+	@PostMapping("/User/SignIn")
 	public JSONObject LoginUser(@RequestBody UserDTO userDTO) {
 		UserDTO getUserDTO = userService.LoginUser(userDTO.getUserId(), userDTO.getUserPassword());
 
@@ -172,10 +163,8 @@ public class UserController {
 	//탈퇴 기능 나중에 논의
 	@RequestMapping("deleteUser")
 	public @ResponseBody String deleteUser() {
-		JSONArray jsonArr = (JSONArray)jsonObject.get("DeleteUser");
-		JSONObject obj = (JSONObject) jsonArr.get(0);
 		
-		result = userService.deleteUser((String)obj.get("UserId"),(String)obj.get("Password"));
+		//result = userService.deleteUser((String)obj.get("UserId"),(String)obj.get("Password"));
 		
 		//Payment - Bill 테이블과 얽혀있어서 더 구현해야함!
 		
@@ -187,7 +176,7 @@ public class UserController {
 		resultJSON.put("count", 2);
 		
 		JSONObject data = new JSONObject();
-		data.put("UserId", (String)obj.get("UserId"));
+		//data.put("UserId", (String)obj.get("UserId"));
 		data.put("message", "회원 탈퇴 완료");
 		
 		resultJSON.put("data", data);

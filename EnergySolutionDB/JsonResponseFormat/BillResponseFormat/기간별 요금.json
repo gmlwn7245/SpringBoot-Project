@@ -1,15 +1,15 @@
-// 기간별 요금 변화
-// 방식 : GET
-// URL : /Bill/FindBillAll?user="user001"&&month=6
-// 기간 내 모든 분야 데이터 보내기
-
 {
+	"기간별 요금":"아이디, 기간(달)",
+	"방식":"Get",
+	"URI":"/Bill/GetBillList?userId=user001&&term=6",
+	
+	
     "ResponseBody":{
         "status":200,   
         "message":"고지서 조회 성공", 
         "data":{
             "UserId":"user001",
-            "month":6,
+            "term":6,
             "BillList":[{
                 "Date":"2021-10",
                 "TotalFee":4000,

@@ -26,8 +26,8 @@ public interface BillMapper {
 	
 	//변경
 	public void updateBillField(HashMap<String, String> updateBillFieldMap);
-	public void updateBill(HashMap<String, String> updateBillMap);
-	public void updateDetailBill(HashMap<String, String> updateDetailBillMap);
+	public void updateBill(HashMap<String, Integer> updateBillMap);
+	public void updateDetailBill(HashMap<String, Integer> updateDetailBillMap);
 	
 	//삭제
 	public void deleteBill(int BillId);

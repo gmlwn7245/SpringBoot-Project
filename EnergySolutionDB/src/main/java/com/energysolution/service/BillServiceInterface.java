@@ -22,7 +22,7 @@ public interface BillServiceInterface {
 	public String updateBillField(String UserId, String Date, String Field, int fee);
 	
 	// 고지서 전체 수정
-	public String updateBill(String UserId,BillDTO billDTO, DetailBillDTO detailbillDTO);
+	public String updateBill(TotalBillDTO totalDTO);
 	
 	// 고지서 삭제
 	public String deleteBill(String UserId, String Date);
@@ -34,7 +34,7 @@ public interface BillServiceInterface {
 	public String checkUpdateBillField(HashMap<String, String> updateCheckBillMap);
 
 	// 고지서 전체 필드 값 변경 확인
-	public String checkUpdateBill(String UserId, String date , HashMap<String, String> updateBillMap);
+	public String checkUpdateBill(int BillId, HashMap<String, Integer> updateBillMap);
 		
 	// 고지서 삭제 확인
 	public String checkDeleteBill(int billId);

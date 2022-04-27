@@ -1,8 +1,9 @@
-// 아이디, 날짜, 총 요금, 수도사용량, 수도요금, 전기사용량, 전기요금
-// 방식 : POST
-// URL : /Bill/InsertBill
-
 {
+	"고지서 등록":"아이디, 날짜, 총 요금, 수도사용량, 수도요금, 전기사용량, 전기요금",
+	"방식":"POST",
+	"URI":"/Bill/InsertBill",
+	
+	
     "RequestBody":{
         "userId":"user100",
         "date":"2022-2",

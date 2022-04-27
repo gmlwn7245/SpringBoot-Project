@@ -23,7 +23,7 @@
 	</update>
 	
 	<update id="updateDetailBill">
-		UPDATE Bill SET WaterFee=#{WaterFee}, WaterUsage=#{WaterUsage}, ElectricityFee=#{ElectricityFee}, ElectricityUsage=#{ElectricityUsage} WHERE BillId = #{BillId}
+		UPDATE DetailBill SET WaterFee=#{WaterFee}, WaterUsage=#{WaterUsage}, ElectricityFee=#{ElectricityFee}, ElectricityUsage=#{ElectricityUsage} WHERE BillId = #{BillId}
 	</update>
 		
 	<delete id="deleteBill">
