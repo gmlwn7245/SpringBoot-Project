@@ -1,7 +1,10 @@
 package com.energysolution.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.mail.MessagingException;
 
 import com.energysolution.dto.UserDTO;
 
@@ -16,7 +19,7 @@ public interface UserServiceInterface {
 	public List<String> FindUserId(String Email);
 	
 	//회원 PW 찾기
-	public String FindUserPW(HashMap<String, String> findUserPWMap);
+	public String FindUserPW(HashMap<String, String> findUserPWMap) throws MessagingException, UnsupportedEncodingException;
 	
 	//회원 수정 (비밀번호)
 	public String updateUser(HashMap<String, String> updateMap);

@@ -1,6 +1,7 @@
 package com.energysolution.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -9,8 +10,10 @@ import org.json.simple.parser.ParseException;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.mail.MessagingException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,12 +39,16 @@ public class UserController {
 	@Autowired
 	UserService userService;
 	
+	
 	@RequestMapping("/User")
 	public @ResponseBody String mainView() throws IOException, ParseException {
+		String springVersion = org.springframework.core.SpringVersion.getVersion();
+
+		System.out.println("스프링 프레임워크 버전 : " + springVersion);
 
 		return "This is User";
 	}
-	
+
 	
 	// 로그인
 	@PostMapping("/User/SignIn")
@@ -118,7 +125,7 @@ public class UserController {
 	
 	//비밀번호 찾기
 	@GetMapping("/User/FindUserPW")
-	public JSONObject FindUserPW(@RequestParam("userId") String UserId,@RequestParam("email") String Email) {
+	public JSONObject FindUserPW(@RequestParam("userId") String UserId,@RequestParam("email") String Email) throws UnsupportedEncodingException, MessagingException {
 		
 		HashMap<String, String> findUserPWMap = new HashMap<String, String>();
 		findUserPWMap.put("UserId", UserId);

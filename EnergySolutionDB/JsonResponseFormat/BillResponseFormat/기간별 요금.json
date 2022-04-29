@@ -30,7 +30,7 @@
                 "WaterFee":3000,
                 "WaterUsage":500,
                 "ElectricityFee":1000,
-                "ElectricityUsage":200              // +9 months
+                "ElectricityUsage":200              
             }]
             
         }

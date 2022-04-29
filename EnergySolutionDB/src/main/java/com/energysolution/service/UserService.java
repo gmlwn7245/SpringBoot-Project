@@ -3,10 +3,16 @@ package com.energysolution.service;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
+import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom; 
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import com.energysolution.dto.UserDTO;
@@ -18,6 +24,8 @@ public class UserService implements UserServiceInterface {
 	@Autowired
 	private UserMapper userMapper;
 	
+    @Autowired
+    private JavaMailSender javaMailSender;
 	//회원가입
 	@Override
 	public String insertUser(UserDTO userDTO) {
@@ -50,7 +58,7 @@ public class UserService implements UserServiceInterface {
 	
 	//비밀번호 찾기
 	@Override
-	public String FindUserPW(HashMap<String, String> findUserPWMap) {
+	public String FindUserPW(HashMap<String, String> findUserPWMap) throws MessagingException, UnsupportedEncodingException {
 		//아이디 있는지 확인
 		int count = userMapper.checkUserByIdEmail(findUserPWMap);
 		System.out.println(count);
@@ -62,6 +70,28 @@ public class UserService implements UserServiceInterface {
 		
 		//임시 비밀번호 발급
 		String tempPW = getRandomPassword(10);
+		
+		//이메일 전송
+		String to = userDTO.getEmail();
+        String from = "gmlwn@test.com";
+        String subject = "temporary password";
+        
+        StringBuilder body = new StringBuilder();
+        body.append("<html> <body><h1>임시 비밀번호는 다음과 같습니다. </h1> <div>");
+        body.append(tempPW);
+        body.append("</div> </body></html>");
+
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true, "UTF-8");
+
+        mimeMessageHelper.setFrom(from,"EnergySolution_TempPW_manager");
+        mimeMessageHelper.setTo(to);
+        mimeMessageHelper.setSubject(subject);
+        mimeMessageHelper.setText(body.toString(), true);
+
+        javaMailSender.send(message);
+		
+        // DB 변경
 		HashMap<String, String> updateMap = new HashMap<String, String>();
 		updateMap.put("UserId", userDTO.getUserId());
 		updateMap.put("newPW", tempPW);
@@ -92,11 +122,8 @@ public class UserService implements UserServiceInterface {
 			sb.append(charSet[idx]); 
 			} 
 		return sb.toString(); 
-		
 	}
 
-	
-	
 	//로그인 하기
 	@Override
 	public UserDTO LoginUser(String UserId, String Password) {		

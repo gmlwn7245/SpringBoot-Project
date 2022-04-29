@@ -17,10 +17,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+
 @Configuration
 @PropertySource("classpath:/application.properties")
 @MapperScan(basePackages="com.energysolution.mapper",sqlSessionFactoryRef = "SqlSessionFactory")
-public class DBConfig {
+public class RootConfig {
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -50,5 +51,6 @@ public class DBConfig {
     public SqlSessionTemplate sqlSessionTemplate(@Qualifier("SqlSessionFactory")SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
+   
     
 }

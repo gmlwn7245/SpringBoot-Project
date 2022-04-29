@@ -23,6 +23,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework:spring-context-support:5.3.17'
+	implementation 'org.springframework.boot:spring-boot-starter-mail:2.6.5'
+
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	compileOnly 'org.projectlombok:lombok'
@@ -33,17 +36,19 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	
-	
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 	implementation 'javax.servlet:jstl'
 	
 	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
-	
-	implementation 'com.squareup.retrofit2:retrofit:2.6.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
-    implementation 'com.google.code.gson:gson:2.8.6'
+	//implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+	//implementation 'com.squareup.retrofit2:retrofit:2.6.0'
+    //implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
+    //implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
-
+	
+    implementation 'com.sun.mail:javax.mail:1.6.2'
+    //implementation fileTree(dir:'libs',include:'*.jar')
+    
 }
 
 tasks.named('test') {
