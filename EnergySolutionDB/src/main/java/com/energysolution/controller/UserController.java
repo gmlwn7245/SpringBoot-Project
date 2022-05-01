@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.energysolution.dto.UserDTO;
-import com.energysolution.service.UserService;
+import com.energysolution.service.UserServiceImpl;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -37,7 +37,7 @@ public class UserController {
 	private List<String> userIdList;
 	
 	@Autowired
-	UserService userService;
+	UserServiceImpl userService;
 	
 	
 	@RequestMapping("/User")
@@ -54,7 +54,7 @@ public class UserController {
 	@PostMapping("/User/SignIn")
 	public JSONObject LoginUser(@RequestBody UserDTO userDTO) {
 		UserDTO getUserDTO = userService.LoginUser(userDTO.getUserId(), userDTO.getUserPassword());
-
+		
 		JSONObject resultJSON = new JSONObject();	
 		resultJSON.put("message", "로그인 성공");
 		

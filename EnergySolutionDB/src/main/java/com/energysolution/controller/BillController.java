@@ -26,7 +26,7 @@ import com.energysolution.dto.DetailBillDTO;
 import com.energysolution.dto.PaymentDTO;
 import com.energysolution.dto.TotalBillDTO;
 import com.energysolution.dto.UserDTO;
-import com.energysolution.service.BillService;
+import com.energysolution.service.BillServiceImpl;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -37,7 +37,7 @@ public class BillController {
 	private String result;
 	
 	@Autowired
-	BillService billService;
+	BillServiceImpl billService;
 	
 	private JSONObject jsonObject;
 	
