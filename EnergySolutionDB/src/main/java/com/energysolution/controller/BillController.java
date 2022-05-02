@@ -1,18 +1,10 @@
 package com.energysolution.controller;
 
-
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
 import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +17,6 @@ import com.energysolution.dto.BillDTO;
 import com.energysolution.dto.DetailBillDTO;
 import com.energysolution.dto.PaymentDTO;
 import com.energysolution.dto.TotalBillDTO;
-import com.energysolution.dto.UserDTO;
 import com.energysolution.service.BillServiceImpl;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -41,14 +32,14 @@ public class BillController {
 	
 	private JSONObject jsonObject;
 	
-	@RequestMapping("/Bill")
+	@GetMapping("/User/Bill")
 	public @ResponseBody String mainView() {
 		
 		return "This is Billhome";
 	}
 	
 	//특정 날짜 고지서 가져오기
-	@GetMapping("/Bill/GetBill")
+	@GetMapping("/User/Bill/GetBill")
 	public JSONObject getBill(@RequestParam("userId") String UserId,@RequestParam("date") String date) {
 			
 		TotalBillDTO totalBillDTO = billService.getBill(UserId, date);
@@ -72,7 +63,7 @@ public class BillController {
 	}
 	
 	//특정 기간 고지서 가져오기
-	@GetMapping("/Bill/GetBillList")
+	@GetMapping("/User/Bill/GetBillList")
 	public JSONObject getBillTerm(@RequestParam("userId") String UserId,@RequestParam("month") int term) {
 		
 		List<TotalBillDTO> listDTO = billService.getBillTerm(UserId, term);
@@ -103,7 +94,7 @@ public class BillController {
 	}
 	
 	//고지서 등록하기
-		@PostMapping("/Bill/InsertBill")
+		@PostMapping("/User/Bill/InsertBill")
 		public JSONObject setBill(@RequestBody TotalBillDTO totalDTO) throws Exception{
 			
 			BillDTO billDTO = new BillDTO(
@@ -160,7 +151,7 @@ public class BillController {
 	}
 	
 	//고지서 전체 수정
-	@PostMapping("/Bill/UpdateBill")
+	@PostMapping("/User/Bill/UpdateBill")
 	public JSONObject updateBill(@RequestBody TotalBillDTO totalDTO) {
 		
 		

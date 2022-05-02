@@ -13,7 +13,6 @@ import java.util.List;
 import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,18 +39,18 @@ public class UserController {
 	UserServiceImpl userService;
 	
 	
-	@RequestMapping("/User")
+	@RequestMapping("/Main")
 	public @ResponseBody String mainView() throws IOException, ParseException {
-		String springVersion = org.springframework.core.SpringVersion.getVersion();
+		/*String springVersion = org.springframework.core.SpringVersion.getVersion();
 
-		System.out.println("스프링 프레임워크 버전 : " + springVersion);
+		System.out.println("스프링 프레임워크 버전 : " + springVersion);*/
 
 		return "This is User";
 	}
 
 	
-	// 로그인
-	@PostMapping("/User/SignIn")
+	//로그인
+	/*@PostMapping("/Main/SignIn")
 	public JSONObject LoginUser(@RequestBody UserDTO userDTO) {
 		UserDTO getUserDTO = userService.LoginUser(userDTO.getUserId(), userDTO.getUserPassword());
 		
@@ -66,11 +65,11 @@ public class UserController {
 		resultJSON.put("data", data);
 		
 		return resultJSON;
-	}
+	}*/
 	
 	
 	// 회원가입
-	@PostMapping("/User/SignUp")
+	@PostMapping("/Main/SignUp")
 	public JSONObject InsertUser(@RequestBody UserDTO userDTO) {
 		result = userService.insertUser(userDTO);
 		
@@ -84,7 +83,7 @@ public class UserController {
 	}
 	
 	//아이디 중복 확인
-	@GetMapping("/User/checkId")
+	@GetMapping("/Main/checkId")
 	public JSONObject checkId(@RequestParam("userId") String UserId) {
 		int count = userService.checkUser(UserId);
 		
@@ -98,7 +97,7 @@ public class UserController {
 	}
 	
 	//id 찾기
-	@GetMapping("/User/FindUserId")
+	@GetMapping("/Main/FindUserId")
 	public JSONObject FindUserId(@RequestParam("email") String Email) {
 			
 		userIdList = userService.FindUserId(Email);
@@ -124,7 +123,7 @@ public class UserController {
 	}
 	
 	//비밀번호 찾기
-	@GetMapping("/User/FindUserPW")
+	@GetMapping("/Main/FindUserPW")
 	public JSONObject FindUserPW(@RequestParam("userId") String UserId,@RequestParam("email") String Email) throws UnsupportedEncodingException, MessagingException {
 		
 		HashMap<String, String> findUserPWMap = new HashMap<String, String>();

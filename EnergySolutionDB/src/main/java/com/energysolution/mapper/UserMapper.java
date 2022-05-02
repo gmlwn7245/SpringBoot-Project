@@ -1,6 +1,5 @@
 package com.energysolution.mapper;
 
-
 import java.util.HashMap;
 import java.util.List;
 

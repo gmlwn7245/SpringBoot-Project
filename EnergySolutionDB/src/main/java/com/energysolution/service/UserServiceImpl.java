@@ -1,18 +1,20 @@
 package com.energysolution.service;
 
+import java.io.UnsupportedEncodingException;
+import java.security.SecureRandom;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import java.io.UnsupportedEncodingException;
-import java.security.SecureRandom; 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +32,6 @@ public class UserServiceImpl implements UserService {
     
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
     
 	//회원가입
 	@Override
@@ -137,7 +138,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	//로그인 하기
-	@Override
+	/*@Override
 	public UserDTO LoginUser(String UserId, String Password) {		
 		//해당 아이디의 비밀번호가 사용자가 입력한 비밀번호와 일치하는지 확인
 		//암호화된 비밀번호
@@ -145,7 +146,7 @@ public class UserServiceImpl implements UserService {
 		if(passwordEncoder.matches(Password, getUserPassword(UserId)))
 			return userMapper.getUser(UserId);
 		return null;
-	}
+	}*/
 	
 
 	@Override
