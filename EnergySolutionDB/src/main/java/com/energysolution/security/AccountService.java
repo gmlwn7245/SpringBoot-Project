@@ -6,9 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.energysolution.mapper.AccountMapper;
@@ -19,8 +19,19 @@ public class AccountService implements UserDetailsService{
 	@Autowired
 	AccountMapper accountMapper;
 	
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+	
+	public boolean isUser(Account account) {
+		Account getUserAccount = accountMapper.findUserById(account.getUsername());
+		if(!passwordEncoder.matches(account.getPassword(), getUserAccount.getPassword())) {
+			return false;
+		}
+		return true;
+	}
+	
 	@Override
-	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+	public Account loadUserByUsername(String userId) throws UsernameNotFoundException {
 		Account account = accountMapper.findUserById(userId);
         if(account == null) {
             throw new UsernameNotFoundException(userId);
@@ -40,4 +51,5 @@ public class AccountService implements UserDetailsService{
 
         return grantedAuthorities;
     }
+    
 }

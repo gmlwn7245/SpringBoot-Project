@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.energysolution.mapper.AccountMapper">
+	<select id="findUser" parameterType="HashMap" resultType="com.energysolution.security.Account">
+		SELECT * FROM User WHERE UserId=#{UserId} AND Password=#{Password}
+	</select>
+	
 	<select id="findUserById" parameterType="String" resultType="com.energysolution.security.Account">
 		SELECT * FROM User WHERE UserId=#{UserId}
 	</select>
