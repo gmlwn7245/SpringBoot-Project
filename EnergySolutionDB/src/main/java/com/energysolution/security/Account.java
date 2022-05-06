@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.Data;
+import security2.UserRole;
 
 
 //@Data : @Getter, @Setter, @RequiredArgsConstructor, @ToString, @EqualsAndHashCode 포함
@@ -50,6 +51,14 @@ public class Account implements UserDetails{
 	public void setEmail(String Email) {
 		this.Email=Email;
 	}
+	/*
+	public UserRole getUserRole() {
+		return this.userRole;
+	}
+	
+	public void setUserRole(UserRole userRole) {
+		this.userRole = userRole;
+	}*/
 
 	//계정 만료 여부 
 	//true : 만료안됨

@@ -22,6 +22,7 @@ public class JwtUtils {
 
 	
 	//jwt 토큰 생성
+	//인자로 key받아서 넣어주는거 구현해보기
 	public String createJwt(Account account) {
 		//Header 부분 설정
 		Map<String, Object> headers = new HashMap<>();
@@ -34,12 +35,22 @@ public class JwtUtils {
 		payloads.put("Email", account.getEmail());
 		payloads.put("Name", account.getUserId());
 		
+		//토큰 유효시간 2시간
+		Long expiredTime = 1000 * 60L * 60L * 2L;
+		
+		//토큰 만료 시간
+		Date ext = new Date();
+		ext.setTime(ext.getTime()+expiredTime);
+		
 		//Token Builder
+		/* 등록된 클레임은 토큰 정보를 표현하기 위해 이미 정해진 정류의 데이터들
+		 * 모두 선택적으로 작성이 가능하며 사용할 것을 권장
+		 */
 		String jwt = Jwts.builder()
 				.setSubject("TestToken")
 				.setHeader(headers)
 				.setClaims(payloads)
-				.setExpiration(new Date(System.currentTimeMillis()+exp))
+				.setExpiration(ext)
 				.signWith(SignatureAlgorithm.HS256, key.getBytes())
 				.compact();
 		
@@ -47,20 +58,20 @@ public class JwtUtils {
 	}
 	
 	//jwt 토큰 검증
-	public Map<String, Object> checkJwt(String token) throws UnsupportedEncodingException {
+	public Map<String, Object> checkJwt(String auth) throws UnsupportedEncodingException {
 		Map<String, Object> claimMap = null;
 		
 		try {
 			Claims claims = Jwts.parser()
 					.setSigningKey(key.getBytes("UTF-8"))	//키설정
-					.parseClaimsJws(token)	//검증
+					.parseClaimsJws(auth)	//검증
 					.getBody();
 			
 			claimMap = claims;
 		} catch (ExpiredJwtException e) {	//만료 예외
-			System.out.println(e);
+			System.out.println("#expir");
 		} catch (Exception e) {				//이외의 예외
-			System.out.println(e);
+			System.out.println("#error");
 		}
 		return claimMap;
 	}

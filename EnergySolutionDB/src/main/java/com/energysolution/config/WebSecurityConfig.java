@@ -1,5 +1,6 @@
 package com.energysolution.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -13,10 +14,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.energysolution.security.AccountProvider;
 
+import security2.JwtAuthenticationProvider;
+import security2.LoginAuthenticationFailureHandler;
+import security2.LoginAuthenticationSuccessHandler;
+
 @Configuration
 @ComponentScan(basePackages={"com.energysolution.security"})
 @EnableWebSecurity 	// Spring Security 지원 : SpringSecurityFilterChain 포함
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
+	/*@Autowired
+	private LoginAuthenticationSuccessHandler LoginAuthSuccessHandler;
+	@Autowired
+	private LoginAuthenticationFailureHandler LoginAuthFailureHandler;
+	@Autowired
+	private AccountProvider accountProvider;
+	@Autowired
+	private JwtAuthenticationProvider jwtAuthenticationProvider;
+*/
 	
 	
 	@Override
@@ -24,17 +38,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		http.cors().disable()
 		.httpBasic().disable()	// rest API 이므로 기본설정 필요 없음
         .csrf().disable()		//rest API 사용시 필요 없음
-        .formLogin().disable()
+        .formLogin().disable();
       //  .headers().frameOptions().disable()
       //  .and()	//JWT token인증이므로 Session 필요 없음
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+      //  .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		
 		//권한
 		http.authorizeRequests()			//요청에 대한 권한 지정
-			.antMatchers("/","/Main/**")
+			.antMatchers("/","/Main/**","/Test/**")
 			.permitAll()
-			.antMatchers("/User/**").hasRole("USER")
-			.anyRequest().authenticated();
+			.antMatchers("/User/**")
+			.permitAll();
+			//.hasRole("USER").anyRequest().authenticated();
 			//.and()
             //.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 	}

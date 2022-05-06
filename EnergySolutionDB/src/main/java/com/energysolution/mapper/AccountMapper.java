@@ -7,9 +7,12 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.energysolution.security.Account;
 
+import security2.Accounts;
+
 @Mapper
 public interface AccountMapper {
 	public Account findUser(HashMap<String, String> Usermap);
 	public Account findUserById(String UserId);
+	public Accounts findByUserId(String UserId);
 	public List<String> loadUserAuthorities(String userId);
 }

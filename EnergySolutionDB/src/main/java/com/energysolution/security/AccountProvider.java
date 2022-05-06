@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import security2.PreAuthorizationToken;
 
 @RequiredArgsConstructor
 @Component
@@ -20,8 +21,10 @@ public class AccountProvider implements AuthenticationProvider{
     @Autowired
     private PasswordEncoder passwordEncoder;
 	
+    //인증 구현
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+		PreAuthorizationToken token = (PreAuthorizationToken)authentication;
 		String UserId = (String) authentication.getPrincipal();
 		String password = (String) authentication.getCredentials();
 		
@@ -30,6 +33,7 @@ public class AccountProvider implements AuthenticationProvider{
 		if(!passwordEncoder.matches(password, account.getPassword())) {
 			throw new BadCredentialsException("BadCredentialsException");
 		}
+		//PostAuthorizationToken.getTokenFromAccountContext(AccountContext);
 		
 		return new UsernamePasswordAuthenticationToken(account,account.getAuthorities());
 	}
