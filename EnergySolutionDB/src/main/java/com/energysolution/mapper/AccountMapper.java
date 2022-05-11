@@ -14,5 +14,6 @@ public interface AccountMapper {
 	public Account findUser(HashMap<String, String> Usermap);
 	public Account findUserById(String UserId);
 	public Accounts findByUserId(String UserId);
+	public String findRole(String UserId);
 	public List<String> loadUserAuthorities(String userId);
 }

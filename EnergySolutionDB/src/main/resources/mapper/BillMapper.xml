@@ -38,8 +38,8 @@
 		DELETE FROM payment WHERE BillId=#{billId}
 	</delete>
 	
-	<select id="getLastBillId" resultType="Integer">
-		SELECT BillId FROM Bill ORDER BY BillId DESC LIMIT 1
+	<select id="getMaxBillId" resultType="Integer">
+		SELECT MAX(BillId) FROM Bill
 	</select>
 	
 	<select id="getBill" parameterType="hashmap" resultType="com.energysolution.dto.BillDTO">
@@ -72,5 +72,9 @@
 	
 	<select id="getBillId" parameterType="hashmap" resultType="Integer">
 		SELECT BillId FROM payment WHERE UserId=#{UserId} AND BillId IN (SELECT BillId FROM Bill WHERE date=#{date});
+	</select>
+	
+	<select id="getBillIdCnt" parameterType="hashmap" resultType="Integer">
+		SELECT Count(BillId) FROM payment WHERE UserId=#{UserId} AND BillId IN (SELECT BillId FROM Bill WHERE date=#{date});
 	</select>
  </mapper>

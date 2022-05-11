@@ -18,11 +18,12 @@ public interface BillMapper {
 	public BillDTO getBill(int BillId);
 	public DetailBillDTO getDetailBill(int BillId);
 	
-	//마지막 BillId 가져옴
-	public int getLastBillId();
+	//가장 큰 BillId 가져옴
+	public int getMaxBillId();
 	
 	//ID로 조회
 	public int getBillId(HashMap<String, String> getBillIdMap);
+	public int getBillIdCnt(HashMap<String, String> getBillIdMap);
 	
 	//변경
 	public void updateBillField(HashMap<String, String> updateBillFieldMap);

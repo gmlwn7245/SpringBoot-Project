@@ -24,8 +24,11 @@ public class BillServiceImpl implements BillService{
 	//고지서 등록
 	@Override
 	public String insertBill(BillDTO billDTO, DetailBillDTO detailbillDTO, PaymentDTO paymentDTO) {
-		billId = getLastBillId()+1;
-		 
+		if(getBillIdCnt(paymentDTO.getUserId(),billDTO.getDate())!=0)
+			return "fail";
+		
+		billId = getMaxBillId()+1;
+		
 		billDTO.setBillId(billId);
 		detailbillDTO.setBillId(billId);
 		paymentDTO.setBillId(billId);
@@ -38,13 +41,17 @@ public class BillServiceImpl implements BillService{
 	}
 	
 	//마지막 BillId 가져옴
-	public int getLastBillId() {
-		return billMapper.getLastBillId(); 
+	public int getMaxBillId() {
+		return billMapper.getMaxBillId(); 
 	}
 	
 	//특정 날짜 고지서 출력
 	@Override
 	public TotalBillDTO getBill(String UserId, String date) {
+		if(getBillIdCnt(UserId,date)==0) {
+			return null;
+		}
+		
 		//BillId 가져옴
 		int BillId = getBillId(UserId, date);
 		
@@ -62,12 +69,18 @@ public class BillServiceImpl implements BillService{
 		int nowYear = now.getYear();
 		int nowMonth = now.getMonthValue();
 		
+		if(nowMonth==1) {
+			nowMonth=12;
+			nowYear-=1;
+		}else {
+			nowMonth--;
+		}
+		
 		int rest = nowMonth - term;
 		
 		//해당 기간의 모든 요금 상세량 넘겨줌
 		List<TotalBillDTO> arrDTO = new ArrayList<TotalBillDTO>();
 		
-	
 		if(rest <=0) {
 			for(int i=12+rest; i<=12; i++) {
 				int year = nowYear-1;
@@ -116,6 +129,7 @@ public class BillServiceImpl implements BillService{
 		HashMap<String, Integer> updateBillMap = new HashMap<String, Integer>();
 		String UserId = totalDTO.getUserId();
 		String date = totalDTO.getDate();
+		
 		int BillId = getBillId(UserId,date);
 		updateBillMap.put("BillId", BillId);
 		updateBillMap.put("TotalFee",totalDTO.getTotalFee());
@@ -214,6 +228,17 @@ public class BillServiceImpl implements BillService{
 		
 		int BillId = billMapper.getBillId(getBillIdMap);
 		return BillId;
+	}
+	
+	// 고지서 있는지 확인 count return
+	@Override
+	public int getBillIdCnt(String UserId, String date) {
+		HashMap<String, String> getBillIdMap = new HashMap<String, String>();
+		getBillIdMap.put("UserId", UserId);
+		getBillIdMap.put("date", date);
+		
+		int Cnt = billMapper.getBillIdCnt(getBillIdMap);
+		return Cnt;
 	}
 	
 	// 고지서 유무 확인

@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public String insertUser(UserDTO userDTO) {
 		String encodedPW = passwordEncoder.encode(userDTO.getPassword());
+		System.out.println(encodedPW);
 		userDTO.setPassword(encodedPW);
 		userMapper.insertUser(userDTO);
 		if(checkUser(userDTO.getUserId())==1)
@@ -138,7 +139,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	//로그인 하기
-	/*@Override
+	@Override
 	public UserDTO LoginUser(String UserId, String Password) {		
 		//해당 아이디의 비밀번호가 사용자가 입력한 비밀번호와 일치하는지 확인
 		//암호화된 비밀번호
@@ -146,7 +147,7 @@ public class UserServiceImpl implements UserService {
 		if(passwordEncoder.matches(Password, getUserPassword(UserId)))
 			return userMapper.getUser(UserId);
 		return null;
-	}*/
+	}
 	
 
 	@Override

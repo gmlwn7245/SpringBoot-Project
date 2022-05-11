@@ -8,15 +8,13 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.energysolution.security.AccountProvider;
-
-import security2.JwtAuthenticationProvider;
-import security2.LoginAuthenticationFailureHandler;
-import security2.LoginAuthenticationSuccessHandler;
+import com.energysolution.security.JwtAuthenticationFilter;
+import com.energysolution.security.JwtUtils;
 
 @Configuration
 @ComponentScan(basePackages={"com.energysolution.security"})
@@ -31,6 +29,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private JwtAuthenticationProvider jwtAuthenticationProvider;
 */
+	@Autowired
+	private JwtUtils jwtUtils;
 	
 	
 	@Override
@@ -45,10 +45,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		
 		//권한
 		http.authorizeRequests()			//요청에 대한 권한 지정
-			.antMatchers("/","/Main/**","/Test/**")
+			.antMatchers("/","/Main/**")
 			.permitAll()
-			.antMatchers("/User/**")
+			.antMatchers("/User/**","/Test/**")
 			.permitAll();
+			//.and()
+			//.addFilterBefore(new JwtAuthenticationFilter(jwtUtils),
+			//		UsernamePasswordAuthenticationFilter.class);
+		
+		//원래 여기까지 주석 풀었음!
+		
 			//.hasRole("USER").anyRequest().authenticated();
 			//.and()
             //.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);

@@ -2,6 +2,7 @@ package com.energysolution.controller;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -9,6 +10,7 @@ import org.json.simple.parser.ParseException;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.mail.MessagingException;
 
@@ -44,66 +46,105 @@ public class UserController {
 		/*String springVersion = org.springframework.core.SpringVersion.getVersion();
 
 		System.out.println("스프링 프레임워크 버전 : " + springVersion);*/
-
+		System.out.println("Main");
+		System.out.println(InetAddress.getLocalHost());
 		return "This is User";
 	}
+	
+	@RequestMapping("/Main/Tests")
+	public @ResponseBody String mainTest(@RequestParam("userId") String UserId) throws IOException, ParseException {
+		System.out.println("Main");
+		return "Hello, "+UserId;
+	}
 
-	
 	//로그인
-	/*@PostMapping("/Main/SignIn")
+	@PostMapping("/Main/SignIn")
 	public JSONObject LoginUser(@RequestBody UserDTO userDTO) {
-		UserDTO getUserDTO = userService.LoginUser(userDTO.getUserId(), userDTO.getUserPassword());
-		
+		System.out.println("로그인");
+		UserDTO getUserDTO = userService.LoginUser(userDTO.getUserId(), userDTO.getPassword());
+		//UserDTO getUserDTO = userService.LoginUser(jsonObject.get("UserId").toString(),jsonObject.get("Password").toString());
 		JSONObject resultJSON = new JSONObject();	
-		resultJSON.put("message", "로그인 성공");
 		
-		JSONObject data = new JSONObject();
-		data.put("UserId", userDTO.getUserId());
-		data.put("Name", getUserDTO.getUserName());
-		data.put("Email", getUserDTO.getUserEmail());
+		if(getUserDTO==null) {
+			resultJSON.put("Message", "잘못된 아이디 또는 비밀번호 입니다.");
+			resultJSON.put("result", "fail");
+		}else {
+			resultJSON.put("Message", userDTO.getUserName()+"님 로그인 성공");
+			resultJSON.put("result", "success");		
+		}
 		
-		resultJSON.put("data", data);
-		
+		System.out.println(getUserDTO);
 		return resultJSON;
-	}*/
+	}
 	
+
 	
 	// 회원가입
 	@PostMapping("/Main/SignUp")
 	public JSONObject InsertUser(@RequestBody UserDTO userDTO) {
+		System.out.println("회원가입 시도");
+		//UserDTO userDTO = new UserDTO(jsonObject.get("UserId").toString(),jsonObject.get("Name").toString(),jsonObject.get("Password").toString(),jsonObject.get("Email").toString());
 		result = userService.insertUser(userDTO);
 		
-		if(result != "success")
-			return null;
-
+		
 		JSONObject resultJSON = new JSONObject();
-		resultJSON.put("message", "회원가입 성공");
+		
+		if(result != "success")
+			resultJSON.put("Message", "회원가입 실패");
+		else
+			resultJSON.put("Message", userDTO.getName()+"님 회원가입 성공");
+		System.out.println("회원가입 성공");
+		
 		
 		return resultJSON;
 	}
+	
+
 	
 	//아이디 중복 확인
-	@GetMapping("/Main/checkId")
+	@GetMapping("/Main/CheckId")
 	public JSONObject checkId(@RequestParam("userId") String UserId) {
 		int count = userService.checkUser(UserId);
-		
-		if(count != 0)
-			return null;
-		
+		System.out.println("아이디 중복 체크");
 		JSONObject resultJSON = new JSONObject();
-		resultJSON.put("message", "사용 가능한 아이디입니다.");
+		if(count != 0) {
+			resultJSON.put("Message", "이미 존재하는 아이디입니다.");
+		}else {
+			resultJSON.put("Message", "사용 가능한 아이디입니다.");
+		}
 		
 		return resultJSON;
 	}
 	
-	//id 찾기
+	//비밀번호 바꾸기
+	@PostMapping("/Main/ChangePW")
+	public JSONObject updateUser(@RequestBody UserDTO userDTO){
+		System.out.println("비밀번호 변경 시도 : "+userDTO.getUserId());
+		HashMap<String, String> updateMap = new HashMap<String, String>();
+		updateMap.put("UserId", userDTO.getUserId());
+		updateMap.put("newPW", userDTO.getPassword());
+		
+		result = userService.updateUser(updateMap);
+		
+		JSONObject resultJSON = new JSONObject();
+		
+		if(result=="fail") {
+			resultJSON.put("Message", "비밀번호 변경 실패");
+		}else {
+			resultJSON.put("Message", "비밀번호 변경 완료");
+		}
+		
+		return resultJSON;
+	}
+	
+	//ID 찾기
 	@GetMapping("/Main/FindUserId")
 	public JSONObject FindUserId(@RequestParam("email") String Email) {
 			
 		userIdList = userService.FindUserId(Email);
 			
 		JSONObject resultJSON = new JSONObject();
-		resultJSON.put("message", "아이디 찾기 성공");
+		resultJSON.put("Message", "아이디 찾기 성공");
 		
 		JSONObject data = new JSONObject();
 		data.put("count", userIdList.size());	
@@ -121,6 +162,8 @@ public class UserController {
 			
 		return resultJSON;
 	}
+
+	
 	
 	//비밀번호 찾기
 	@GetMapping("/Main/FindUserPW")
@@ -137,7 +180,7 @@ public class UserController {
 		/*이메일로 전송하기*/
 		
 		JSONObject resultJSON = new JSONObject();
-		resultJSON.put("message", "이메일로 해당 아이디의 임시 비밀번호가 전송되었습니다.");
+		resultJSON.put("Message", "이메일로 해당 아이디의 임시 비밀번호가 전송되었습니다.");
 		
 		JSONObject data = new JSONObject();
 		data.put("UserId", UserId);
@@ -147,21 +190,39 @@ public class UserController {
 		return resultJSON;
 	}
 	
-	//비밀번호 바꾸기
-	@PostMapping("/User/ChangeUserPW")
-	public JSONObject updateUser(@RequestBody UserDTO userDTO){
-		HashMap<String, String> updateMap = new HashMap<String, String>();
-		updateMap.put("UserId", userDTO.getUserId());
-		updateMap.put("newPW", userDTO.getPassword());
-		
-		result = userService.updateUser(updateMap);
-		
-		if(result=="fail") {
+
+	
+	//로그인
+	@PostMapping("/Main/RetrofitSignIn")
+	public JSONObject RetrofitLoginUser(@RequestBody HashMap<String, String> map) {
+		System.out.println("Retrofit 로그인");
+		UserDTO getUserDTO = userService.LoginUser(map.get("UserId"), map.get("Password"));
+		if(getUserDTO==null)
 			return null;
-		}
+		
+		JSONObject resultJSON = new JSONObject();	
+		resultJSON.put("UserId", getUserDTO.getUserId());
+		resultJSON.put("Name", getUserDTO.getUserName());
+		resultJSON.put("Email", getUserDTO.getUserEmail());
+		
+		System.out.println(getUserDTO);
+		return resultJSON;
+	}
+	
+	
+	// Retrofit 회원가입
+	@PostMapping("/Main/RetrofitSignUp")
+	public JSONObject RetrofitInsertUser(@RequestBody HashMap<String, String> map) {
+		System.out.println("회원가입 시도");
+		UserDTO userDTO = new UserDTO(map.get("UserId"),map.get("Name"),map.get("Password"),map.get("Email"));
+		result = userService.insertUser(userDTO);
+		
+		if(result != "success")
+			return null;
+		System.out.println("회원가입 성공");
 		
 		JSONObject resultJSON = new JSONObject();
-		resultJSON.put("message", "비밀번호 변경 완료");
+		resultJSON.put("Name", userDTO.getName());
 		
 		return resultJSON;
 	}
@@ -183,7 +244,7 @@ public class UserController {
 		
 		JSONObject data = new JSONObject();
 		//data.put("UserId", (String)obj.get("UserId"));
-		data.put("message", "회원 탈퇴 완료");
+		data.put("Message", "회원 탈퇴 완료");
 		
 		resultJSON.put("data", data);
 		

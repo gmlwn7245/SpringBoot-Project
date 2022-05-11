@@ -33,9 +33,8 @@ public class AccountService implements UserDetailsService{
 	@Override
 	public Account loadUserByUsername(String userId) throws UsernameNotFoundException {
 		Account account = accountMapper.findUserById(userId);
-        if(account == null) {
-            throw new UsernameNotFoundException(userId);
-        }
+		String Role = accountMapper.findRole(userId);
+		account.setRole(Role);
 		account.setAuthorities(loadUserAuthorities(userId));
 		
 		return account;
@@ -50,6 +49,15 @@ public class AccountService implements UserDetailsService{
         }
 
         return grantedAuthorities;
+    }
+    
+    
+    // XXXX 이 방식 안됨
+    public GrantedAuthority loadUserAuthority(String UserId) {
+        String auth = accountMapper.findRole(UserId);
+        GrantedAuthority grantedAuthority=new SimpleGrantedAuthority(auth);
+
+        return grantedAuthority;
     }
     
 }

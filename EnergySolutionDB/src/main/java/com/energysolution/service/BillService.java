@@ -41,4 +41,6 @@ public interface BillService {
 	
 	// 고지서 ID 가져오기
 	public int getBillId(String UserId, String date);
+
+	int getBillIdCnt(String UserId, String date);
 }

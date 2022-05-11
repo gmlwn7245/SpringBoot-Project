@@ -13,7 +13,7 @@ public interface UserService {
 	public String insertUser(UserDTO userDTO);
 	
 	//회원 로그인
-	//public UserDTO LoginUser(String UserId, String Password);
+	public UserDTO LoginUser(String UserId, String Password);
 	
 	//회원 ID 찾기
 	public List<String> FindUserId(String Email);

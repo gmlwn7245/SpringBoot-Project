@@ -13,11 +13,14 @@ import security2.UserRole;
 //@Data : @Getter, @Setter, @RequiredArgsConstructor, @ToString, @EqualsAndHashCode 포함
 @Data
 public class Account implements UserDetails{
+	private Long no;
+	
 	private String UserId;
 	private String Password;
 	private String Email;
 	private String Name;
-    private ArrayList<GrantedAuthority> authorities;
+	private String Role;
+    private ArrayList<? extends GrantedAuthority> authorities;
 	
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -36,12 +39,27 @@ public class Account implements UserDetails{
 		return this.UserId;
 	}
 	
+	public Long getNo() {
+	    return no;
+	}
+	public void setNo(Long no) {
+	    this.no = no;
+	}
+	
 	public String getName() {
 		return this.Name;
 	}
 	
 	public void setName(String Name) {
 		this.Name=Name;
+	}
+	
+	public String getRole() {
+		return this.Role;
+	}
+	
+	public void setRole(String Role) {
+		this.Role=Role;
 	}
 	
 	public String getEmail() {
@@ -51,14 +69,6 @@ public class Account implements UserDetails{
 	public void setEmail(String Email) {
 		this.Email=Email;
 	}
-	/*
-	public UserRole getUserRole() {
-		return this.userRole;
-	}
-	
-	public void setUserRole(UserRole userRole) {
-		this.userRole = userRole;
-	}*/
 
 	//계정 만료 여부 
 	//true : 만료안됨

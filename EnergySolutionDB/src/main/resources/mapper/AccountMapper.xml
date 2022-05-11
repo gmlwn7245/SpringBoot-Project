@@ -5,6 +5,10 @@
 		SELECT * FROM User WHERE UserId=#{UserId} AND Password=#{Password}
 	</select>
 	
+	<select id="findRole" parameterType="String" resultType="string">
+		SELECT Authority FROM Authorities WHERE UserId=#{UserId}
+	</select>
+	
 	<select id="findUserById" parameterType="String" resultType="com.energysolution.security.Account">
 		SELECT * FROM User WHERE UserId=#{UserId}
 	</select>

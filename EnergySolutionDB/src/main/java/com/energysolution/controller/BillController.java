@@ -32,51 +32,62 @@ public class BillController {
 	
 	private JSONObject jsonObject;
 	
-	@GetMapping("/User/Bill")
+	@GetMapping("/Bill")
 	public @ResponseBody String mainView() {
 		
 		return "This is Billhome";
 	}
 	
 	//특정 날짜 고지서 가져오기
-	@GetMapping("/User/Bill/GetBill")
-	public JSONObject getBill(@RequestParam("userId") String UserId,@RequestParam("date") String date) {
+	@GetMapping("/Bill/GetBill")
+	public JSONObject getBill(@RequestParam("userId") String UserId, @RequestParam("date") String date) {
 			
 		TotalBillDTO totalBillDTO = billService.getBill(UserId, date);
 			
-		if(totalBillDTO.getDate()==null)
-			return null;
-		
 		JSONObject resultJSON = new JSONObject();
-		resultJSON.put("message", UserId+"님 고지서 조회 성공");
 		JSONObject data = new JSONObject();
-		data.put("UserId", UserId);
-		data.put("date", totalBillDTO.getDate());
-		data.put("TotalFee", totalBillDTO.getTotalFee());
-		data.put("WaterFee", totalBillDTO.getWaterFee());
-		data.put("WaterUsage", totalBillDTO.getWaterUsage());
-		data.put("ElectricityFee", totalBillDTO.getElectricityFee());
-		data.put("ElectricityUsage", totalBillDTO.getElectricityUsage());	
-		resultJSON.put("data", data);
+		
+		if(totalBillDTO.getDate()==null) {
+			data.put("Message", UserId+"님 고지서 조회 실패");
+			resultJSON.put("Data",data);
+			return resultJSON;
+		}
+		
+
+		JSONObject TotalBill = new JSONObject();
+		TotalBill.put("UserId", UserId);
+		TotalBill.put("date", totalBillDTO.getDate());
+		TotalBill.put("TotalFee", totalBillDTO.getTotalFee());
+		TotalBill.put("WaterFee", totalBillDTO.getWaterFee());
+		TotalBill.put("WaterUsage", totalBillDTO.getWaterUsage());
+		TotalBill.put("ElectricityFee", totalBillDTO.getElectricityFee());
+		TotalBill.put("ElectricityUsage", totalBillDTO.getElectricityUsage());	
+		
+		data.put("TotalBill", TotalBill);
+		data.put("Message", UserId+"님 고지서 조회 성공");
+		
+		resultJSON.put("Data",data);
 			
 		return resultJSON;
 	}
 	
 	//특정 기간 고지서 가져오기
-	@GetMapping("/User/Bill/GetBillList")
-	public JSONObject getBillTerm(@RequestParam("userId") String UserId,@RequestParam("month") int term) {
+	@GetMapping("/Bill/GetBillList")
+	public JSONObject getBillTerm(@RequestParam("userId") String UserId) {
+		//,@RequestParam("month") int term
+		List<TotalBillDTO> listDTO = billService.getBillTerm(UserId, 6);
 		
-		List<TotalBillDTO> listDTO = billService.getBillTerm(UserId, term);
-		
-		if(listDTO.size()==0)
-			return null;
 		
 		JSONObject resultJSON = new JSONObject();
-		resultJSON.put("message", UserId+"님 "+term+"개월 고지서 조회 성공");
-		
 		JSONObject data = new JSONObject();
-		data.put("UserId", UserId);
-		data.put("term", term);
+		
+		if(listDTO.size()==0) {
+			data.put("Message", UserId+"님 6개월 고지서 조회 실패");
+			resultJSON.put("Data", data);
+			return resultJSON;
+		}
+		
+		data.put("Message", UserId+"님 6개월 고지서 조회 성공");
 		JSONArray BillList = new JSONArray();
 		for(TotalBillDTO dto : listDTO) {
 			JSONObject detailData = new JSONObject();
@@ -88,13 +99,13 @@ public class BillController {
 		}
 		
 		data.put("BillList", BillList);
-		resultJSON.put("data", data);
+		resultJSON.put("Data", data);
 		
 		return resultJSON;
 	}
 	
 	//고지서 등록하기
-		@PostMapping("/User/Bill/InsertBill")
+		@PostMapping("/Bill/InsertBill")
 		public JSONObject setBill(@RequestBody TotalBillDTO totalDTO) throws Exception{
 			
 			BillDTO billDTO = new BillDTO(
@@ -110,19 +121,24 @@ public class BillController {
 			
 			String result = billService.insertBill(billDTO,detailbillDTO,paymentDTO);
 			
+			JSONObject resultJSON = new JSONObject();
+			JSONObject data = new JSONObject();
 			if(result=="fail") {
-				return null;
+				data.put("Message", "등록 실패하였습니다.");
+				resultJSON.put("Data", data);
+				return resultJSON;
 			}
 			
-			JSONObject resultJSON = new JSONObject();
-			resultJSON.put("message", "등록이 완료되었습니다.");
+
+			data.put("Message", "등록이 완료되었습니다.");
+			resultJSON.put("Data", data);
 						
 			return resultJSON;
 		}
 	
 	//고지서 부분 수정
-	@RequestMapping("updateBillField")
-	public @ResponseBody String updateBillField() {
+	@RequestMapping("/Bill/updateBillField")
+	public @ResponseBody JSONObject updateBillField() {
 		JSONArray jsonArr = (JSONArray)jsonObject.get("UpdateBillField");
 		JSONObject obj = (JSONObject) jsonArr.get(0);
 		
@@ -132,39 +148,44 @@ public class BillController {
 				(String)obj.get("Field"),
 				Integer.parseInt(String.valueOf(obj.get("Fee"))));
 		
+		JSONObject resultJSON = new JSONObject();
+		JSONObject data = new JSONObject();
+		
 		if(result=="fail") {
-			return "fail";
+			data.put("Message", "수정에 실패하였습니다.");
+			return resultJSON;
 		}
 		
-		JSONObject resultJSON = new JSONObject();
-		resultJSON.put("count", 2);
+
+		data.put("Message", "수정이 완료되었습니다.");
+		data.put("count", 2);
 		
-		JSONObject data = new JSONObject();
-		data.put("UserId", (String)obj.get("UserId"));
-		data.put("Date", (String)obj.get("Date"));
-		data.put("Field", (String)obj.get("Field"));
-		data.put("message", "수정이 완료되었습니다.");
+		resultJSON.put("Data", data);
 		
-		resultJSON.put("data", data);
-		
-		return resultJSON.toJSONString();
+		return resultJSON;
 	}
 	
 	//고지서 전체 수정
-	@PostMapping("/User/Bill/UpdateBill")
+	@PostMapping("/Bill/UpdateBill")
 	public JSONObject updateBill(@RequestBody TotalBillDTO totalDTO) {
 		
-		
 		String result = billService.updateBill(totalDTO);
+		
+		JSONObject resultJSON = new JSONObject();
+		JSONObject data = new JSONObject();
+		
 		if(result=="fail") {
-			return null;
+			data.put("Message", "고지서 수정 실패하였습니다.");
+			return resultJSON;
 		}
 		
 		String UserId = totalDTO.getUserId();
 		String date = totalDTO.getDate();
 		
-		JSONObject resultJSON = new JSONObject();
-		resultJSON.put("message", UserId+"님의 "+date+"의 고지서 수정이 완료되었습니다.");
+
+		data.put("Message", UserId+"님의 "+date+"의 고지서 수정이 완료되었습니다.");
+		
+		resultJSON.put("Data", data);
 
 		return resultJSON;
 	}
