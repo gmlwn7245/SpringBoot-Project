@@ -5,6 +5,7 @@ import java.security.SecureRandom;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -176,5 +177,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public String getUserPassword(String UserId) {
 		return userMapper.getUserPassword(UserId);
+	}
+
+	@Override
+	public List<Map<String, Object>> getReqData() throws Exception {
+		// TODO Auto-generated method stub
+		return userMapper.getReqData();
 	}
 }

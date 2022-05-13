@@ -43,4 +43,6 @@ public interface BillService {
 	public int getBillId(String UserId, String date);
 
 	int getBillIdCnt(String UserId, String date);
+
+
 }

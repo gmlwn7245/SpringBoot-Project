@@ -38,4 +38,10 @@
 		SELECT COUNT(*) FROM User WHERE UserId=#{UserId} AND Email=#{Email}
 	</select>
 	
+	<select id="getReqData" resultType="map">
+		SELECT 
+			* FROM 
+		DAY_PREDICTED_USAGE LIMIT 1000
+	</select>
+	
 </mapper>

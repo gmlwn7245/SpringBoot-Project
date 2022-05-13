@@ -2,8 +2,10 @@ package com.energysolution.mapper;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+
 import com.energysolution.dto.UserDTO;
 
 @Mapper
@@ -18,4 +20,6 @@ public interface UserMapper {
 	public int checkUser(String UserId);
 	public int checkUserByIdEmail(HashMap<String, String> UserMap);
 	public UserDTO getUser(String UserId);
+	// # 안드로이드 데이터 요청 테스트용
+	public List<Map<String, Object>> getReqData() throws Exception;
 }

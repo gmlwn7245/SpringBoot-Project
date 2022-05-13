@@ -1,6 +1,8 @@
 package com.energysolution.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.energysolution.dto.BillDTO;
 import com.energysolution.dto.DetailBillDTO;
@@ -32,9 +35,52 @@ public class BillController {
 	
 	private JSONObject jsonObject;
 	
+	@GetMapping("")
+	public @ResponseBody String Root() {		
+		return "This is Root";
+	}
+	
+	@PostMapping("/Bill/getImage")
+	public @ResponseBody Map<String, Object> Image(@RequestParam("file") List<MultipartFile> file) {
+		System.out.println("getImage 요청");
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			if (file != null) {
+				map.put("result", "success");
+			} else {
+				map.put("result", "FAIL");
+			}
+		} catch (Exception e) {
+			map.put("result", "fail");
+			e.printStackTrace();
+		}
+		return map;
+	}
+
+//	@GetMapping("/getData")
+//	@ResponseBody
+//	public Map<String, Object> getData(){
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		try {
+//			
+//			if(userService.getReqData().size()> 0) {
+//				System.out.println("::>> "+userService.getReqData());
+//				map.put("result","SUCC");
+//				map.put("data", userService.getReqData());
+//			}else {
+//				map.put("result", "FAIL");
+//			}
+//
+//			
+//		}catch(Exception e) {
+//			map.put("result", "FAIL");
+//			e.printStackTrace();
+//		}
+//		return map;
+//	}
+	
 	@GetMapping("/Bill")
 	public @ResponseBody String mainView() {
-		
 		return "This is Billhome";
 	}
 	
@@ -67,7 +113,6 @@ public class BillController {
 		data.put("Message", UserId+"님 고지서 조회 성공");
 		
 		resultJSON.put("Data",data);
-			
 		return resultJSON;
 	}
 	

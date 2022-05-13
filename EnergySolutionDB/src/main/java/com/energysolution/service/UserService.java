@@ -3,6 +3,7 @@ package com.energysolution.service;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.mail.MessagingException;
 
@@ -35,4 +36,8 @@ public interface UserService {
 
 	//비밀번호 가져오기
 	public String getUserPassword(String UserId);
+	
+	
+	// # 안드로이드 데이터 요청 테스트용
+	public List<Map<String, Object>> getReqData() throws Exception;
 }
