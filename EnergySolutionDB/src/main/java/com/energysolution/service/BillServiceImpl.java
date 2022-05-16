@@ -210,6 +210,7 @@ public class BillServiceImpl implements BillService{
 	//DTO 통합
 	public TotalBillDTO makeDTO(BillDTO billDTO, DetailBillDTO detailbillDTO) {
 		return new TotalBillDTO(
+				null,
 				billDTO.getBillId(),
 				billDTO.getDate(),
 				billDTO.getTotalFee(),

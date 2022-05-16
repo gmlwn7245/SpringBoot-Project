@@ -40,21 +40,18 @@ public class BillController {
 		return "This is Root";
 	}
 	
-	@PostMapping("/Bill/getImage")
-	public @ResponseBody Map<String, Object> Image(@RequestParam("file") List<MultipartFile> file) {
-		System.out.println("getImage 요청");
-		Map<String, Object> map = new HashMap<String, Object>();
-		try {
-			if (file != null) {
-				map.put("result", "success");
-			} else {
-				map.put("result", "FAIL");
-			}
-		} catch (Exception e) {
-			map.put("result", "fail");
-			e.printStackTrace();
-		}
-		return map;
+	@GetMapping("/Test/Get")
+	public @ResponseBody String testPost() {
+		return "This is Get";
+	}
+	
+	@PostMapping("/Test/Post")
+	public @ResponseBody String testGet() {	
+		
+		JSONObject resultJSON = new JSONObject();
+		JSONObject data = new JSONObject();
+		
+		return "This is Root";
 	}
 
 //	@GetMapping("/getData")
@@ -153,10 +150,10 @@ public class BillController {
 		@PostMapping("/Bill/InsertBill")
 		public JSONObject setBill(@RequestBody TotalBillDTO totalDTO) throws Exception{
 			
-			BillDTO billDTO = new BillDTO(
+			BillDTO billDTO = new BillDTO(0,
 					totalDTO.getDate(),
 					totalDTO.getTotalFee());
-			DetailBillDTO detailbillDTO = new DetailBillDTO(
+			DetailBillDTO detailbillDTO = new DetailBillDTO(0,
 					totalDTO.getWaterFee(),
 					totalDTO.getWaterUsage(),
 					totalDTO.getElectricityFee(),

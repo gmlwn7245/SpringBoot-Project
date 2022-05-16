@@ -18,6 +18,9 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
@@ -26,6 +29,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework:spring-context-support:5.3.17'
 	implementation 'org.springframework.boot:spring-boot-starter-mail:2.6.5'
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.13.3'
 
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'

@@ -3,6 +3,7 @@ package com.energysolution.controller;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class UserController {
 		 */
 		System.out.println("Main");
 		System.out.println(InetAddress.getLocalHost());
-		return "This is User";
+		return "This is Main";
 	}
 
 	@RequestMapping("/Main/Tests")
@@ -71,7 +72,7 @@ public class UserController {
 			resultJSON.put("Message", "잘못된 아이디 또는 비밀번호 입니다.");
 			resultJSON.put("result", "fail");
 		} else {
-			resultJSON.put("Message", userDTO.getUserName() + "님 로그인 성공");
+			resultJSON.put("Message", userDTO.getName() + "님 로그인 성공");
 			resultJSON.put("result", "success");
 		}
 
@@ -196,8 +197,8 @@ public class UserController {
 
 		JSONObject resultJSON = new JSONObject();
 		resultJSON.put("UserId", getUserDTO.getUserId());
-		resultJSON.put("Name", getUserDTO.getUserName());
-		resultJSON.put("Email", getUserDTO.getUserEmail());
+		resultJSON.put("Name", getUserDTO.getName());
+		resultJSON.put("Email", getUserDTO.getEmail());
 
 		System.out.println(getUserDTO);
 		return resultJSON;
