@@ -1,18 +1,21 @@
 package com.energysolution.service;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+
+import com.energysolution.mapper.PhotoAIMapper;
 
 @Service
 public class PhotoAIServiceImp implements PhotoAIService{
-
+	@Autowired
+	PhotoAIMapper photoAIMapper;
+	
 	@Override
-	public HashMap<String, Object> insertPhoto(List<MultipartFile> file) {
-		
-		return null;
+	public void insertPhoto(Map<String, Object> map) {
+		System.out.println("=====Photo Service====");
+		photoAIMapper.insertPhoto(map);
 	}
 
 }

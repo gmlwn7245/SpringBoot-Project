@@ -31,10 +31,10 @@ public interface BillService {
 	public String checkBill(int billId);
 	
 	// 고지서 특정 필드 값 변경 확인
-	public String checkUpdateBillField(HashMap<String, String> updateCheckBillMap);
+	public String checkUpdateBillField(HashMap<String, Object> updateCheckBillMap);
 
 	// 고지서 전체 필드 값 변경 확인
-	public String checkUpdateBill(int BillId, HashMap<String, Integer> updateBillMap);
+	public String checkUpdateBill(int BillId, HashMap<String, Object> updateBillMap);
 		
 	// 고지서 삭제 확인
 	public String checkDeleteBill(int billId);

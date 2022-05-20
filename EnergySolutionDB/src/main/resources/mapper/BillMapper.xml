@@ -3,11 +3,11 @@
 <mapper namespace="com.energysolution.mapper.BillMapper">
 	
 	<insert id="insertBill">
-		INSERT INTO Bill(Date, TotalFee) VALUES (#{date},#{TotalFee})
+		INSERT INTO Bill(date, totalFee) VALUES (#{date},#{totalFee})
 	</insert>
 	
 	<insert id="insertDetailBill">
-		INSERT INTO detailBill(BillId, WaterFee, WaterUsage, ElectricityFee, ElectricityUsage) VALUES (#{BillId},#{WaterFee},#{WaterUsage},#{ElectricityFee},#{ElectricityUsage})
+		INSERT INTO detailBill(BillId, publicFee, waterFee, waterUse, electFee, electUse) VALUES (#{BillId},#{publicFee},#{waterFee},#{waterUse},#{electFee},#{electUse})
 	</insert>
 	
 	<insert id="insertPayment">
@@ -19,11 +19,11 @@
 	</update>
 	
 	<update id="updateBill">
-		UPDATE Bill SET TotalFee=#{TotalFee} WHERE BillId = #{BillId}
+		UPDATE Bill SET totalFee=#{totalFee} WHERE BillId = #{BillId}
 	</update>
 	
 	<update id="updateDetailBill">
-		UPDATE DetailBill SET WaterFee=#{WaterFee}, WaterUsage=#{WaterUsage}, ElectricityFee=#{ElectricityFee}, ElectricityUsage=#{ElectricityUsage} WHERE BillId = #{BillId}
+		UPDATE DetailBill SET waterFee=#{waterFee}, waterUse=#{waterUse}, electFee=#{electFee}, electUse=#{electUse}, publicFee=#{publicFee} WHERE BillId = #{BillId}
 	</update>
 		
 	<delete id="deleteBill">

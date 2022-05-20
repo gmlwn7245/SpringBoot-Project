@@ -13,9 +13,6 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,10 +38,23 @@ public class UserServiceImpl implements UserService {
 		System.out.println(encodedPW);
 		userDTO.setPassword(encodedPW);
 		userMapper.insertUser(userDTO);
+		
 		if(checkUser(userDTO.getUserId())==1)
 			return "success";
 		return "fail";
 	}
+
+	//로그인 하기
+	@Override
+	public UserDTO LoginUser(String UserId, String Password) {		
+		//해당 아이디의 비밀번호가 사용자가 입력한 비밀번호와 일치하는지 확인
+		//암호화된 비밀번호
+		
+		if(passwordEncoder.matches(Password, getUserPassword(UserId)))
+			return userMapper.getUser(UserId);
+		return null;
+	}
+	
 
 	//비밀번호 변경
 	@Override
@@ -139,17 +149,6 @@ public class UserServiceImpl implements UserService {
 		return sb.toString(); 
 	}
 
-	//로그인 하기
-	@Override
-	public UserDTO LoginUser(String UserId, String Password) {		
-		//해당 아이디의 비밀번호가 사용자가 입력한 비밀번호와 일치하는지 확인
-		//암호화된 비밀번호
-		
-		if(passwordEncoder.matches(Password, getUserPassword(UserId)))
-			return userMapper.getUser(UserId);
-		return null;
-	}
-	
 
 	@Override
 	public String deleteUser(String UserId,String Password) {
@@ -164,6 +163,8 @@ public class UserServiceImpl implements UserService {
 		return "fail";
 	}
 	
+	
+	// UserId로 User있는지 확인
 	@Override
 	public int checkUser(String UserId) {
 		return userMapper.checkUser(UserId);
@@ -174,6 +175,7 @@ public class UserServiceImpl implements UserService {
 		return userMapper.checkUserByIdEmail(UserMap);
 	}
 	
+	// DB에서 암호화된 비밀번호 가져오기
 	@Override
 	public String getUserPassword(String UserId) {
 		return userMapper.getUserPassword(UserId);

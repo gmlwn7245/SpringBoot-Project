@@ -1,8 +1,6 @@
 package com.energysolution.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.energysolution.dto.BillDTO;
 import com.energysolution.dto.DetailBillDTO;
@@ -53,28 +50,6 @@ public class BillController {
 		
 		return "This is Root";
 	}
-
-//	@GetMapping("/getData")
-//	@ResponseBody
-//	public Map<String, Object> getData(){
-//		Map<String, Object> map = new HashMap<String, Object>();
-//		try {
-//			
-//			if(userService.getReqData().size()> 0) {
-//				System.out.println("::>> "+userService.getReqData());
-//				map.put("result","SUCC");
-//				map.put("data", userService.getReqData());
-//			}else {
-//				map.put("result", "FAIL");
-//			}
-//
-//			
-//		}catch(Exception e) {
-//			map.put("result", "FAIL");
-//			e.printStackTrace();
-//		}
-//		return map;
-//	}
 	
 	@GetMapping("/Bill")
 	public @ResponseBody String mainView() {
@@ -82,7 +57,7 @@ public class BillController {
 	}
 	
 	//특정 날짜 고지서 가져오기
-	@GetMapping("/Bill/GetBill")
+	@GetMapping("/bill/getData")
 	public JSONObject getBill(@RequestParam("userId") String UserId, @RequestParam("date") String date) {
 			
 		TotalBillDTO totalBillDTO = billService.getBill(UserId, date);
@@ -91,52 +66,56 @@ public class BillController {
 		JSONObject data = new JSONObject();
 		
 		if(totalBillDTO.getDate()==null) {
-			data.put("Message", UserId+"님 고지서 조회 실패");
-			resultJSON.put("Data",data);
+			data.put("message", UserId+"님 고지서 조회 실패");
+			data.put("result", "fail");
+			resultJSON.put("data",data);
 			return resultJSON;
 		}
 		
 
-		JSONObject TotalBill = new JSONObject();
-		TotalBill.put("UserId", UserId);
-		TotalBill.put("date", totalBillDTO.getDate());
-		TotalBill.put("TotalFee", totalBillDTO.getTotalFee());
-		TotalBill.put("WaterFee", totalBillDTO.getWaterFee());
-		TotalBill.put("WaterUsage", totalBillDTO.getWaterUsage());
-		TotalBill.put("ElectricityFee", totalBillDTO.getElectricityFee());
-		TotalBill.put("ElectricityUsage", totalBillDTO.getElectricityUsage());	
+		data.put("message", UserId+"님 고지서 조회 성공");
+		data.put("result", "success");
+		data.put("UserId", UserId);
+		data.put("date", totalBillDTO.getDate());
+		data.put("electUse", totalBillDTO.getElectUse());
+		data.put("waterUse", totalBillDTO.getWaterUse());
+		data.put("electFee", totalBillDTO.getElectFee());
+		data.put("waterFee", totalBillDTO.getWaterFee());
+		data.put("publicFee", totalBillDTO.getPublicFee());	
+		data.put("totalFee", totalBillDTO.getTotalFee());	
 		
-		data.put("TotalBill", TotalBill);
-		data.put("Message", UserId+"님 고지서 조회 성공");
-		
-		resultJSON.put("Data",data);
+		resultJSON.put("data",data);
 		return resultJSON;
 	}
 	
 	//특정 기간 고지서 가져오기
-	@GetMapping("/Bill/GetBillList")
+	@GetMapping("/bill/getDataList")
 	public JSONObject getBillTerm(@RequestParam("userId") String UserId) {
 		//,@RequestParam("month") int term
 		List<TotalBillDTO> listDTO = billService.getBillTerm(UserId, 6);
-		
 		
 		JSONObject resultJSON = new JSONObject();
 		JSONObject data = new JSONObject();
 		
 		if(listDTO.size()==0) {
-			data.put("Message", UserId+"님 6개월 고지서 조회 실패");
-			resultJSON.put("Data", data);
+			data.put("message", UserId+"님 6개월 고지서 조회 실패");
+			data.put("result", "fail");
+			resultJSON.put("data", data);
 			return resultJSON;
 		}
 		
-		data.put("Message", UserId+"님 6개월 고지서 조회 성공");
+		data.put("message", UserId+"님 6개월 고지서 조회 성공");
+		data.put("result", "success");
 		JSONArray BillList = new JSONArray();
 		for(TotalBillDTO dto : listDTO) {
 			JSONObject detailData = new JSONObject();
-			detailData.put("Date", dto.getDate());
-			detailData.put("Totalfee", dto.getTotalFee());
-			detailData.put("Waterfee", dto.getWaterFee());
-			detailData.put("Electricityfee", dto.getElectricityFee());
+			detailData.put("date", dto.getDate());
+			detailData.put("electUse", dto.getElectUse());
+			detailData.put("waterUse", dto.getWaterUse());
+			detailData.put("electFee", dto.getElectFee());
+			detailData.put("waterFee", dto.getWaterFee());
+			detailData.put("publicFee", dto.getPublicFee());
+			detailData.put("totalFee", dto.getTotalFee());
 			BillList.add(detailData);
 		}
 		
@@ -147,31 +126,34 @@ public class BillController {
 	}
 	
 	//고지서 등록하기
-		@PostMapping("/Bill/InsertBill")
+		@PostMapping("/bill/register")
 		public JSONObject setBill(@RequestBody TotalBillDTO totalDTO) throws Exception{
 			
 			BillDTO billDTO = new BillDTO(0,
 					totalDTO.getDate(),
 					totalDTO.getTotalFee());
 			DetailBillDTO detailbillDTO = new DetailBillDTO(0,
-					totalDTO.getWaterFee(),
-					totalDTO.getWaterUsage(),
-					totalDTO.getElectricityFee(),
-					totalDTO.getElectricityUsage()
+					totalDTO.getPublicFee(),
+					totalDTO.getElectUse(),
+					totalDTO.getWaterUse(),
+					totalDTO.getElectFee(),
+					totalDTO.getWaterFee()
 					);
-			PaymentDTO paymentDTO = new PaymentDTO(totalDTO.getUserId());
 			
+			PaymentDTO paymentDTO = new PaymentDTO(totalDTO.getUserId());
 			String result = billService.insertBill(billDTO,detailbillDTO,paymentDTO);
 			
 			JSONObject resultJSON = new JSONObject();
 			JSONObject data = new JSONObject();
 			if(result=="fail") {
+				data.put("result", "fail");
 				data.put("Message", "등록 실패하였습니다.");
 				resultJSON.put("Data", data);
 				return resultJSON;
 			}
 			
 
+			data.put("result", "success");
 			data.put("Message", "등록이 완료되었습니다.");
 			resultJSON.put("Data", data);
 						
@@ -208,27 +190,23 @@ public class BillController {
 	}
 	
 	//고지서 전체 수정
-	@PostMapping("/Bill/UpdateBill")
+	@PostMapping("/bill/update")
 	public JSONObject updateBill(@RequestBody TotalBillDTO totalDTO) {
 		
 		String result = billService.updateBill(totalDTO);
 		
 		JSONObject resultJSON = new JSONObject();
-		JSONObject data = new JSONObject();
-		
+		resultJSON.put("result", result);
 		if(result=="fail") {
-			data.put("Message", "고지서 수정 실패하였습니다.");
+			resultJSON.put("message", "고지서 수정 실패하였습니다.");
 			return resultJSON;
 		}
 		
 		String UserId = totalDTO.getUserId();
 		String date = totalDTO.getDate();
 		
-
-		data.put("Message", UserId+"님의 "+date+"의 고지서 수정이 완료되었습니다.");
+		resultJSON.put("message", UserId+"님의 "+date+"의 고지서 수정이 완료되었습니다.");
 		
-		resultJSON.put("Data", data);
-
 		return resultJSON;
 	}
 	

@@ -13,10 +13,10 @@ public class TotalBillDTO {
 	private String UserId;
 	private int BillId;
 	private String date;
-	private int TotalFee;
-	private int WaterFee;
-	private int WaterUsage;
-	private int ElectricityFee;
-	private int ElectricityUsage;
-	
+	private String totalFee;
+	private String electUse;
+	private String waterUse;
+	private String electFee;
+	private String waterFee;
+	private String publicFee;
 }

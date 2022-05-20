@@ -3,10 +3,8 @@ package com.energysolution.controller;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.mail.MessagingException;
 
@@ -21,33 +19,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.energysolution.dto.UserDTO;
 import com.energysolution.service.UserServiceImpl;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 @RestController
 public class UserController {
 
-	@JsonInclude(Include.NON_NULL)
 	private String result;
-
-	@JsonInclude(Include.NON_EMPTY)
 	private List<String> userIdList;
 
 	@Autowired
 	UserServiceImpl userService;
-
-
-	@RequestMapping("/Main")
-	public @ResponseBody String mainView() throws IOException, ParseException {
+	
+	
+	@RequestMapping("/ttt")
+	public @ResponseBody String maisssnView() {
 		/*
 		 * String springVersion = org.springframework.core.SpringVersion.getVersion();
-		 * 
 		 * System.out.println("스프링 프레임워크 버전 : " + springVersion);
 		 */
+		System.out.println("tt");
+		return "t";
+	}
+	
+	@RequestMapping("/Main")
+	public @ResponseBody String mainView() throws IOException, ParseException {
 		System.out.println("Main");
 		System.out.println(InetAddress.getLocalHost());
 		return "This is Main";
@@ -60,58 +59,84 @@ public class UserController {
 	}
 
 	// 로그인
-	@PostMapping("/Main/SignIn")
-	public JSONObject LoginUser(@RequestBody UserDTO userDTO) {
-		System.out.println("로그인");
-		UserDTO getUserDTO = userService.LoginUser(userDTO.getUserId(), userDTO.getPassword());
-		// UserDTO getUserDTO =
-		// userService.LoginUser(jsonObject.get("UserId").toString(),jsonObject.get("Password").toString());
-		JSONObject resultJSON = new JSONObject();
-
+	@PostMapping(value="/main/login",produces="text/plain;charset=UTF-8")
+	public String LoginUser(@RequestBody HashMap<String, String> map) {
+		System.out.println("==========================================");
+		System.out.println("로그인:"+map.get("UserId"));
+		UserDTO getUserDTO = userService.LoginUser(map.get("UserId"), map.get("Password"));
+		Gson gson = new Gson();
+		JsonObject resultJSON = new JsonObject();
 		if (getUserDTO == null) {
-			resultJSON.put("Message", "잘못된 아이디 또는 비밀번호 입니다.");
-			resultJSON.put("result", "fail");
+			resultJSON.addProperty("result", "fail");
+			resultJSON.addProperty("message", "잘못된 아이디 또는 비밀번호 입니다.");
 		} else {
-			resultJSON.put("Message", userDTO.getName() + "님 로그인 성공");
-			resultJSON.put("result", "success");
+			resultJSON.addProperty("result", "success");
+			resultJSON.addProperty("message", getUserDTO.getName() + "님 로그인 성공!");
 		}
 
 		System.out.println(getUserDTO);
-		return resultJSON;
+		return gson.toJson(resultJSON);
 	}
 
 	// 회원가입
-	@PostMapping("/Main/SignUp")
-	public JSONObject InsertUser(@RequestBody UserDTO userDTO) {
-		System.out.println("회원가입 시도");
-		// UserDTO userDTO = new
-		// UserDTO(jsonObject.get("UserId").toString(),jsonObject.get("Name").toString(),jsonObject.get("Password").toString(),jsonObject.get("Email").toString());
+	@PostMapping(value="/main/register",produces="text/plain;charset=UTF-8")
+	public String registerUser(@RequestBody UserDTO userDTO) {
+		System.out.println("==========================================");
+		System.out.println("회원가입 시도:"+userDTO.getUserId());
 		result = userService.insertUser(userDTO);
 
-		JSONObject resultJSON = new JSONObject();
+		Gson gson = new Gson();
+		JsonObject resultJSON = new JsonObject();
 
-		if (result != "success")
-			resultJSON.put("Message", "회원가입 실패");
-		else
-			resultJSON.put("Message", userDTO.getName() + "님 회원가입 성공");
+		if (result != "success") {
+			resultJSON.addProperty("result", "fail");
+			resultJSON.addProperty("message", "등록 실패");
+		}else {
+			resultJSON.addProperty("result", "success");
+			resultJSON.addProperty("message", userDTO.getName() + "님 회원가입 성공");
+		}
+			
 		System.out.println("회원가입 성공");
-
-		return resultJSON;
+		return gson.toJson(resultJSON);
 	}
 
 	// 아이디 중복 확인
-	@GetMapping("/Main/CheckId")
-	public JSONObject checkId(@RequestParam("userId") String UserId) {
+	@GetMapping(value="/main/checkId",produces="text/plain;charset=UTF-8")
+	public String checkId(@RequestParam("userId") String UserId) {
 		int count = userService.checkUser(UserId);
-		System.out.println("아이디 중복 체크");
-		JSONObject resultJSON = new JSONObject();
+		System.out.println("==========================================");
+		System.out.println("아이디 중복 체크:"+UserId);
+		
+		Gson gson = new Gson();
+		JsonObject resultJSON = new JsonObject();
 		if (count != 0) {
-			resultJSON.put("Message", "이미 존재하는 아이디입니다.");
+			resultJSON.addProperty("result", "fail");
+			resultJSON.addProperty("message", "이미 존재하는 아이디입니다.");
 		} else {
-			resultJSON.put("Message", "사용 가능한 아이디입니다.");
+			resultJSON.addProperty("result", "success");
+			resultJSON.addProperty("message", "사용 가능한 아이디입니다.");
 		}
-
-		return resultJSON;
+		return gson.toJson(resultJSON);
+	}
+	
+	// 아이디 중복 확인
+	@PostMapping("/main/checkIdPost")
+	public String checkIdPost(@RequestBody HashMap<String, String> map) {
+		String UserId = map.get("UserId").toString();
+		int count = userService.checkUser(UserId);
+		System.out.println("==========================================");
+		System.out.println("아이디 중복 체크:"+UserId);
+		
+		Gson gson = new Gson();
+		JsonObject resultJSON = new JsonObject();
+		if (count != 0) {
+			resultJSON.addProperty("result", "fail");
+			resultJSON.addProperty("message", "This ID already exists.");
+		} else {
+			resultJSON.addProperty("result", "success");
+			resultJSON.addProperty("message", "This ID is available.");
+		}
+		return gson.toJson(resultJSON);
 	}
 
 	// 비밀번호 바꾸기
@@ -127,9 +152,9 @@ public class UserController {
 		JSONObject resultJSON = new JSONObject();
 
 		if (result == "fail") {
-			resultJSON.put("Message", "비밀번호 변경 실패");
+			resultJSON.put("message", "비밀번호 변경 실패");
 		} else {
-			resultJSON.put("Message", "비밀번호 변경 완료");
+			resultJSON.put("message", "비밀번호 변경 완료");
 		}
 
 		return resultJSON;

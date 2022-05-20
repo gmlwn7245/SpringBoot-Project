@@ -12,6 +12,6 @@ public class BillDTO {
 	//필요한 필드값
 	private int BillId;
 	private String date;
-	private int TotalFee;
+	private String totalFee;
 
 }

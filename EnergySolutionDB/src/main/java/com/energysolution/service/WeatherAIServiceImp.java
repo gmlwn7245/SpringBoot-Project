@@ -87,6 +87,7 @@ public class WeatherAIServiceImp implements WeatherAIService{
 			URL url = new URL(urlStr);
 			HttpURLConnection conn =(HttpURLConnection)url.openConnection();
 			conn.setRequestMethod("GET");
+			conn.setConnectTimeout(10000);
 			
 			int res = conn.getResponseCode();
 			System.out.println(urlStr);

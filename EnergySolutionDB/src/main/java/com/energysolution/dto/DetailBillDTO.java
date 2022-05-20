@@ -11,10 +11,9 @@ public class DetailBillDTO {
 	
 	//필요한 필드값
 	private int BillId;
-	private int WaterFee;
-	private int WaterUsage;
-	private int ElectricityFee;
-	private int ElectricityUsage;
-	
-
+	private String publicFee;
+	private String electUse;
+	private String waterUse;
+	private String electFee;
+	private String waterFee;
 }
