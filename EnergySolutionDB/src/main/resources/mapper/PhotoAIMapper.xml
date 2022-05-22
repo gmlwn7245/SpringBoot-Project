@@ -4,4 +4,20 @@
 	<insert id="insertPhoto">
 		INSERT INTO photo(file, file_name, file_size) VALUES (#{file},#{file_name},#{file_size})
 	</insert>
+	
+	<select id="getPhotoData" resultType="com.energysolution.dto.PhotoDataDTO">
+		SELECT * FROM gojiseo limit 1;
+	</select>
+	
+	<select id="getMaxFileKey" resultType="Integer">
+		SELECT MAX(fileKey) FROM photo
+	</select>
+	
+	<delete id="deletePhoto">
+		DELETE FROM photo
+	</delete>
+	
+	<delete id="deleteGojiseo">
+		DELETE FROM gojiseo
+	</delete>
 </mapper>

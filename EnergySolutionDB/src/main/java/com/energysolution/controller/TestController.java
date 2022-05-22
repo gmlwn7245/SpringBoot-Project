@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -32,6 +35,24 @@ public class TestController {
 	public String mainController() {
 		System.out.println("test====> url : /main");
 		return "This is main";
+	}
+	
+	// Python과 요청 사용
+	@GetMapping("/PythonConn")
+	public @ResponseBody String testPythonConn() {
+		System.out.println("test====> /PythonConn");
+		
+		String url = "http://localhost:5000";
+		
+		//RestTemplate 객체 생성
+		RestTemplate template = new RestTemplate();		
+		String response = template.getForObject(url+"/getTest", String.class);
+		System.out.println(response);
+		
+		//response = template.getForObject(url+"/getWeather", String.class);
+		//System.out.println(response);
+		
+		return response;
 	}
 	
 	@PostMapping("/TestGetImage")

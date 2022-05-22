@@ -60,10 +60,11 @@ public class UserController {
 
 	// 로그인
 	@PostMapping(value="/main/login",produces="text/plain;charset=UTF-8")
-	public String LoginUser(@RequestBody HashMap<String, String> map) {
+	public String loginUser(UserDTO userDTO) {
 		System.out.println("==========================================");
-		System.out.println("로그인:"+map.get("UserId"));
-		UserDTO getUserDTO = userService.LoginUser(map.get("UserId"), map.get("Password"));
+		System.out.println("로그인:"+userDTO.getUserId());
+		UserDTO getUserDTO = userService.LoginUser(userDTO.getUserId(), userDTO.getPassword());
+		
 		Gson gson = new Gson();
 		JsonObject resultJSON = new JsonObject();
 		if (getUserDTO == null) {
@@ -72,6 +73,8 @@ public class UserController {
 		} else {
 			resultJSON.addProperty("result", "success");
 			resultJSON.addProperty("message", getUserDTO.getName() + "님 로그인 성공!");
+			resultJSON.addProperty("name", getUserDTO.getName());
+			resultJSON.addProperty("email", getUserDTO.getEmail());
 		}
 
 		System.out.println(getUserDTO);
@@ -80,9 +83,15 @@ public class UserController {
 
 	// 회원가입
 	@PostMapping(value="/main/register",produces="text/plain;charset=UTF-8")
-	public String registerUser(@RequestBody UserDTO userDTO) {
+	public String registerUser(UserDTO userDTO) {	
 		System.out.println("==========================================");
-		System.out.println("회원가입 시도:"+userDTO.getUserId());
+		System.out.println("회원가입 시도");
+		//UserDTO userDTO = new UserDTO(js.get("userId").toString(),js.get("name").toString(),js.get("password").toString(),js.get("email").toString());
+		System.out.println("UserID:"+userDTO.getUserId());
+		System.out.println("Password:"+userDTO.getPassword());
+		System.out.println("Name:"+userDTO.getName());
+		System.out.println("Email:"+userDTO.getEmail());
+		
 		result = userService.insertUser(userDTO);
 
 		Gson gson = new Gson();

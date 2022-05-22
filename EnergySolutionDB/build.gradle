@@ -32,7 +32,8 @@ dependencies {
 	//implementation 'com.fasterxml.jackson.core:jackson-core:2.13.3'
 	implementation 'com.google.code.gson:gson:2.9.0'
 	
-
+	//레트로핏
+	//implementation 'com.squareup.retrofit2:retrofit:2.9.0'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
 	//implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	compileOnly 'org.projectlombok:lombok'
