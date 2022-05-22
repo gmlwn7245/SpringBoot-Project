@@ -16,32 +16,60 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.energysolution.dto.RealTimeDataDTO;
 import com.energysolution.dto.WeatherDTO;
+import com.energysolution.dto.nxnyDTO;
 import com.energysolution.mapper.WeatherAIMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class WeatherAIServiceImp implements WeatherAIService{
 	// 날씨 API KEY값
-	private String serviceKey = "vtjq%2FAY95mysnfmzSx%2FBI0ijID8CYa7fdWqbcRMpeeIV3%2FApXziRmhiSjZ7z1SIhMWKBY%2BC3JAZ6axGiPmt4lQ%3D%3D";
+	private String serviceKey = "";
 	// 날씨 API 주소
 	private String urlForm = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
 	
 	@Autowired
 	WeatherAIMapper weatherAIMapper;
 	
+	// 주소 DB에 넣기
 	@Override
-	public HashMap<String, Object> insertWeather(int nx, int ny) {
+	public void insertAddress(HashMap<String, String> addressMap) {
+		weatherAIMapper.insertAddress(addressMap);
+	}
+	
+	// nx, ny 좌표 가져오기
+	@Override
+	public nxnyDTO getNXNY() {
+		return weatherAIMapper.getNXNY();
+	}
+	
+	// 실시간 요금 가져오기
+	@Override
+	public RealTimeDataDTO getRealTimeData() {
+		return weatherAIMapper.getRealTimeData();
+	}
+	
+	// 데이터 삭제
+	@Override
+	public void deleteWeatherData() {
+		weatherAIMapper.deleteAddress();
+		weatherAIMapper.deleteNXNY();
+		weatherAIMapper.deleteWeatherData();
+	}
+	
+	
+	// 날씨 정보 넣기
+	@Override
+	public void insertWeather() {
 		String[] times = getTodayDate().split(" ");
 		String urlStr = urlForm + getQuery(times);
 		String result = getWeatherConn(urlStr);
 		
 		HashMap<String, Object> weatherMap = new HashMap<>();
 		weatherMap = getWeatherData(result);
-		weatherMap.put("Location", nx + " " + ny);
 		
 		weatherAIMapper.insertWeatherData(weatherMap);
-		return null;
 	}
 
 	
@@ -58,13 +86,17 @@ public class WeatherAIServiceImp implements WeatherAIService{
 		return today;
 	}
 	
+	
 	// 쿼리 생성
 	public String getQuery(String[] times) {
+		//nx,ny 가져오기
+		nxnyDTO nxnydto = getNXNY();
+		
 		StringBuilder query = new StringBuilder();
 		query.append("?");
 		query.append("serviceKey=").append(serviceKey);
-		String nx = "56"; //경도
-		String ny = "71"; //위도
+		String nx = nxnydto.getNx(); //경도
+		String ny = nxnydto.getNy(); //위도
 		query.append("&nx=").append(nx).append("&ny=").append(ny);
 		
 		String numOfRows = "10";
@@ -90,8 +122,8 @@ public class WeatherAIServiceImp implements WeatherAIService{
 			conn.setConnectTimeout(10000);
 			
 			int res = conn.getResponseCode();
-			System.out.println(urlStr);
-			System.out.println("res====>"+res);
+			//System.out.println(urlStr);
+			//System.out.println("res====>"+res);
 			
 			BufferedReader rd;
 			if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
@@ -125,8 +157,8 @@ public class WeatherAIServiceImp implements WeatherAIService{
 			JSONObject parse_items = (JSONObject) parse_body.get("items");// body 로 부터 items 받아오기
 			JSONArray parse_item = (JSONArray) parse_items.get("item");
 			Long totalCount = (Long) parse_body.get("totalCount");
-			String baseDate = (String) ((JSONObject) parse_item.get(0)).get("baseDate");
-			String baseTime = (String) ((JSONObject) parse_item.get(0)).get("baseTime");
+			//String baseDate = (String) ((JSONObject) parse_item.get(0)).get("baseDate");
+			//String baseTime = (String) ((JSONObject) parse_item.get(0)).get("baseTime");
 			//System.out.println(totalCount);
 			WeatherDTO weatherDTO = new WeatherDTO();
 			for(int i=0; i<totalCount; i++) {
@@ -134,8 +166,8 @@ public class WeatherAIServiceImp implements WeatherAIService{
 				String category = (String) obj.get("category");
 				
 				/*
-				1시간 기온 TMP ℃
-				1시간 강수량 PCP 범주 (1 mm)
+				1시간 기온 T1H ℃
+				1시간 강수량 RN1 범주 (1 mm)
 				습도 REH %		
 				풍속 WSD m/s
 				*/
@@ -159,8 +191,8 @@ public class WeatherAIServiceImp implements WeatherAIService{
 				}	
 			}
 			
-			weatherMap.put("date", baseDate);
-			weatherMap.put("time", baseTime);
+			//weatherMap.put("date", baseDate);
+			//weatherMap.put("time", baseTime);
 			weatherMap.put("T1H", weatherDTO.getT1H());
 			weatherMap.put("RN1", weatherDTO.getRN1());
 			weatherMap.put("REH", weatherDTO.getREH());
@@ -173,5 +205,8 @@ public class WeatherAIServiceImp implements WeatherAIService{
 		
 		return weatherMap;
 	}
+
+
+
 	
 }

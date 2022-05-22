@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.energysolution.dto.PhotoDataDTO;
+import com.energysolution.dto.RealTimeDataDTO;
 import com.energysolution.service.PhotoAIServiceImp;
 import com.energysolution.service.WeatherAIService;
 import com.google.gson.Gson;
@@ -77,31 +78,62 @@ public class AIController {
 			}			
 		}
 		
+		
 		// 사진, 고지서 결과 데이터 전부 삭제
 		photoAIService.deletePhotoData();
 		
 		return gson.toJson(resultJSON);
 	}
 	
-	// 실시간 요금 추정
-	@GetMapping("/realTimeFee")
-	public @ResponseBody Map<String, String> getWeather(@RequestParam("nx") int nx, @RequestParam("ny") int ny) {
-		System.out.println("getWeather 요청");
-		Map<String, Integer> map = new HashMap<>();
-		Map<String, String> ResultMap = new HashMap<>();
-		try {
-			map.put("nx", nx);
-			map.put("ny", ny);
-			
-			weatherAIService.insertWeather(nx, ny);
-			ResultMap.put("result","success");
-		} catch (Exception e) {
-			e.printStackTrace();
-			ResultMap.put("result","fail");
-		}
-				
-		System.out.println("getWeather 반환");
-		return ResultMap;
-	}
 	
+	
+	// 실시간 요금 추정
+	@GetMapping(value="/realTimeData",produces="text/plain;charset=UTF-8")
+	public @ResponseBody String getWeather(@RequestParam("region1")String region1,@RequestParam("region2")String region2,@RequestParam("region3")String region3) {
+		System.out.println("=====getWeather 요청=====");
+		
+		// Address 데이터베이스에 넣기
+		HashMap<String, String> addressMap = new HashMap<>();
+		addressMap.put("region1", region1);
+		addressMap.put("region2", region2);
+		addressMap.put("region3", region3);
+		weatherAIService.insertAddress(addressMap);
+		
+		// 리턴 메세지
+		Gson gson = new Gson();
+		JsonObject resultJSON = new JsonObject();
+		
+		// nx, ny 좌표 데이터 요청 후 API 값 넣기 
+		RestTemplate template = new RestTemplate();		
+		String response = template.getForObject(url+"/getAddress", String.class);
+		
+		if(response.isEmpty() || response.equals("fail")) {		
+			resultJSON.addProperty("result", "fail");
+			resultJSON.addProperty("message", "위치 데이터 로딩에 실패하였습니다.");
+			return gson.toJson(resultJSON);
+			
+		}else if(response.equals("success")) {
+			weatherAIService.insertWeather();
+		}
+		
+		// 실시간 요금 데이터 요청
+		response = template.getForObject(url+"/getRealTimeData", String.class);
+		if(response.isEmpty() || response.equals("fail")) {		
+			resultJSON.addProperty("result", "fail");
+			resultJSON.addProperty("message", "예측량 데이터 로딩에 실패하였습니다.");
+			return gson.toJson(resultJSON);
+			
+		}else if(response.equals("success")) {
+			RealTimeDataDTO RTDdto = weatherAIService.getRealTimeData();
+			String datas = gson.toJson(RTDdto);
+			resultJSON.addProperty("result", "success");
+			resultJSON.addProperty("message", "예측량 데이터입니다.");
+			resultJSON.addProperty("data", datas);
+		}
+		
+		// 데이터 삭제
+		weatherAIService.deleteWeatherData();
+		
+		return gson.toJson(resultJSON);
+	}
 }

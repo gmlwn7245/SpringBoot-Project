@@ -32,6 +32,7 @@ public class WeatherAPITest {
 			//1시간전
 			c.add(Calendar.HOUR,-1);
 			String today = sdformat.format(c.getTime());
+			System.out.println("today:"+today);
 			String[] times = today.split(" ");
 			StringBuilder query = new StringBuilder();
 			query.append("?");
