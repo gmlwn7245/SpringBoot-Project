@@ -20,6 +20,9 @@ import com.energysolution.dto.TotalBillDTO;
 import com.energysolution.service.BillServiceImpl;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 @RestController
 public class BillController {
@@ -37,128 +40,146 @@ public class BillController {
 		return "This is Root";
 	}
 	
-	@GetMapping("/Test/Get")
-	public @ResponseBody String testPost() {
-		return "This is Get";
-	}
-	
-	@PostMapping("/Test/Post")
-	public @ResponseBody String testGet() {	
-		
-		JSONObject resultJSON = new JSONObject();
-		JSONObject data = new JSONObject();
-		
-		return "This is Root";
-	}
-	
 	@GetMapping("/Bill")
 	public @ResponseBody String mainView() {
 		return "This is Billhome";
 	}
 	
 	//특정 날짜 고지서 가져오기
-	@GetMapping("/bill/getData")
-	public JSONObject getBill(@RequestParam("userId") String UserId, @RequestParam("date") String date) {
-			
+	@GetMapping(value = "/bill/getData", produces = "text/plain;charset=UTF-8")
+	public @ResponseBody String getBill(@RequestParam("userId") String UserId, @RequestParam("date") String date) {
+		System.out.println("=====특정 날짜 데이터 조회=====");
+		System.out.println("userId:"+UserId);
+		System.out.println("date:"+date);
 		TotalBillDTO totalBillDTO = billService.getBill(UserId, date);
 			
-		JSONObject resultJSON = new JSONObject();
-		JSONObject data = new JSONObject();
+		Gson gson = new Gson();
+		JsonObject resultJSON = new JsonObject();
 		
-		if(totalBillDTO.getDate()==null) {
-			data.put("message", UserId+"님 고지서 조회 실패");
-			data.put("result", "fail");
-			resultJSON.put("data",data);
-			return resultJSON;
+		if(totalBillDTO.getBillId()==-1) {
+			System.out.println("fail");
+			resultJSON.addProperty("message", UserId+"님 고지서 조회 실패");
+			resultJSON.addProperty("result", "fail");
+			return gson.toJson(resultJSON);
 		}
 		
-
-		data.put("message", UserId+"님 고지서 조회 성공");
-		data.put("result", "success");
-		data.put("UserId", UserId);
-		data.put("date", totalBillDTO.getDate());
-		data.put("electUse", totalBillDTO.getElectUse());
-		data.put("waterUse", totalBillDTO.getWaterUse());
-		data.put("electFee", totalBillDTO.getElectFee());
-		data.put("waterFee", totalBillDTO.getWaterFee());
-		data.put("publicFee", totalBillDTO.getPublicFee());	
-		data.put("totalFee", totalBillDTO.getTotalFee());	
+		System.out.println("success");
+		resultJSON.addProperty("message", UserId+"님 고지서 조회 성공");
+		resultJSON.addProperty("result", "success");
+		resultJSON.addProperty("UserId", UserId);
+		resultJSON.addProperty("date", totalBillDTO.getDate());
+		resultJSON.addProperty("electUse", totalBillDTO.getElectUse());
+		resultJSON.addProperty("waterUse", totalBillDTO.getWaterUse());
+		resultJSON.addProperty("electFee", totalBillDTO.getElectFee());
+		resultJSON.addProperty("waterFee", totalBillDTO.getWaterFee());
+		resultJSON.addProperty("publicFee", totalBillDTO.getPublicFee());	
+		resultJSON.addProperty("totalFee", totalBillDTO.getTotalFee());	
 		
-		resultJSON.put("data",data);
-		return resultJSON;
+		return gson.toJson(resultJSON);
 	}
 	
-	//특정 기간 고지서 가져오기
-	@GetMapping("/bill/getDataList")
-	public JSONObject getBillTerm(@RequestParam("userId") String UserId) {
+	// 원 그래프 데이터 가져오기
+	@GetMapping(value = "/bill/pieGraph", produces = "text/plain;charset=UTF-8")
+	public @ResponseBody String getPie(@RequestParam("userId") String UserId) {
+		System.out.println("=====원그래프데이터 조회=====");
+		Gson gson = new Gson();
+		JsonObject resultJSON = new JsonObject();
+
+		TotalBillDTO totalBillDTO = billService.getGraphData(UserId);
+		if(totalBillDTO.getBillId()==-1) {
+			resultJSON.addProperty("result", "fail");
+			resultJSON.addProperty("message", "데이터가 없습니다.");
+			return gson.toJson(resultJSON);
+		}
+	
+		resultJSON.addProperty("result", "success");
+		resultJSON.addProperty("message", "데이터 조회 성공");
+		resultJSON.addProperty("electFee", totalBillDTO.getElectFee());
+		resultJSON.addProperty("waterFee", totalBillDTO.getWaterFee());
+		resultJSON.addProperty("publicFee", totalBillDTO.getPublicFee());
+		
+		int tFee = Integer.parseInt(totalBillDTO.getTotalFee());
+		int eFee = Integer.parseInt(totalBillDTO.getElectFee());
+		int wFee = Integer.parseInt(totalBillDTO.getWaterFee());
+		int pFee = Integer.parseInt(totalBillDTO.getPublicFee());
+		int iFee = tFee-(eFee+wFee+pFee);
+		
+		resultJSON.addProperty("individualFee", Integer.toString(iFee));
+		
+		return gson.toJson(resultJSON);
+	}
+	
+	// 특정 기간 고지서 가져오기
+	@GetMapping(value = "/bill/getDataList", produces = "text/plain;charset=UTF-8")
+	public @ResponseBody String getBillTerm(@RequestParam("userId") String UserId) {
 		//,@RequestParam("month") int term
+		System.out.println("=====6개월 데이터 조회=====");		
 		List<TotalBillDTO> listDTO = billService.getBillTerm(UserId, 6);
 		
-		JSONObject resultJSON = new JSONObject();
-		JSONObject data = new JSONObject();
+		Gson gson = new Gson();
+		JsonObject resultJSON = new JsonObject();
+		JsonObject data = new JsonObject();
 		
 		if(listDTO.size()==0) {
-			data.put("message", UserId+"님 6개월 고지서 조회 실패");
-			data.put("result", "fail");
-			resultJSON.put("data", data);
-			return resultJSON;
+			data.addProperty("message", UserId+"님 6개월 고지서 조회 실패");
+			data.addProperty("result", "fail");
+			resultJSON.add("data", data);
+			return gson.toJson(resultJSON);
 		}
 		
-		data.put("message", UserId+"님 6개월 고지서 조회 성공");
-		data.put("result", "success");
-		JSONArray BillList = new JSONArray();
+		data.addProperty("message", UserId+"님 6개월 고지서 조회 성공");
+		data.addProperty("result", "success");
+		JsonArray BillList = new JsonArray();
 		for(TotalBillDTO dto : listDTO) {
-			JSONObject detailData = new JSONObject();
-			detailData.put("date", dto.getDate());
-			detailData.put("electUse", dto.getElectUse());
-			detailData.put("waterUse", dto.getWaterUse());
-			detailData.put("electFee", dto.getElectFee());
-			detailData.put("waterFee", dto.getWaterFee());
-			detailData.put("publicFee", dto.getPublicFee());
-			detailData.put("totalFee", dto.getTotalFee());
+			JsonObject detailData = new JsonObject();
+			detailData.addProperty("date", dto.getDate());
+			detailData.addProperty("electUse", dto.getElectUse());
+			detailData.addProperty("waterUse", dto.getWaterUse());
+			detailData.addProperty("electFee", dto.getElectFee());
+			detailData.addProperty("waterFee", dto.getWaterFee());
+			detailData.addProperty("publicFee", dto.getPublicFee());
+			detailData.addProperty("totalFee", dto.getTotalFee());
 			BillList.add(detailData);
 		}
 		
-		data.put("BillList", BillList);
-		resultJSON.put("Data", data);
+		data.add("dataList", BillList);
+		resultJSON.add("data", data);
 		
-		return resultJSON;
+		return gson.toJson(resultJSON);
 	}
 	
 	//고지서 등록하기
-		@PostMapping("/bill/register")
-		public JSONObject setBill(@RequestBody TotalBillDTO totalDTO) throws Exception{
-			
-			BillDTO billDTO = new BillDTO(0,
-					totalDTO.getDate(),
-					totalDTO.getTotalFee());
-			DetailBillDTO detailbillDTO = new DetailBillDTO(0,
-					totalDTO.getPublicFee(),
-					totalDTO.getElectUse(),
-					totalDTO.getWaterUse(),
-					totalDTO.getElectFee(),
-					totalDTO.getWaterFee()
-					);
-			
-			PaymentDTO paymentDTO = new PaymentDTO(totalDTO.getUserId());
-			String result = billService.insertBill(billDTO,detailbillDTO,paymentDTO);
-			
-			JSONObject resultJSON = new JSONObject();
-			JSONObject data = new JSONObject();
-			if(result=="fail") {
-				data.put("result", "fail");
-				data.put("Message", "등록 실패하였습니다.");
-				resultJSON.put("Data", data);
-				return resultJSON;
-			}
-			
-
-			data.put("result", "success");
-			data.put("Message", "등록이 완료되었습니다.");
-			resultJSON.put("Data", data);
-						
-			return resultJSON;
+	@PostMapping(value = "/bill/register", produces = "text/plain;charset=UTF-8")
+	public @ResponseBody String setBill(@RequestBody TotalBillDTO totalDTO) throws Exception{
+		System.out.println("======고지서 등록======");
+		BillDTO billDTO = new BillDTO(0,
+				totalDTO.getDate(),
+				totalDTO.getTotalFee());
+		DetailBillDTO detailbillDTO = new DetailBillDTO(0,
+				totalDTO.getPublicFee(),
+				totalDTO.getElectUse(),
+				totalDTO.getWaterUse(),
+				totalDTO.getElectFee(),
+				totalDTO.getWaterFee()
+				);
+		
+		PaymentDTO paymentDTO = new PaymentDTO(totalDTO.getUserId());
+		String result = billService.insertBill(billDTO,detailbillDTO,paymentDTO);
+		
+		
+		Gson gson = new Gson();
+		JsonObject resultJSON = new JsonObject();
+		if(result=="fail") {
+			resultJSON.addProperty("result", "fail");
+			resultJSON.addProperty("message", "등록 실패하였습니다.");
+			return gson.toJson(resultJSON);
 		}
+	
+		resultJSON.addProperty("result", "success");
+		resultJSON.addProperty("message", "등록이 완료되었습니다.");
+					
+		return gson.toJson(resultJSON);
+	}
 	
 	//고지서 부분 수정
 	@RequestMapping("/Bill/updateBillField")

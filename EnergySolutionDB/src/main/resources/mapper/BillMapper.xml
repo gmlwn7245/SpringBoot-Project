@@ -71,10 +71,22 @@
 	</select>
 	
 	<select id="getBillId" parameterType="hashmap" resultType="Integer">
-		SELECT BillId FROM payment WHERE UserId=#{UserId} AND BillId IN (SELECT BillId FROM Bill WHERE date=#{date});
+		SELECT BillId FROM payment WHERE UserId=#{UserId} AND BillId IN (SELECT BillId FROM Bill WHERE date=#{date})
 	</select>
 	
 	<select id="getBillIdCnt" parameterType="hashmap" resultType="Integer">
-		SELECT Count(BillId) FROM payment WHERE UserId=#{UserId} AND BillId IN (SELECT BillId FROM Bill WHERE date=#{date});
+		SELECT Count(BillId) FROM payment WHERE UserId=#{UserId} AND BillId IN (SELECT BillId FROM Bill WHERE date=#{date})
+	</select>
+	
+	<select id="getRecentBillId" parameterType="String" resultType="Integer">
+		SELECT BillId FROM Bill WHERE BillId IN (SELECT BillId FROM Payment WHERE UserId=#{UserId}) ORDER BY date DESC LIMIT 1
+	</select>
+	
+	<select id="checkPaymentCnt" parameterType="String" resultType="Integer">
+		SELECT count(*) FROM payment WHERE UserId = #{UserId}
+	</select>
+	
+	<select id="checkBillDataCnt" parameterType="hashmap" resultType="Integer">
+		SELECT count(*) FROM Bill WHERE BillId IN (SELECT BillId FROM payment WHERE UserId=#{UserId}) AND date=#{date}
 	</select>
  </mapper>

@@ -1,12 +1,12 @@
 package com.energysolution.service;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,16 +43,29 @@ public class BillServiceImpl implements BillService{
 		return checkBill(billId);
 	}
 	
+	//그래프용 데이터
+	public TotalBillDTO getGraphData(String UserId) {
+		int cnt = billMapper.checkPaymentCnt(UserId);
+		if(cnt == 0)
+			return new TotalBillDTO(-1);
+		
+		int BillId = billMapper.getRecentBillId(UserId);
+		BillDTO billDTO = billMapper.getBill(BillId);
+		DetailBillDTO detailbillDTO = billMapper.getDetailBill(BillId);
+		TotalBillDTO totalBillDTO = makeDTO(billDTO, detailbillDTO);
+		return totalBillDTO;
+	}
+	
 	//마지막 BillId 가져옴
 	public int getMaxBillId() {
-		return billMapper.getMaxBillId(); 
+		return billMapper.getMaxBillId();
 	}
 	
 	//특정 날짜 고지서 출력
 	@Override
 	public TotalBillDTO getBill(String UserId, String date) {
 		if(getBillIdCnt(UserId,date)==0) {
-			return null;
+			return new TotalBillDTO(-1);
 		}
 		
 		//BillId 가져옴
@@ -79,6 +92,17 @@ public class BillServiceImpl implements BillService{
 			c.setTime(date);
 			c.add(Calendar.MONTH, -i);
 			String month = sdformat.format(c.getTime());
+			
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("UserId", UserId);
+			map.put("date", month);
+			int isExisted = billMapper.checkBillDataCnt(map);
+			
+			if(isExisted==0) {
+				arrDTO.clear();
+				return arrDTO;
+			}
+			
 			int BillId = getBillId(UserId, month);
 			
 			BillDTO billDTO = billMapper.getBill(BillId);

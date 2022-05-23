@@ -12,6 +12,9 @@ public interface BillService {
 	//고지서 등록
 	public String insertBill(BillDTO billDTO, DetailBillDTO detailbillDTO,PaymentDTO paymentDTO);
 	
+	// 그래프용 데이터
+	public TotalBillDTO getGraphData(String UserId);
+	
 	// 특정 기간 고지서 조회 (UserId와 Term)
 	public List<TotalBillDTO> getBillTerm(String UserId, int term);
 	

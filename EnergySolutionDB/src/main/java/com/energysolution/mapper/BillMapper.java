@@ -18,6 +18,9 @@ public interface BillMapper {
 	public BillDTO getBill(int BillId);
 	public DetailBillDTO getDetailBill(int BillId);
 	
+	//가장 최근 Data BillId 가져옴
+	public int getRecentBillId(String UserId);
+	
 	//가장 큰 BillId 가져옴
 	public int getMaxBillId();
 	
@@ -47,4 +50,10 @@ public interface BillMapper {
 	
 	//고지서 확인
 	public int checkBill(int BillId);
+	
+	//payment 고지서 유무 확인
+	public int checkPaymentCnt(String UserId);
+	
+	//UserId, Month에 해당하는 고지서 유무 확인
+	public int checkBillDataCnt(HashMap<String, String> map);
 }

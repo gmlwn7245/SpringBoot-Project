@@ -58,6 +58,9 @@ dependencies {
     implementation 'com.sun.mail:javax.mail:1.6.2'
     //implementation fileTree(dir:'libs',include:'*.jar')
     
+    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'commons-fileupload:commons-fileupload:1.4'
+    
 }
 
 tasks.named('test') {

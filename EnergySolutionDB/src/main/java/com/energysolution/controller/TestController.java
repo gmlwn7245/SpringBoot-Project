@@ -92,6 +92,18 @@ public class TestController {
 		return resultMap;
 	}
 	
+	@PostMapping("/scanPhotoTest")
+	public @ResponseBody String testphototest(@RequestParam("file") MultipartFile file){
+		
+		System.out.println("====testPhoto====");
+		if(file!=null) {
+			System.out.println("success");
+			return "success";
+		}
+		System.out.println("fail");
+		return "fail";
+	}
+	
 	@GetMapping("/TestscanPhoto")
 	public ModelAndView getTestPhoto() throws IOException {
 		ModelAndView mv = new ModelAndView("Image");
