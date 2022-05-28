@@ -1,14 +1,20 @@
 package com.energysolution.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.Blob;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,13 +35,40 @@ public class TestController {
 	
 	@Autowired
 	TestService testService;
-
-	//인터넷 브라우저 요청은 get 요청만 가능
-	@GetMapping("main")
-	public String mainController() {
-		System.out.println("test====> url : /main");
-		return "This is main";
+	
+	@Autowired
+    private JavaMailSender javaMailSender;
+    
+	@GetMapping("")
+	public @ResponseBody String Root() {		
+		return "This is Root";
 	}
+	
+	
+	// 메일 전송
+    @GetMapping("/mail")
+    public String index() throws MessagingException, UnsupportedEncodingException {
+
+        String to = "gmlwn7245@naver.com";
+        String from = "gmlwn@test.com";
+        String subject = "test";
+
+        StringBuilder body = new StringBuilder();
+        body.append("<html> <body><h1>임시 비밀번호는 다음과 같습니다. </h1>");
+        body.append("<div>테스트 입니다2. <img src=\"cid:flower.jpg\"> </div> </body></html>");
+
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true, "UTF-8");
+
+        mimeMessageHelper.setFrom(from,"EnergySolution_TempPW_manager");
+        mimeMessageHelper.setTo(to);
+        mimeMessageHelper.setSubject(subject);
+        mimeMessageHelper.setText(body.toString(), true);
+
+        javaMailSender.send(message);
+
+        return "하이";
+    }
 	
 	// Python과 요청 사용
 	@GetMapping("/PythonConn")
@@ -104,107 +137,4 @@ public class TestController {
 		return "fail";
 	}
 	
-	@GetMapping("/TestscanPhoto")
-	public ModelAndView getTestPhoto() throws IOException {
-		ModelAndView mv = new ModelAndView("Image");
-		System.out.println("getImage Test 요청");
-		
-		String imgPath = "C:\\Users\\82109\\Desktop\\zzang.jpg";
-		mv.addObject("image",imgPath);
-		/*
-		File file = new File(imgPath);
-		
-		Blob blob = null;
-	    FileInputStream inputStream = null;
-	  
-	    try {
-	        byte[] byteArray = new byte[(int) file.length()];
-	        inputStream = new FileInputStream(file);
-	        inputStream.read(byteArray);
-	        
-	        blob = new javax.sql.rowset.serial.SerialBlob(byteArray);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    } finally {
-	        try {
-	            if (inputStream != null) {
-	                inputStream.close();
-	            }
-	        } catch (Exception e) {
-	            inputStream = null;
-	        } finally {
-	            inputStream = null;
-	        }
-	    }
-		
-		HashMap<String, Object> maps = new HashMap<String, Object>();
-		maps.put("index", "1");
-		maps.put("blob", blob);
-		testService.InsertImage(maps);
-		
-		*/
-		return mv;
-	}
-	
-	@GetMapping("get")
-	public JSONObject getData(@RequestParam int id) {
-		
-		JSONObject resultJSON = new JSONObject();
-		JSONObject data = new JSONObject();
-		data.put("result", "success");
-		data.put("id", id);
-		data.put("message", "Get 성공");
-		
-		resultJSON.put("data", data);
-		
-		return resultJSON;
-	}
-	
-	@PostMapping("post")
-	public JSONObject postData() {	//MessageConverter의 Jackson Lib가 자동으로 mapping
-		System.out.println("Post 요청");
-		
-		/*
-		JSONObject resultJSON = new JSONObject();
-		JSONObject data = new JSONObject();
-		resultJSON.put("result", "success");
-		resultJSON.put("message", "Post 성공");
-		
-		data.put("UserId", userDTO.getUserId());
-		data.put("Password", userDTO.getPassword());
-		data.put("Email", userDTO.getEmail());
-		data.put("Name", userDTO.getName());
-		
-		resultJSON.put("data", data);
-		
-		System.out.println(userDTO.getUserId());*/
-		
-		return null;
-	}
-	
-	@PutMapping("put")
-	public JSONObject putData() {
-		
-		JSONObject resultJSON = new JSONObject();
-		JSONObject data = new JSONObject();
-		data.put("result", "success");
-		data.put("message", "Put 성공");
-		
-		resultJSON.put("data", data);
-		
-		return resultJSON;
-	}
-	
-	@DeleteMapping("delete")
-	public JSONObject deleteData() {
-		
-		JSONObject resultJSON = new JSONObject();
-		JSONObject data = new JSONObject();
-		data.put("result", "success");
-		data.put("message", "Delete 성공");
-		
-		resultJSON.put("data", data);
-		
-		return resultJSON;
-	}
 }

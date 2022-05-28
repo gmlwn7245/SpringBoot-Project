@@ -4,21 +4,15 @@
 	"URI":"/Bill/GetBill?user=user001&&date=2022-2",
 	
     "ResponseBody":{
-        "status":200,   
-        "message":"user001님 고지서 조회 성공", 
-        "data":{
-            "UserId":"user001",
-            "Date":"2022-2",
-            "TotalFee":4000,
-            "WaterFee":3000,
-            "WaterUsage":500,
-            "ElectricityFee":1000,
-            "ElectricityUsage":200
-        }
-    },
-
-    "UserNotFound":{
-        "errorMessage":"고지서를 등록해주세요.",
-        "errorCode":201
+        "result":"success 또는 fail",   
+        "message":"(아이디)님 고지서 조회 성공 / (아이디)님 고지서 조회 성공",
+        "userId":"userId",
+        "date":"202202",
+        "totalFee":"4000",
+        "waterFee":"3000",
+        "waterUse":"500",
+        "electFee":"1000",
+        "electUse":"200",
+        "publicFee":"4000"
     }
 }

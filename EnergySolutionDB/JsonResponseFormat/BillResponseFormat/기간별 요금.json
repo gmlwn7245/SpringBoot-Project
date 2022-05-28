@@ -1,43 +1,39 @@
 {
-	"기간별 요금":"아이디, 기간(달)",
+	"기간별 요금":"아이디",
 	"방식":"Get",
-	"URI":"/Bill/GetBillList?userId=user001&&term=6",
+	"URI":"/bill/getDataList?userId=userId",
 	
 	
     "ResponseBody":{
-        "status":200,   
-        "message":"고지서 조회 성공", 
-        "data":{
-            "UserId":"user001",
-            "term":6,
-            "BillList":[{
-                "Date":"2021-10",
-                "TotalFee":4000,
-                "WaterFee":3000,
-                "WaterUsage":500,
-                "ElectricityFee":1000,
-                "ElectricityUsage":200
+        "result":"success 또는 fail",   
+        "message":"(아이디)님 고지서 조회 성공 / (아이디)님 고지서 조회 실패", 
+        "dataList":[{
+        	"userId":"userId",			
+            "date":"202110",
+            "totalFee":"4000",
+            "publicFee":"4000",
+            "waterFee":"4000",
+            "waterUse":"4000",
+            "electFee":"4000",
+            "electUse":"4000"
             },{
-                "Date":"2021-11",
-                "TotalFee":4000,
-                "WaterFee":3000,
-                "WaterUsage":500,
-                "ElectricityFee":1000,
-                "ElectricityUsage":200
+        	"userId":"userId",
+            "date":"202109",
+            "totalFee":"4000",
+            "publicFee":"4000",
+            "waterFee":"4000",
+            "waterUse":"4000",
+            "electFee":"4000",
+            "electUse":"4000"
             },{
-                "Date":"2021-12",
-                "TotalFee":4000,
-                "WaterFee":3000,
-                "WaterUsage":500,
-                "ElectricityFee":1000,
-                "ElectricityUsage":200              
+        	"userId":"userId",
+            "date":"202108",
+            "totalFee":"4000",
+            "publicFee":"4000",
+            "waterFee":"4000",
+            "waterUse":"4000",
+            "electFee":"4000",
+            "electUse":"4000"
             }]
-            
         }
-    },
-
-    "UserNotFound":{
-        "errorMessage":"고지서를 등록해주세요.",
-        "errorCode":201
     }
-}

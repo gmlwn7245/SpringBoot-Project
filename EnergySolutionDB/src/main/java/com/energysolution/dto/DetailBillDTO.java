@@ -16,4 +16,13 @@ public class DetailBillDTO {
 	private String waterUse;
 	private String electFee;
 	private String waterFee;
+	
+	public DetailBillDTO(TotalBillDTO totalDTO) {
+		BillId = 0;
+		publicFee = totalDTO.getPublicFee();
+		electUse = totalDTO.getElectUse();
+		waterUse = totalDTO.getWaterUse();
+		electFee = totalDTO.getElectFee();
+		waterFee = totalDTO.getWaterFee();
+	}
 }

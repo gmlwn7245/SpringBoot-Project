@@ -1,26 +1,20 @@
 {
 	"로그인":"아이디, 비밀번호",
 	"방식":"POST",
-	"URI":"/User/SignIn",
+	"URI":"/main/login",
 	
 	
     "RequestBody":{
-        "userId":"user001",
-        "password":"PW001"
+        "userId":"userId",
+        "password":"password",
+        "name":"name",
+        "email":"email"
     },
     
     "ResponseBody":{
-        "status":200,   
-        "message":"로그인 성공",    
-        "data":{
-            "UserId":"user001",
-            "Name":"김희주",
-            "Email":"Email"
-        }
-    },
-    
-    "UserNotFound":{
-        "errorMessage":"일치하는 회원정보가 없습니다.",
-        "errorCode":201
+        "result":"fail 또는 success",   
+        "message":"잘못된 아이디 또는 비밀번호입니다. / (이름)님 로그인 성공",
+        "email":"email",
+        "name":"name"
     }
 }

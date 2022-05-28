@@ -2,7 +2,7 @@
 {
 	"비밀번호 변경":"아이디, 새 비밀번호",
 	"방식":"POST",
-	"URI":"/User/ChangeUserPW",
+	"URI":"/main/ChangeUserPW",
 	
 	
     "RequestBody":{
@@ -10,8 +10,7 @@
         "password":"pw100"
     },
 
-    "ResponseBody":{
-        "status":200, 
+    "ResponseBody":{ 
         "message":"변경이 완료되었습니다."
     }
 }

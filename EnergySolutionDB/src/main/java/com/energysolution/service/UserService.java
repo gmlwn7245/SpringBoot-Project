@@ -11,10 +11,10 @@ import com.energysolution.dto.UserDTO;
 
 public interface UserService {
 	//회원 가입
-	public String insertUser(UserDTO userDTO);
+	public String registerUser(UserDTO userDTO);
 	
 	//회원 로그인
-	public UserDTO LoginUser(String UserId, String Password);
+	public UserDTO loginUser(String UserId, String Password);
 	
 	//회원 ID 찾기
 	public List<String> FindUserId(String Email);

@@ -13,5 +13,11 @@ public class BillDTO {
 	private int BillId;
 	private String date;
 	private String totalFee;
+	
+	public BillDTO(TotalBillDTO totalDTO) {
+		BillId=0;
+		date = totalDTO.getDate();
+		totalFee = totalDTO.getTotalFee();
+	}
 
 }

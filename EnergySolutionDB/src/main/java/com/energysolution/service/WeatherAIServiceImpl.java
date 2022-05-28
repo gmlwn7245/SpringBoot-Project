@@ -23,7 +23,7 @@ import com.energysolution.mapper.WeatherAIMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class WeatherAIServiceImp implements WeatherAIService{
+public class WeatherAIServiceImpl implements WeatherAIService{
 	// 날씨 API KEY값
 	private String serviceKey = "vtjq%2FAY95mysnfmzSx%2FBI0ijID8CYa7fdWqbcRMpeeIV3%2FApXziRmhiSjZ7z1SIhMWKBY%2BC3JAZ6axGiPmt4lQ%3D%3D";
 	// 날씨 API 주소
@@ -56,6 +56,7 @@ public class WeatherAIServiceImp implements WeatherAIService{
 		weatherAIMapper.deleteAddress();
 		weatherAIMapper.deleteNXNY();
 		weatherAIMapper.deleteWeatherData();
+		weatherAIMapper.deleteRealTimeData();
 	}
 	
 	

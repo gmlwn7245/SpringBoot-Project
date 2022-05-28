@@ -30,7 +30,7 @@ public class WeatherAPITest {
 			Date date = new Date();
 			c.setTime(date);
 			//1시간전
-			c.add(Calendar.HOUR,-1);
+			c.add(Calendar.HOUR,-2);
 			String today = sdformat.format(c.getTime());
 			System.out.println("today:"+today);
 			String[] times = today.split(" ");

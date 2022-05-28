@@ -1,19 +1,10 @@
 package com.energysolution.controller;
 
-//import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
-
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.sql.Blob;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItem;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,11 +13,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.energysolution.dto.PhotoDataDTO;
 import com.energysolution.dto.RealTimeDataDTO;
-import com.energysolution.service.PhotoAIServiceImp;
+import com.energysolution.service.PhotoAIServiceImpl;
 import com.energysolution.service.WeatherAIService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -40,19 +30,12 @@ public class AIController {
 	WeatherAIService weatherAIService;
 
 	@Autowired
-	PhotoAIServiceImp photoAIService;
+	PhotoAIServiceImpl photoAIService;
 
 
 	@PostMapping(value = "/scanPhoto", produces = "text/plain;charset=UTF-8")
 	public @ResponseBody String getPhoto(@RequestParam("file") MultipartFile file) throws IOException {
-		System.out.println("이미지 스캔 요청");
-//		System.out.println(file.getContentType());
-//		System.out.println(file.getName());
-//		System.out.println(file.getOriginalFilename());
-//		System.out.println(file.getResource());
-//		return null;
-
-		
+		System.out.println("======이미지 스캔 요청======");		
 		System.out.println(file.getName()); // 파일 파라미터 이름
 		System.out.println(file.getSize()); // 파일 사이즈
 		System.out.println(file.getOriginalFilename()); // 파일 실제 이름
@@ -66,10 +49,6 @@ public class AIController {
 			param.put("file", blob);
 			param.put("file_name", file.getOriginalFilename());
 			param.put("file_size", file.getSize());
-			
-			
-//			param.put("file_name", file.getName());
-//			param.put("file_size", "00");
 
 			photoAIService.insertPhoto(param);
 		} catch (Exception e) {
@@ -93,10 +72,9 @@ public class AIController {
 				resultJSON.addProperty("result", "fail");
 				resultJSON.addProperty("message", "데이터를 불러올 수 없습니다.");
 			} else {
-				String datas = gson.toJson(photoDataDTO);
 				resultJSON.addProperty("result", "success");
 				resultJSON.addProperty("message", "이미지 스캔 완료!");
-				resultJSON.addProperty("data", datas);
+				resultJSON.add("data", photoDataDTO.revertToJson());
 			}
 		}
 
@@ -148,7 +126,7 @@ public class AIController {
 			String datas = gson.toJson(RTDdto);
 			resultJSON.addProperty("result", "success");
 			resultJSON.addProperty("message", "예측량 데이터입니다.");
-			resultJSON.addProperty("data", datas);
+			resultJSON.addProperty("electFee", RTDdto.getPredictedFee());
 		}
 
 		// 데이터 삭제

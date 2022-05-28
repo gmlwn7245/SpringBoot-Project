@@ -22,4 +22,5 @@ public interface WeatherAIMapper {
 	public void deleteWeatherData();
 	public void deleteAddress();
 	public void deleteNXNY();
+	public void deleteRealTimeData();
 }

@@ -13,6 +13,8 @@ public interface UserMapper {
 	public void insertUser(UserDTO userDTO);
 	public void updateUser(HashMap<String, String> updateMap);
 	public List<String> FindUserId(String Email);
+	
+	
 	public UserDTO FindUserPW(HashMap<String, String> findUserPWMap);
 	public String getUserPassword(String UserId);
 	public void deleteUser(String UserId);
@@ -20,6 +22,7 @@ public interface UserMapper {
 	public int checkUser(String UserId);
 	public int checkUserByIdEmail(HashMap<String, String> UserMap);
 	public UserDTO getUser(String UserId);
+	
 	// # 안드로이드 데이터 요청 테스트용
 	public List<Map<String, Object>> getReqData() throws Exception;
 }

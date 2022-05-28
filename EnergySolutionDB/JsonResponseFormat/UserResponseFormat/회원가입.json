@@ -1,18 +1,18 @@
 {
 	"회원가입":"아이디, 비밀번호, 닉네임, 이메일",
 	"방식":"POST",
-	"URI":"/User/SignUp",
+	"URI":"/main/register",
 	
 	
     "RequestBody":{
-        "userId":"user100",
-        "name":"홍길동",
-        "password":"pw100",
-        "email":"user100@naver.com"
+        "userId":"userId",
+        "name":"name",
+        "password":"password",
+        "email":"email"
     },
 
     "ResponseBody":{
-        "status":200, 
-        "message":"회원가입이 완료되었습니다."
+        "result":"fail 또는 success", 
+        "message":"회원가입 실패 / (이름)님 회원가입 성공"
     }
 }

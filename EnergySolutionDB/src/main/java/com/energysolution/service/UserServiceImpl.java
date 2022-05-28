@@ -33,10 +33,8 @@ public class UserServiceImpl implements UserService {
     
 	//회원가입
 	@Override
-	public String insertUser(UserDTO userDTO) {
-		String encodedPW = passwordEncoder.encode(userDTO.getPassword());
-		System.out.println(encodedPW);
-		userDTO.setPassword(encodedPW);
+	public String registerUser(UserDTO userDTO) {
+		userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 		userMapper.insertUser(userDTO);
 		
 		if(checkUser(userDTO.getUserId())==1)
@@ -46,9 +44,11 @@ public class UserServiceImpl implements UserService {
 
 	//로그인 하기
 	@Override
-	public UserDTO LoginUser(String UserId, String Password) {		
+	public UserDTO loginUser(String UserId, String Password) {		
 		//해당 아이디의 비밀번호가 사용자가 입력한 비밀번호와 일치하는지 확인
 		//암호화된 비밀번호
+		if(checkUser(UserId)==0)
+			return null;
 		
 		if(passwordEncoder.matches(Password, getUserPassword(UserId)))
 			return userMapper.getUser(UserId);
@@ -183,7 +183,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<Map<String, Object>> getReqData() throws Exception {
-		// TODO Auto-generated method stub
 		return userMapper.getReqData();
 	}
 }

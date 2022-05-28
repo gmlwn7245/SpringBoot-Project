@@ -27,4 +27,8 @@
 	<delete id="deleteNXNY">
 		DELETE FROM nxny
 	</delete>
+	
+	<delete id="deleteRealTimeData">
+		DELETE FROM realtimepredict
+	</delete>
 </mapper>

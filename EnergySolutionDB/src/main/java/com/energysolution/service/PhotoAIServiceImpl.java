@@ -9,7 +9,7 @@ import com.energysolution.dto.PhotoDataDTO;
 import com.energysolution.mapper.PhotoAIMapper;
 
 @Service
-public class PhotoAIServiceImp implements PhotoAIService{
+public class PhotoAIServiceImpl implements PhotoAIService{
 	@Autowired
 	PhotoAIMapper photoAIMapper;
 	
