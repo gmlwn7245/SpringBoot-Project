@@ -6,12 +6,24 @@
 		INSERT INTO User(UserId, Name, Password, Email) VALUES (#{UserId},#{Name},#{Password},#{Email})
 	</insert>
 	
+	<insert id="insertRole">
+		INSERT INTO Role(UserId, role) VALUES (#{UserId},#{role})
+	</insert>
+	
+	<select id="existUserById"  parameterType="String" resultType="Integer">
+		SELECT EXISTS (SELECT * FROM User WHERE UserId=#{UserId}) AS SUCCESS
+	</select>
+	
 	<select id="getUserPassword" parameterType="String" resultType="String">
 		SELECT Password FROM User WHERE UserId=#{UserId}
 	</select>
 	
 	<select id="getUser" parameterType="String" resultType="com.energysolution.dto.UserDTO">
 		SELECT * FROM User WHERE UserId=#{UserId}
+	</select>
+	
+	<select id="getUserRole" parameterType="String" resultType="com.energysolution.dto.UserRoleDTO">
+		SELECT * FROM role WHERE UserId=#{UserId}
 	</select>
 	
 	<select id="FindUserId" parameterType="String" resultType="String">

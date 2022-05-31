@@ -13,10 +13,16 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.energysolution.authMember.UserDetailsImpl;
 import com.energysolution.dto.UserDTO;
+import com.energysolution.dto.UserRoleDTO;
 import com.energysolution.mapper.UserMapper;
 
 @Service
@@ -31,11 +37,15 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
     
+    @Autowired
+	private AuthenticationManager authManager;
+    
 	//회원가입
 	@Override
 	public String registerUser(UserDTO userDTO) {
 		userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 		userMapper.insertUser(userDTO);
+		userMapper.insertRole(new UserRoleDTO(userDTO.getUserId()));
 		
 		if(checkUser(userDTO.getUserId())==1)
 			return "success";
@@ -44,14 +54,19 @@ public class UserServiceImpl implements UserService {
 
 	//로그인 하기
 	@Override
-	public UserDTO loginUser(String UserId, String Password) {		
+	public String loginUser(String UserId, String Password) {	
+		Authentication auth = authManager.authenticate(
+				new UsernamePasswordAuthenticationToken(UserId, Password)
+				);
+		SecurityContextHolder.getContext().setAuthentication(auth);
+		UserDetailsImpl principal = (UserDetailsImpl) auth.getPrincipal();
 		//해당 아이디의 비밀번호가 사용자가 입력한 비밀번호와 일치하는지 확인
 		//암호화된 비밀번호
 		if(checkUser(UserId)==0)
 			return null;
 		
 		if(passwordEncoder.matches(Password, getUserPassword(UserId)))
-			return userMapper.getUser(UserId);
+			return principal.getUsername();
 		return null;
 	}
 	

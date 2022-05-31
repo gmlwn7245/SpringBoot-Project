@@ -14,7 +14,7 @@ public interface UserService {
 	public String registerUser(UserDTO userDTO);
 	
 	//회원 로그인
-	public UserDTO loginUser(String UserId, String Password);
+	public String loginUser(String UserId, String Password);
 	
 	//회원 ID 찾기
 	public List<String> FindUserId(String Email);

@@ -105,10 +105,6 @@ public class WeatherAPITest {
 						weatherDTO.setT1H(category);
 						break;
 					}
-					case "RN1":{
-						weatherDTO.setRN1(category);
-						break;
-					}
 					case "REH":{
 						weatherDTO.setREH(category);
 						break;

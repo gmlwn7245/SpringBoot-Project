@@ -13,9 +13,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.energysolution.dto.PhotoDataDTO;
 import com.energysolution.dto.RealTimeDataDTO;
+import com.energysolution.dto.WeatherDTO;
 import com.energysolution.service.PhotoAIServiceImpl;
 import com.energysolution.service.WeatherAIService;
 import com.google.gson.Gson;
@@ -24,7 +27,7 @@ import com.google.gson.JsonObject;
 @RestController
 public class AIController {
 
-	private final String url = "http://localhost:5000";
+	private final String url = "http://192.168.1.80:5001";
 
 	@Autowired
 	WeatherAIService weatherAIService;
@@ -40,8 +43,7 @@ public class AIController {
 		System.out.println(file.getSize()); // 파일 사이즈
 		System.out.println(file.getOriginalFilename()); // 파일 실제 이름
 		byte[] data = file.getBytes(); // 파일 실제 내용
-
-				
+		
 		Map<String, Object> param = new HashMap<String, Object>();
 		// Convert to Blob
 		try {
@@ -83,19 +85,41 @@ public class AIController {
 
 		return gson.toJson(resultJSON);
 	}
-
+	
+	// 실시간 요금 추정
+	@GetMapping(value = "/predictedFee", produces = "text/plain;charset=UTF-8")
+	public @ResponseBody String getPredictedFee(@RequestParam("userId") String userId) {
+		System.out.println("=====getPredictedData 요청=====");
+		
+		Gson gson = new Gson();
+		JsonObject resultJSON = new JsonObject();
+		
+		RestTemplate template = new RestTemplate();
+		String query = "userId="+userId;
+		UriComponents uri = UriComponentsBuilder.fromHttpUrl(url+"/getUserData").query(query).build(false);
+		String response = template.getForObject(uri.toString(), String.class);
+		
+		if (response.isEmpty() || response.equals("fail")) {
+			resultJSON.addProperty("result", "fail");
+			resultJSON.addProperty("message", "예측 요금량을 불러오지 못했습니다.");
+			System.out.println("====예측 요금량을 불러오지 못했습니다.====");
+			return gson.toJson(resultJSON);
+		}
+		resultJSON.addProperty("result", "success");
+		resultJSON.addProperty("message", "예측 요금량입니다.");
+		System.out.println("====예측 요금량입니다.====");
+		
+		System.out.println(response);
+		return gson.toJson(resultJSON);
+	}
+	
+	
+	
 	// 실시간 요금 추정
 	@GetMapping(value = "/realTimeData", produces = "text/plain;charset=UTF-8")
 	public @ResponseBody String getWeather(@RequestParam("region1") String region1,
 			@RequestParam("region2") String region2, @RequestParam("region3") String region3) {
 		System.out.println("=====getWeather 요청=====");
-
-		// Address 데이터베이스에 넣기
-		HashMap<String, String> addressMap = new HashMap<>();
-		addressMap.put("region1", region1);
-		addressMap.put("region2", region2);
-		addressMap.put("region3", region3);
-		weatherAIService.insertAddress(addressMap);
 
 		// 리턴 메세지
 		Gson gson = new Gson();
@@ -103,34 +127,37 @@ public class AIController {
 
 		// nx, ny 좌표 데이터 요청 후 API 값 넣기
 		RestTemplate template = new RestTemplate();
-		String response = template.getForObject(url + "/getAddress", String.class);
-
+		String query = "region1="+region1+"&region2="+region2+"&region3="+region3;
+		UriComponents uri = UriComponentsBuilder.fromHttpUrl(url+"/getAddress").query(query).build(false);
+		String response = template.getForObject(uri.toString(), String.class);
+		
 		if (response.isEmpty() || response.equals("fail")) {
 			resultJSON.addProperty("result", "fail");
 			resultJSON.addProperty("message", "위치 데이터 로딩에 실패하였습니다.");
+			System.out.println("====위치 데이터 로딩에 실패하였습니다.====");
 			return gson.toJson(resultJSON);
-
-		} else if (response.equals("success")) {
-			weatherAIService.insertWeather();
 		}
-
+		
+		String[] nxny = response.split(" ");
+		WeatherDTO weatherDTO = weatherAIService.returnWeatherData(nxny[0], nxny[1]);
+		System.out.println("nxny:==========>"+nxny[0]+ ":"+ nxny[1]);
+		
 		// 실시간 요금 데이터 요청
-		response = template.getForObject(url + "/getRealTimeData", String.class);
+		String query2 = "T1H="+weatherDTO.getT1H()+"&REH="+weatherDTO.getREH()+"&WSD="+weatherDTO.getWSD();
+		UriComponents uri2 = UriComponentsBuilder.fromHttpUrl(url+"/getRealTimeData").query(query2).build(false);
+		response = template.getForObject(uri2.toString(), String.class);
+		
 		if (response.isEmpty() || response.equals("fail")) {
 			resultJSON.addProperty("result", "fail");
 			resultJSON.addProperty("message", "예측량 데이터 로딩에 실패하였습니다.");
+			System.out.println("====예측량 데이터 로딩에 실패하였습니다.====");
 			return gson.toJson(resultJSON);
-
-		} else if (response.equals("success")) {
-			RealTimeDataDTO RTDdto = weatherAIService.getRealTimeData();
-			String datas = gson.toJson(RTDdto);
+		} else {
 			resultJSON.addProperty("result", "success");
 			resultJSON.addProperty("message", "예측량 데이터입니다.");
-			resultJSON.addProperty("electFee", RTDdto.getPredictedFee());
+			System.out.println("====예측량 데이터입니다.====");
+			resultJSON.addProperty("electUse", response);
 		}
-
-		// 데이터 삭제
-		weatherAIService.deleteWeatherData();
 
 		return gson.toJson(resultJSON);
 	}

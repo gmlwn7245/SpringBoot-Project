@@ -13,7 +13,7 @@ public class WeatherDTO {
 	//기온
 	private String T1H;
 	//1시간 강수량
-	private String RN1;
+	//private String RN1;
 	//습도
 	private String REH;
 	//풍속

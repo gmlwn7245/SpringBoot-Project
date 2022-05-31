@@ -1,6 +1,5 @@
 package com.energysolution.controller;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.Blob;
 import java.util.HashMap;
@@ -9,26 +8,30 @@ import java.util.Map;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import com.energysolution.dto.UserDTO;
 import com.energysolution.service.TestService;
+import com.energysolution.service.WeatherAIService;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 @Controller
 public class TestController {
@@ -38,12 +41,73 @@ public class TestController {
 	
 	@Autowired
     private JavaMailSender javaMailSender;
+	
+	@Autowired
+	WeatherAIService weatherAIService;
+	
+	private final String url = "http://localhost:5000";
     
 	@GetMapping("")
 	public @ResponseBody String Root() {		
 		return "This is Root";
 	}
 	
+	@PostMapping(value = "/scanPhotoTest", produces = "text/plain;charset=UTF-8")
+	public @ResponseBody String getPhotoTest(@RequestParam("file") MultipartFile file) {
+		try {
+			System.out.println("========scanphoto test========");
+			RestTemplate template = new RestTemplate();
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+			
+			MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
+			params.add("file", file);
+			UriComponents uri = UriComponentsBuilder.fromHttpUrl(url+"/getPhoto").build(false);
+			String response = template.getForObject(uri.toString(), String.class, params);			
+			
+			System.out.println("========fin01========");
+			//ResponseEntity<String> res = template.getForEntity(url + "/getPhoto", String.class);
+			System.out.println(response);
+			//ResponseEntity<String> response = template.postForObject(url+"/getPhoto", requestEntity, String.class);
+			//System.out.println(response);
+			return "success";
+		}catch(Exception e) {
+			e.printStackTrace();
+			return "fail";
+		}
+	}
+	
+	// 실시간 요금 추정
+	@GetMapping(value = "/realTimeTest", produces = "text/plain;charset=UTF-8")
+	public @ResponseBody String getWeatherTest(@RequestParam("region1") String region1,
+			@RequestParam("region2") String region2, @RequestParam("region3") String region3) {
+		System.out.println("=====getWeather 요청=====");
+
+		// 리턴 메세지
+		Gson gson = new Gson();
+		JsonObject resultJSON = new JsonObject();
+
+		// nx, ny 좌표 데이터 요청 후 API 값 넣기
+		RestTemplate template = new RestTemplate();
+		String query = "region1="+region1+"&region2="+region2+"&region3="+region3;
+		UriComponents uri = UriComponentsBuilder.fromHttpUrl(url+"/getAddress").query(query).build(false);
+		String response = template.getForObject(uri.toString(), String.class);
+			
+		if (response.isEmpty() || response.equals("fail")) {
+			resultJSON.addProperty("result", "fail");
+			resultJSON.addProperty("message", "위치 데이터 로딩에 실패하였습니다.");
+			return gson.toJson(resultJSON);
+
+		} else {
+			resultJSON.addProperty("result", "success");
+			resultJSON.addProperty("message", "위치 데이터입니다.");
+			String[] nxny = response.split(" ");
+			resultJSON.addProperty("nx", nxny[0]);
+			resultJSON.addProperty("ny", nxny[1]);
+		}
+		return gson.toJson(resultJSON);
+	}
 	
 	// 메일 전송
     @GetMapping("/mail")
@@ -125,16 +189,5 @@ public class TestController {
 		return resultMap;
 	}
 	
-	@PostMapping("/scanPhotoTest")
-	public @ResponseBody String testphototest(@RequestParam("file") MultipartFile file){
-		
-		System.out.println("====testPhoto====");
-		if(file!=null) {
-			System.out.println("success");
-			return "success";
-		}
-		System.out.println("fail");
-		return "fail";
-	}
 	
 }
