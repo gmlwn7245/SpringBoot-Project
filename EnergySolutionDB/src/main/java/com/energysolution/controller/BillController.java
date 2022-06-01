@@ -80,9 +80,10 @@ public class BillController {
 	
 		resultJSON.addProperty("result", "success");
 		resultJSON.addProperty("message", "데이터 조회 성공");
+		System.out.println("==fin==");
+		System.out.println(totalBillDTO.revertToJsonPie().toString());
 		resultJSON.add("data", totalBillDTO.revertToJsonPie());
-		
-		
+				
 		return gson.toJson(resultJSON);
 	}
 	
@@ -117,14 +118,19 @@ public class BillController {
 	@PostMapping(value = "/register", produces = "text/plain;charset=UTF-8")
 	public @ResponseBody String setBill(TotalBillDTO totalDTO) throws Exception{
 		System.out.println("======고지서 등록======");
+		Gson gson = new Gson();
+		JsonObject resultJSON = new JsonObject();
+		if(totalDTO.getDate().equals("")){
+			resultJSON.addProperty("result", "fail");
+			resultJSON.addProperty("message", "등록 실패하였습니다.");
+			return gson.toJson(resultJSON);
+		}
+			
 		BillDTO billDTO = new BillDTO(totalDTO);
 		DetailBillDTO detailbillDTO = new DetailBillDTO(totalDTO);
 		PaymentDTO paymentDTO = new PaymentDTO(totalDTO.getUserId());
 		String result = billService.insertBill(billDTO,detailbillDTO,paymentDTO);
 		
-		
-		Gson gson = new Gson();
-		JsonObject resultJSON = new JsonObject();
 		if(result=="fail") {
 			resultJSON.addProperty("result", "fail");
 			resultJSON.addProperty("message", "등록 실패하였습니다.");
@@ -134,6 +140,32 @@ public class BillController {
 		resultJSON.addProperty("result", "success");
 		resultJSON.addProperty("message", "등록이 완료되었습니다.");
 					
+		return gson.toJson(resultJSON);
+	}
+	
+	//고지서 전체 수정
+	@PostMapping("/update")
+	public @ResponseBody String updateBill(TotalBillDTO totalDTO) {
+		System.out.println("======고지서 변경======");
+		System.out.println("바뀐고지서==>"+totalDTO.toString());
+		
+		String result = billService.updateBill(totalDTO);
+		
+		Gson gson = new Gson();
+		JsonObject resultJSON = new JsonObject();
+		
+		if(result.equals("fail")) {
+			resultJSON.addProperty("result", "fail");
+			resultJSON.addProperty("message", "고지서 수정 실패하였습니다.");
+			return gson.toJson(resultJSON);
+		}
+		
+		String UserId = totalDTO.getUserId();
+		String date = totalDTO.getDate();
+		
+		resultJSON.addProperty("result", "success");
+		resultJSON.addProperty("message", UserId+"님의 "+date.substring(0,4)+"년"+date.substring(4)+"월의 고지서 수정이 완료되었습니다.");
+		
 		return gson.toJson(resultJSON);
 	}
 	

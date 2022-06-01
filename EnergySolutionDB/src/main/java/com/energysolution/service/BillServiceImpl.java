@@ -53,6 +53,7 @@ public class BillServiceImpl implements BillService{
 		BillDTO billDTO = billMapper.getBill(BillId);
 		DetailBillDTO detailbillDTO = billMapper.getDetailBill(BillId);
 		TotalBillDTO totalBillDTO = makeDTO(billDTO, detailbillDTO);
+		
 		return totalBillDTO;
 	}
 	
@@ -121,15 +122,10 @@ public class BillServiceImpl implements BillService{
 		String date = totalDTO.getDate();
 		
 		int BillId = getBillId(UserId,date);
-		updateBillMap.put("BillId", BillId);
-		updateBillMap.put("totalFee",totalDTO.getTotalFee());
-		updateBillMap.put("waterFee", totalDTO.getWaterFee());
-		updateBillMap.put("waterUse", totalDTO.getWaterUse());
-		updateBillMap.put("electFee", totalDTO.getElectFee());
-		updateBillMap.put("electUse", totalDTO.getElectUse());
+		totalDTO.setBillId(BillId);
 		
-		billMapper.updateBill(updateBillMap);
-		billMapper.updateDetailBill(updateBillMap);
+		billMapper.updateBill(totalDTO);
+		billMapper.updateDetailBill(totalDTO);
 		
 		return checkUpdateBill(BillId, updateBillMap);
 	}

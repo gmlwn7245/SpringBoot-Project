@@ -166,7 +166,7 @@ public class RestsController {
 		}
 		
 		//고지서 전체 수정
-		@PostMapping("/bill/update")
+		@PostMapping("/test/update")
 		public JSONObject updateBill(@RequestBody TotalBillDTO totalDTO) {
 			
 			String result = billService.updateBill(totalDTO);

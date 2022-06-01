@@ -46,17 +46,21 @@ public class UserController {
 	public String loginUser(UserDTO userDTO) {
 		System.out.println("==========================================");
 		System.out.println("로그인:"+userDTO.getUserId());
-		String userids = userService.loginUser(userDTO.getUserId(), userDTO.getPassword());
-		
 		Gson gson = new Gson();
+		UserDTO getUserDTO = userService.loginUser(userDTO.getUserId(), userDTO.getPassword());
+		System.out.println("userID:"+getUserDTO.getUserId());
+		System.out.println(getUserDTO.getUserId().equals(userDTO.getUserId()));
+		
 		JsonObject resultJSON = new JsonObject();
-		if (userids == null) {
+		if (!getUserDTO.getUserId().equals(userDTO.getUserId())) {
 			resultJSON.addProperty("result", "fail");
 			resultJSON.addProperty("message", "잘못된 아이디 또는 비밀번호 입니다.");
-		} else {
-			resultJSON.addProperty("result", "success");
-			resultJSON.addProperty("message", userids + "님 로그인 성공!");
+			return gson.toJson(resultJSON);
 		}
+		resultJSON.addProperty("result", "success");
+		resultJSON.addProperty("message", getUserDTO.getName() + "님 로그인 성공!");
+		resultJSON.addProperty("email", getUserDTO.getEmail());
+		resultJSON.addProperty("name", getUserDTO.getName());
 
 		return gson.toJson(resultJSON);
 	}

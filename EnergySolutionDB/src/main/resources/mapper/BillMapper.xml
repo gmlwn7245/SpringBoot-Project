@@ -2,15 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.energysolution.mapper.BillMapper">
 	
-	<insert id="insertBill">
+	<insert id="insertBill" parameterType="com.energysolution.dto.BillDTO">
 		INSERT INTO Bill(date, totalFee) VALUES (#{date},#{totalFee})
 	</insert>
 	
-	<insert id="insertDetailBill">
+	<insert id="insertDetailBill" parameterType="com.energysolution.dto.DetailBillDTO">
 		INSERT INTO detailBill(BillId, publicFee, waterFee, waterUse, electFee, electUse) VALUES (#{BillId},#{publicFee},#{waterFee},#{waterUse},#{electFee},#{electUse})
 	</insert>
 	
-	<insert id="insertPayment">
+	<insert id="insertPayment" parameterType="com.energysolution.dto.PaymentDTO">
 		INSERT INTO payment(UserId, BillId) VALUES (#{UserId},#{BillId})
 	</insert>
 	
@@ -18,11 +18,11 @@
 		UPDATE ${table} SET ${Field}=#{fee} WHERE BillId = #{BillId}
 	</update>
 	
-	<update id="updateBill">
+	<update id="updateBill" parameterType="com.energysolution.dto.TotalBillDTO">
 		UPDATE Bill SET totalFee=#{totalFee} WHERE BillId = #{BillId}
 	</update>
 	
-	<update id="updateDetailBill">
+	<update id="updateDetailBill" parameterType="com.energysolution.dto.TotalBillDTO">
 		UPDATE DetailBill SET waterFee=#{waterFee}, waterUse=#{waterUse}, electFee=#{electFee}, electUse=#{electUse}, publicFee=#{publicFee} WHERE BillId = #{BillId}
 	</update>
 		

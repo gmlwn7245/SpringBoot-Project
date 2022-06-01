@@ -1,11 +1,13 @@
 package com.energysolution.mapper;
 
 import java.util.HashMap;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.energysolution.dto.BillDTO;
 import com.energysolution.dto.DetailBillDTO;
 import com.energysolution.dto.PaymentDTO;
+import com.energysolution.dto.TotalBillDTO;
 
 @Mapper
 public interface BillMapper {	
@@ -30,8 +32,8 @@ public interface BillMapper {
 	
 	//변경
 	public void updateBillField(HashMap<String, Object> updateBillFieldMap);
-	public void updateBill(HashMap<String, Object> updateBillMap);
-	public void updateDetailBill(HashMap<String, Object> updateDetailBillMap);
+	public void updateBill(TotalBillDTO dto);
+	public void updateDetailBill(TotalBillDTO dto);
 	
 	//삭제
 	public void deleteBill(int BillId);

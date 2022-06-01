@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
 
 	//로그인 하기
 	@Override
-	public String loginUser(String UserId, String Password) {	
+	public UserDTO loginUser(String UserId, String Password) {	
 		Authentication auth = authManager.authenticate(
 				new UsernamePasswordAuthenticationToken(UserId, Password)
 				);
@@ -63,13 +63,13 @@ public class UserServiceImpl implements UserService {
 		//해당 아이디의 비밀번호가 사용자가 입력한 비밀번호와 일치하는지 확인
 		//암호화된 비밀번호
 		if(checkUser(UserId)==0)
-			return null;
-		
-		if(passwordEncoder.matches(Password, getUserPassword(UserId)))
-			return principal.getUsername();
-		return null;
-	}
-	
+			return new UserDTO();
+		if(passwordEncoder.matches(Password, getUserPassword(UserId))) {
+			UserDTO userDTO = userMapper.getUser(principal.getUsername());
+			return userDTO;
+		}
+		return new UserDTO();
+	}	
 
 	//비밀번호 변경
 	@Override
